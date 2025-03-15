@@ -1,0 +1,31 @@
+/* AddBook.css */
+.addbook-container {
+    background-color: #ffffff;
+    padding: 30px;
+    font-family: 'Roboto', sans-serif;
+  }
+  
+  .addbook-form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .addbook-input {
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .addbook-submit-btn {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .addbook-submit-btn:hover {
+    background-color: #45a049;
+  }
+  

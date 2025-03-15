@@ -1,0 +1,31 @@
+/* EditBook.css */
+.editbook-container {
+    background-color: #f0f0f0;
+    padding: 25px;
+    font-family: 'Verdana', sans-serif;
+  }
+  
+  .editbook-form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .editbook-input {
+    padding: 12px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .editbook-submit-btn {
+    background-color: #008CBA;
+    color: white;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .editbook-submit-btn:hover {
+    background-color: #007B9E;
+  }
+  

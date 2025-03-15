@@ -1,0 +1,22 @@
+/* ViewBooks.css */
+.viewbooks-container {
+    background-color: #f9f9f9;
+    padding: 20px;
+  }
+  
+  .viewbooks-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .viewbooks-table th, .viewbooks-table td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: left;
+  }
+  
+  .viewbooks-table th {
+    background-color: #4CAF50;
+    color: white;
+  }
+  

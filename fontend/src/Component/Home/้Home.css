@@ -1,0 +1,17 @@
+/* Home.css */
+.home-container {
+    background-color: #f4f4f4;
+    padding: 20px;
+    font-family: 'Arial', sans-serif;
+  }
+  
+  .home-title {
+    font-size: 36px;
+    color: #333;
+  }
+  
+  .home-description {
+    font-size: 18px;
+    color: #666;
+  }
+  
