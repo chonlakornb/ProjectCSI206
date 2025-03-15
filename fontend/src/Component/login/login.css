@@ -1,0 +1,83 @@
+/* login.css */
+.login-container {
+    background: linear-gradient(135deg, #f9f9f9, #e3e3e3);
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    margin: 50px auto;
+    text-align: center;
+    font-family: 'Poppins', sans-serif;
+}
+
+.login-container h2 {
+    font-size: 28px;
+    font-weight: bold;
+    color: #2c3e50;
+    margin-bottom: 20px;
+}
+
+.login-container form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.login-container label {
+    text-align: left;
+    font-weight: bold;
+    color: #555;
+}
+
+.login-container input {
+    padding: 12px;
+    font-size: 16px;
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    transition: border 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.login-container input:focus {
+    border: 2px solid #4CAF50;
+    outline: none;
+    box-shadow: 0px 0px 8px rgba(76, 175, 80, 0.3);
+}
+
+.login-container button {
+    background: #4CAF50;
+    color: white;
+    padding: 12px;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+}
+
+.login-container button:hover {
+    background: #45a049;
+    transform: scale(1.05);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .login-container {
+        padding: 20px;
+        max-width: 90%;
+    }
+
+    .login-container h2 {
+        font-size: 24px;
+    }
+
+    .login-container input {
+        font-size: 14px;
+        padding: 10px;
+    }
+
+    .login-container button {
+        font-size: 14px;
+        padding: 10px;
+    }
+}

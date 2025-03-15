@@ -1,31 +1,77 @@
 /* EditBook.css */
 .editbook-container {
-    background-color: #f0f0f0;
-    padding: 25px;
-    font-family: 'Verdana', sans-serif;
+  background: linear-gradient(135deg, #f9f9f9, #e3e3e3);
+  padding: 40px;
+  font-family: 'Poppins', sans-serif;
+  max-width: 500px;
+  margin: 50px auto;
+  border-radius: 12px;
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.editbook-title {
+  font-size: 28px;
+  font-weight: bold;
+  color: #2c3e50;
+  margin-bottom: 20px;
+}
+
+.editbook-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.editbook-input {
+  padding: 12px;
+  font-size: 16px;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  transition: border 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.editbook-input:focus {
+  border: 2px solid #008CBA;
+  outline: none;
+  box-shadow: 0px 0px 8px rgba(0, 140, 186, 0.3);
+}
+
+.editbook-submit-btn {
+  background: #008CBA;
+  color: white;
+  padding: 12px;
+  font-size: 16px;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+.editbook-submit-btn:hover {
+  background: #007B9E;
+  transform: scale(1.05);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .editbook-container {
+      padding: 20px;
+      max-width: 90%;
   }
-  
-  .editbook-form {
-    display: flex;
-    flex-direction: column;
+
+  .editbook-title {
+      font-size: 24px;
   }
-  
+
   .editbook-input {
-    padding: 12px;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+      font-size: 14px;
+      padding: 10px;
   }
-  
+
   .editbook-submit-btn {
-    background-color: #008CBA;
-    color: white;
-    padding: 10px;
-    border: none;
-    cursor: pointer;
+      font-size: 14px;
+      padding: 10px;
   }
-  
-  .editbook-submit-btn:hover {
-    background-color: #007B9E;
-  }
-  
+}

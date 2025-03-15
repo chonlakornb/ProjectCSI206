@@ -1,7 +1,16 @@
-import React from 'react';
-import './ViewBooks.css';  // นำเข้า CSS ที่เกี่ยวข้อง
+import React, { useEffect, useState } from 'react';
+import './ViewBooks.css';
 
 function ViewBooks() {
+  const [books, setBooks] = useState([]);
+
+  useEffect(() => {
+    fetch('http://localhost:5000/books')
+      .then(response => response.json())
+      .then(data => setBooks(data))
+      .catch(error => console.error('Error fetching books:', error));
+  }, []);
+
   return (
     <div className="viewbooks-container">
       <h2>View All Books</h2>
@@ -14,12 +23,15 @@ function ViewBooks() {
           </tr>
         </thead>
         <tbody>
-          {/* นี่เป็นตัวอย่างแถวข้อมูล */}
-          <tr>
-            <td>Book Title</td>
-            <td>Book Author</td>
-            <td><button>Edit</button> <button>Delete</button></td>
-          </tr>
+          {books.map(book => (
+            <tr key={book.id}>
+              <td>{book.title}</td>
+              <td>{book.author}</td>
+              <td>
+                <button>Edit</button> <button>Delete</button>
+              </td>
+            </tr>
+          ))}
         </tbody>
       </table>
     </div>
