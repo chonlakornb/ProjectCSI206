@@ -2,12 +2,12 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 
 // Import Components
-import Home from './Component/Home';
-import AddBook from './Component/AddBook';
-import ViewBooks from './Component/ViewBooks';
-import EditBook from './Component/EditBook';
-import About from './Component/About';
-import Login from './Component/Login';
+import Home from './Component/Home/Home';
+import AddBook from './Component/AddBook/AddBook';
+import ViewBooks from './Component/ViewBooks/ViewBooks';
+import EditBook from './Component/EditBook/EditBook';
+import About from './Component/About/About';
+import Login from './Component/login/login';
 
 function App() {
   return (
