@@ -52,3 +52,20 @@ export const logoutUser = (req, res) => {
   // Invalidate the token (implementation depends on your token management strategy)
   res.status(200).json({ message: 'User logged out successfully' });
 };
+
+export const refreshToken = (req, res) => {
+  const { token } = req.body;
+
+  if (!token) {
+    return res.status(401).json({ message: 'Token is required' });
+  }
+
+  try {
+    const decoded = jwt.verify(token, 'your_jwt_secret');
+    const newToken = jwt.sign({ id: decoded.id, role: decoded.role }, 'your_jwt_secret', { expiresIn: '1h' });
+
+    res.status(200).json({ token: newToken });
+  } catch (error) {
+    res.status(401).json({ message: 'Invalid token' });
+  }
+};
