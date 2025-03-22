@@ -3,7 +3,10 @@ import connectDB from './config/db.js';
 import cors from 'cors';
 import userRoutes from './routes/userRoutes.js';
 import authRoutes from './routes/authRoutes.js';
-import bookRoutes from './routes/bookRoutes.js'; // Import book routes
+import bookRoutes from './routes/bookRoutes.js';
+import categoryRoutes from './routes/categoryRoutes.js';
+import favoriteRoutes from './routes/favoriteRoutes.js'; // Import favorite routes
+import reviewRoutes from './routes/reviewRoutes.js'; // Import review routes
 
 const app = express();
 const PORT = 3000;
@@ -17,7 +20,10 @@ await connectDB();
 // Use routes
 app.use('/api', userRoutes);
 app.use('/api/auth', authRoutes);
-app.use('/api', bookRoutes); // Use book routes
+app.use('/api', bookRoutes);
+app.use('/api', categoryRoutes);
+app.use('/api', favoriteRoutes); // Use favorite routes
+app.use('/api', reviewRoutes); // Use review routes
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
