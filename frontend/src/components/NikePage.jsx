@@ -12,9 +12,9 @@ const NikePage = () => {
     <div>
       <Section />
       <Products />
-      <About />
-      <Review />
-      <Services />
+      {/* <About /> */}
+      {/* <Review />
+      <Services /> */}
       <Footer />
     </div>
   );

@@ -1,0 +1,27 @@
+footer {
+  background: #333;
+  color: white;
+  padding: 2rem;
+}
+
+.footer_main {
+  display: flex;
+  justify-content: space-between;
+  gap: 2rem;
+}
+
+.footer_main .tag h1 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.footer_main .tag a {
+  color: white;
+  text-decoration: none;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.footer_main .tag a:hover {
+  color: #c72092;
+}
