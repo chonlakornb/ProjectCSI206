@@ -2,7 +2,7 @@ import React from 'react';
 
 const Products = () => {
   const productImages = [
-    'shoes1.png',
+    'kagurabachi.PNG',
     'shoes2.png',
     'shoes3.png',
     'shoes4.png',
@@ -14,7 +14,7 @@ const Products = () => {
 
   return (
     <div className="products" id="Products">
-      <h1>Products</h1>
+      <h1>PRODUCTS</h1>
       <div className="box">
         {productImages.map((image, index) => (
           <div className="card" key={index}>

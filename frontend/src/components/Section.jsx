@@ -22,14 +22,17 @@ const Section = () => {
       </nav>
       <div className="main" id="Home">
         <div className="main_content">
-          <div className="main_text">
-            <h1>NIKE<br /><span>Collection</span></h1>
-            <p>
-              Lorem Ipsum is simply dummy text of the printing and typesetting industry...
-            </p>
-          </div>
           <div className="main_image">
-            <img src="./src/img/shoes.png" alt="Nike Shoes" />
+            <img src="./src/img/one piece 3.jpeg" alt="Nike Shoes" />
+            <img src="./src/img/one piece 1.png" alt="Nike Shoes" />
+            {/* <img src="./src/img/kagurabachi.PNG" alt="Nike Shoes" /> */}
+          </div>
+
+          <div className="main_text">
+            <h1>NUMBER 1 IN SALES<br /><span></span></h1>
+            <p>
+              {/* Lorem Ipsum is simply dummy text of the printing and typesetting industry... */}
+            </p>
           </div>
         </div>
         <div className="social_icon">
@@ -38,10 +41,10 @@ const Section = () => {
           <i className="fa-brands fa-instagram"></i>
           <i className="fa-brands fa-linkedin-in"></i>
         </div>
-        <div className="button">
+        {/* <div className="button">
           <a href="#">SHOP NOW</a>
           <i className="fa-solid fa-chevron-right"></i>
-        </div>
+        </div> */}
       </div>
     </section>
   );

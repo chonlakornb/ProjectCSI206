@@ -1,17 +1,30 @@
 footer {
   background: #333;
   color: white;
-  padding: 2rem;
+  padding: 3rem 2rem; /* เพิ่ม padding ให้ดูสมดุลมากขึ้น */
+  width: 100vw;  /* ให้ footer กว้างเต็มจอ */
+  position: relative;
+  left: 0;
+  right: 0;
+  bottom: 0;
 }
 
 .footer_main {
   display: flex;
   justify-content: space-between;
   gap: 2rem;
+  flex-wrap: wrap;  /* เพิ่มการยืดหดตามหน้าจอ */
+  max-width: 1200px;  /* จำกัดความกว้างสูงสุด */
+  margin: 0 auto;  /* จัดให้อยู่กลางหน้าจอ */
+}
+
+.footer_main .tag {
+  flex: 1;  /* ทำให้แต่ละ tag กว้างเท่ากัน */
+  min-width: 200px;  /* กำหนดความกว้างขั้นต่ำ */
 }
 
 .footer_main .tag h1 {
-  font-size: 1.5rem;
+  font-size: 1.6rem; /* ปรับขนาดหัวข้อให้ใหญ่ขึ้น */
   margin-bottom: 1rem;
 }
 
@@ -20,8 +33,10 @@ footer {
   text-decoration: none;
   display: block;
   margin-bottom: 0.5rem;
+  font-size: 1.1rem; /* เพิ่มขนาดตัวอักษร */
 }
 
 .footer_main .tag a:hover {
-  color: #c72092;
+  color: #c72092; /* เปลี่ยนสีลิงก์เมื่อ hover */
+  text-decoration: underline; /* เพิ่มเส้นใต้เมื่อ hover */
 }

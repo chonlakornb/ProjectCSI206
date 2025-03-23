@@ -75,7 +75,7 @@ section nav .icons i:hover {
 .main_text h1 {
   font-size: 4rem;
   line-height: 1.2;
-  background: linear-gradient(to right, #c72092, #6c14d0);
+  background: linear-gradient(to right, #000000, #000000);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }

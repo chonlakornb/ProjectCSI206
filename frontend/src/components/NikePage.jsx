@@ -15,7 +15,7 @@ const NikePage = () => {
       {/* <About /> */}
       {/* <Review />
       <Services /> */}
-      <Footer />
+      {/* <Footer /> */}
     </div>
   );
 };

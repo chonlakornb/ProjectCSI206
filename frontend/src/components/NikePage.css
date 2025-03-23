@@ -26,16 +26,19 @@ section {
 section nav {
   display: flex;
   align-items: center;
-  justify-content: space-between ;
-  padding: 0 2rem;
+  justify-content: space-between;
+  width: 100vw; /* ทำให้ nav กว้างเต็มจอ */
+  padding: 1rem 2rem;
+  height: 70px;
   background: white;
-  box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   z-index: 100;
 }
+
 
 section nav .logo h1 {
   font-size: 2rem;
@@ -84,16 +87,16 @@ section nav .icons i:hover {
 }
 
 .main_content {
-  display: flex;
+  /* display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: space-between; */
   width: 100%;
 }
 
 .main_text h1 {
   font-size: 4rem;
   line-height: 1.2;
-  background: linear-gradient(to right, #c72092, #6c14d0);
+  background: linear-gradient(to right, #d3c11e, #ffc118);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -108,9 +111,17 @@ section nav .icons i:hover {
   color: #555;
 }
 
-.main_image img {
-  width: 500px;
+.main_image {
+  display: flex;  /* ทำให้ลูกใน .main_image เรียงตัวในแนวนอน */
+  gap: 1rem;      /* ระยะห่างระหว่างรูปภาพ */
 }
+
+.main_image img {
+  width: 450px;
+  padding: 1rem;
+  margin-top: 2rem;
+}
+
 
 .social_icon {
   position: fixed;
@@ -165,7 +176,7 @@ section nav .icons i:hover {
   text-align: center;
   font-size: 3rem;
   margin-bottom: 2rem;
-  background: linear-gradient(to right, #c72092, #6c14d0);
+  background: linear-gradient(to right, #ff0f0f, #744040);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
