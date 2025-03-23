@@ -22,11 +22,11 @@ section nav {
 
 section nav .logo h1 {
   font-size: 2rem;
-  color: #c72092;
+  color: #000000;
 }
 
 section nav .logo span {
-  color: #6c14d0;
+  color: #4e425c;
   text-decoration: underline;
 }
 

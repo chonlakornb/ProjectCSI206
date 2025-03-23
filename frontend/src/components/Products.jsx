@@ -1,34 +1,89 @@
 import React from 'react';
 
 const Products = () => {
-  const productImages = [
-    'kagurabachi.PNG',
-    'shoes2.png',
-    'shoes3.png',
-    'shoes4.png',
-    'shoes5.png',
-    'shoes6.png',
-    'shoes7.png',
-    'shoes8.png',
+  const products = [
+    {
+      id: 1,
+      name: 'KAGURABACHI',
+      description: 'Lorem ipsum dolor sit, amet consectetur adipisicing elit.',
+      price: 140.00,
+      image: '1.png',
+    },
+    {
+      id: 2,
+      name: 'ONE PIECE 104',
+      description: 'Lorem ipsum dolor sit, amet consectetur adipisicing elit.',
+      price: 120.00,
+      image: '3.png',
+    },
+    {
+      id: 3,
+      name: 'SAKAMOTO DAYS 1',
+      description: 'Lorem ipsum dolor sit, amet consectetur adipisicing elit.',
+      price: 140.00,
+      image: '5.png',
+    },
+    {
+      id: 4,
+      name: 'SAKAMOTO DAYS 16',
+      description: 'Lorem ipsum dolor sit, amet consectetur adipisicing elit.',
+      price: 160.00,
+      image: '6.png',
+    },
+    {
+      id: 5,
+      name: 'JUJUTSU KAISEN 28',
+      description: 'Lorem ipsum dolor sit, amet consectetur adipisicing elit.',
+      price: 180.00,
+      image: '7.png',
+    },
+    {
+      id: 6,
+      name: 'MY HERO ACADEMIA 41',
+      description: 'Lorem ipsum dolor sit, amet consectetur adipisicing elit.',
+      price: 200.00,
+      image: '8.png',
+    },
+    {
+      id: 7,
+      name: 'KAIJU NO.8 12',
+      description: 'Lorem ipsum dolor sit, amet consectetur adipisicing elit.',
+      price: 220.00,
+      image: '9.png',
+    },
+    {
+      id: 8,
+      name: 'KAIJU NO.8 8',
+      description: 'Lorem ipsum dolor sit, amet consectetur adipisicing elit.',
+      price: 240.00,
+      image: '10.png',
+    },
+    {
+      id: 9,
+      name: 'JUJUTSU KAISEN 26',
+      description: 'Lorem ipsum dolor sit, amet consectetur adipisicing elit.',
+      price: 260.00,
+      image: '11.png',
+    },
   ];
 
   return (
     <div className="products" id="Products">
       <h1>PRODUCTS</h1>
       <div className="box">
-        {productImages.map((image, index) => (
-          <div className="card" key={index}>
+        {products.map((product) => (
+          <div className="card" key={product.id}>
             <div className="small_card">
               <i className="fa-solid fa-heart"></i>
               <i className="fa-solid fa-share"></i>
             </div>
             <div className="image">
-              <img src={`./src/img/${image}`} alt={`Product ${index + 1}`} />
+              <img src={`./src/img/${product.image}`} alt={`Product ${product.id}`} />
             </div>
             <div className="products_text">
-              <h2>NIKE</h2>
-              <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit.</p>
-              <h3>${(100 + index * 20).toFixed(2)}</h3>
+              <h2>{product.name}</h2>
+              <p>{product.description}</p>
+              <h3>${product.price.toFixed(2)}</h3>
               <div className="products_star">
                 {[...Array(5)].map((_, starIndex) => (
                   <i
