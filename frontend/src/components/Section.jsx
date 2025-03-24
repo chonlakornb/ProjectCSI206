@@ -1,38 +1,14 @@
 import React from 'react';
+import Navbar from './Navbar'; // Import Navbar component
 
 const Section = () => {
   return (
     <section>
-      <nav>
-        <div className="logo">
-          <h1>BOOK<span></span></h1>
-        </div>
-        <ul>
-          <li><a href="#Home">Home</a></li>
-          <li><a href="#Products">Products</a></li>
-          <li><a href="#Favorites">Favorites</a></li>
-          <li><a href="#Notifications">Notifications</a></li>
-          <li><a href="#Recommendations">Recommendations</a></li>
-          <li><a href="#Reviews">Reviews</a></li>
-        </ul>
-
-        <div className="search-container">
-          <input type="text" placeholder="Search..." className="search-input" />
-          <button className="search-btn">
-            <i className="fa-solid fa-magnifying-glass"></i> Search
-          </button>
-        </div>
-
-        <div className="icons">
-          <i className="fa-solid fa-heart"></i>
-          <i className="fa-solid fa-cart-shopping"></i>
-          <i className="fa-solid fa-user"></i>
-        </div>
-      </nav>
+      <Navbar /> {/* Use Navbar component */}
       <div className="main" id="Home">
         <div className="main_content">
           <div className="main_image">
-            <img src="./src/img/4.jpeg" alt="" />
+            <img src="./src/img/4.PNG" alt="" />
             <img src="./src/img/2.png" alt="" />
             {/* <img src="./src/img/kagurabachi.PNG" alt="Nike Shoes" /> */}
           </div>

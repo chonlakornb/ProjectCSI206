@@ -20,7 +20,7 @@ const Products = () => {
     },
     {
       id: 3,
-      name: 'SAKAMOTO DAYS 1',
+      name: 'SAKAMOTO DAYS ',
       description: 'Lorem ipsum dolor sit, amet consectetur adipisicing elit.',
       price: 140.00,
       image: '5.png',
@@ -41,7 +41,7 @@ const Products = () => {
     },
     {
       id: 6,
-      name: 'MY HERO ACADEMIA 41',
+      name: 'MY HERO ACADEMIA ',
       description: 'Lorem ipsum dolor sit, amet consectetur adipisicing elit.',
       price: 200.00,
       image: '8.png',
@@ -71,6 +71,10 @@ const Products = () => {
 
   const [message, setMessage] = useState('');
   const navigate = useNavigate(); // Initialize useNavigate
+
+  const handleViewProduct = (product) => {
+    navigate('/view', { state: { product: { ...product, image: `/src/img/${product.image}` } } }); // Pass full image path
+  };
 
   const handleAddToFavorites = async (product) => {
     try {
@@ -127,7 +131,12 @@ const Products = () => {
                 ))}
               </div>
               <div className="button-group">
-                <a href="#" className="btn">Add To Cart</a>
+                <button
+                  className="btn"
+                  onClick={() => handleViewProduct(product)} // Navigate to ViewPage
+                >
+                  View
+                </button>
                 <button
                   className="favorite-btn"
                   onClick={() => handleAddToFavorites(product)}

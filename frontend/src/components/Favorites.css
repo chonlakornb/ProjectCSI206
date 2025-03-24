@@ -2,6 +2,7 @@
   padding: 2rem;
   background-color: #f9f9f9;
   min-height: 100vh;
+  margin-top: 2rem; /* เพิ่มระยะห่างด้านบน */
 }
 
 .favorites-container h1 {
@@ -17,13 +18,16 @@
   margin-bottom: 1rem;
 }
 
-.favorites-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+.favorites-row {
+  display: flex;
+  overflow-x: auto;
   gap: 1.5rem;
+  padding: 1rem 0;
 }
 
 .favorite-card {
+  flex: 0 0 auto;
+  width: 250px;
   background: white;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);

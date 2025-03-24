@@ -1,0 +1,130 @@
+/* General Styles */
+body {
+  font-family: 'Roboto', sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f9f9f9;
+}
+
+.view-page {
+  padding-top: 70px; /* To account for the fixed navbar */
+}
+
+/* Product Details */
+.product-details {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2rem;
+  gap: 2rem;
+}
+
+.product-card img {
+  width: 400px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.product-info {
+  flex: 1;
+}
+
+.product-info h1 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  color: #333;
+}
+
+.product-info p {
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+  color: #555;
+}
+
+.product-info h2 {
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  color: #c72092;
+}
+
+.add-to-cart-btn {
+  padding: 0.8rem 2rem;
+  background: linear-gradient(to right, #c72092, #6c14d0);
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background 0.3s;
+}
+
+.add-to-cart-btn:hover {
+  background: linear-gradient(to right, #6c14d0, #c72092);
+}
+
+/* Recommended Products */
+.recommended-products {
+  padding: 2rem;
+}
+
+.recommended-products h2 {
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  color: #333;
+}
+
+.recommended-grid {
+  display: flex; /* Changed from grid to flex for horizontal layout */
+  gap: 1.5rem;
+  overflow-x: auto; /* Allow horizontal scrolling if content overflows */
+  padding-bottom: 1rem; /* Add padding for better spacing */
+}
+
+.recommended-card {
+  flex: 0 0 auto; /* Prevent shrinking and set a fixed width */
+  width: 200px; /* Set a fixed width for each card */
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 1rem;
+  text-align: center;
+  transition: transform 0.3s;
+}
+
+.recommended-card:hover {
+  transform: translateY(-5px);
+}
+
+.recommended-card img {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 10px;
+  margin-bottom: 1rem;
+}
+
+.recommended-card h3 {
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+  color: #333;
+}
+
+.recommended-card p {
+  color: #777;
+  margin-bottom: 1rem;
+}
+
+.view-btn {
+  padding: 0.5rem 1rem;
+  background: linear-gradient(to right, #c72092, #6c14d0);
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.view-btn:hover {
+  background: linear-gradient(to right, #6c14d0, #c72092);
+}
