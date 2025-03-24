@@ -6,57 +6,6 @@ section {
   background-position: center;
 }
 
-section nav {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 1rem 2rem;
-  background: white;
-  box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 100;
-}
-
-section nav .logo h1 {
-  font-size: 2rem;
-  color: #000000;
-}
-
-section nav .logo span {
-  color: #4e425c;
-  text-decoration: underline;
-}
-
-section nav ul {
-  list-style: none;
-  display: flex;
-  gap: 1.5rem;
-}
-
-section nav ul li a {
-  text-decoration: none;
-  color: black;
-  transition: color 0.3s;
-}
-
-section nav ul li a:hover {
-  color: #c72092;
-}
-
-section nav .icons i {
-  margin-left: 1rem;
-  font-size: 1.2rem;
-  cursor: pointer;
-  transition: color 0.3s;
-}
-
-section nav .icons i:hover {
-  color: #c72092;
-}
-
 .main {
   display: flex;
   align-items: center;

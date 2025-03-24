@@ -1,57 +1,52 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import React, { useState } from 'react';
+import Navbar from './Navbar'; // นำเข้า Navbar
 import './Favorites.css';
 
 const Favorites = () => {
-  const [favorites, setFavorites] = useState([]);
-  const [message, setMessage] = useState('');
+  const [favorites, setFavorites] = useState([
+    {
+      id: 1,
+      title: 'KAGURABACHI',
+      author: 'Lorem ipsum dolor sit amet.',
+      cover_image: '/src/img/1.png',
+    },
+    {
+      id: 8,
+      title: 'KAIJU NO.8 8',
+      author: 'Lorem ipsum dolor sit, amet ',
+      cover_image: '/src/img/10.png',
+    },
+    {
+      id: 3,
+      title: 'SAKAMOTO DAYS ',
+      author: 'Lorem ipsum dolor sit amet.',
+      cover_image: '/src/img/5.png',
+    },
+  ]);
 
-  useEffect(() => {
-    const fetchFavorites = async () => {
-      try {
-        const response = await axios.get('http://localhost:3000/api/favorites', {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`, // Assuming token is stored in localStorage
-          },
-        });
-        setFavorites(response.data);
-      } catch (error) {
-        setMessage(error.response?.data?.message || 'Failed to fetch favorites.');
-      }
-    };
-
-    fetchFavorites();
-  }, []);
-
-  const handleRemoveFavorite = async (bookId) => {
-    try {
-      await axios.delete(`http://localhost:3000/api/favorites/${bookId}`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
-        },
-      });
-      setFavorites(favorites.filter((favorite) => favorite.book._id !== bookId));
-      setMessage('Book removed from favorites.');
-    } catch (error) {
-      setMessage(error.response?.data?.message || 'Failed to remove favorite.');
-    }
+  const handleRemoveFavorite = (id) => {
+    setFavorites(favorites.filter((favorite) => favorite.id !== id));
   };
 
   return (
-    <div className="favorites-container">
-      <h1>Your Favorites</h1>
-      {message && <p className="message">{message}</p>}
-      <div className="favorites-grid">
-        {favorites.map((favorite) => (
-          <div className="favorite-card" key={favorite.book._id}>
-            <img src={favorite.book.cover_image} alt={favorite.book.title} />
-            <h2>{favorite.book.title}</h2>
-            <p>{favorite.book.author}</p>
-            <button onClick={() => handleRemoveFavorite(favorite.book._id)}>
-              Remove from Favorites
-            </button>
-          </div>
-        ))}
+    <div className="favorites-page">
+      {/* เพิ่ม Navbar ที่นี่ */}
+      <Navbar />  
+      
+      <div className="favorites-container" id="Favorites">
+        <h1>YOUR FAVORITES</h1>
+        <div className="favorites-row">
+          {favorites.map((favorite) => (
+            <div className="favorite-card" key={favorite.id}>
+              <img src={favorite.cover_image} alt={favorite.title} />
+              <h2>{favorite.title}</h2>
+              <p>{favorite.author}</p>
+              <button onClick={() => handleRemoveFavorite(favorite.id)}>
+                Remove from Favorites
+              </button>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
