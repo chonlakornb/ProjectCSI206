@@ -9,10 +9,11 @@ const router = express.Router();
  * /api/categories:
  *   get:
  *     summary: Get all categories
+ *     description: Retrieve a list of all book categories.
  *     tags: [Categories]
  *     responses:
  *       200:
- *         description: List of categories
+ *         description: List of categories.
  */
 router.get('/categories', getAllCategories);
 
@@ -21,6 +22,7 @@ router.get('/categories', getAllCategories);
  * /api/categories:
  *   post:
  *     summary: Add a new category
+ *     description: Add a new book category. Only accessible by admin users.
  *     tags: [Categories]
  *     security:
  *       - bearerAuth: []
@@ -33,11 +35,12 @@ router.get('/categories', getAllCategories);
  *             properties:
  *               name:
  *                 type: string
+ *                 description: The name of the category.
  *     responses:
  *       201:
- *         description: Category added successfully
+ *         description: Category added successfully.
  *       401:
- *         description: Unauthorized
+ *         description: Unauthorized.
  */
 router.post('/categories', authMiddleware, adminMiddleware, addCategory);
 
@@ -46,6 +49,7 @@ router.post('/categories', authMiddleware, adminMiddleware, addCategory);
  * /api/categories/{id}:
  *   put:
  *     summary: Update a category by ID
+ *     description: Update the name of a book category by its ID. Only accessible by admin users.
  *     tags: [Categories]
  *     security:
  *       - bearerAuth: []
@@ -55,7 +59,7 @@ router.post('/categories', authMiddleware, adminMiddleware, addCategory);
  *         schema:
  *           type: string
  *         required: true
- *         description: Category ID
+ *         description: The ID of the category.
  *     requestBody:
  *       required: true
  *       content:
@@ -65,13 +69,14 @@ router.post('/categories', authMiddleware, adminMiddleware, addCategory);
  *             properties:
  *               name:
  *                 type: string
+ *                 description: The new name of the category.
  *     responses:
  *       200:
- *         description: Category updated successfully
+ *         description: Category updated successfully.
  *       401:
- *         description: Unauthorized
+ *         description: Unauthorized.
  *       404:
- *         description: Category not found
+ *         description: Category not found.
  */
 router.put('/categories/:id', authMiddleware, adminMiddleware, updateCategoryById);
 
@@ -80,6 +85,7 @@ router.put('/categories/:id', authMiddleware, adminMiddleware, updateCategoryByI
  * /api/categories/{id}:
  *   delete:
  *     summary: Delete a category by ID
+ *     description: Delete a book category by its ID. Only accessible by admin users.
  *     tags: [Categories]
  *     security:
  *       - bearerAuth: []
@@ -89,14 +95,14 @@ router.put('/categories/:id', authMiddleware, adminMiddleware, updateCategoryByI
  *         schema:
  *           type: string
  *         required: true
- *         description: Category ID
+ *         description: The ID of the category.
  *     responses:
  *       200:
- *         description: Category deleted successfully
+ *         description: Category deleted successfully.
  *       401:
- *         description: Unauthorized
+ *         description: Unauthorized.
  *       404:
- *         description: Category not found
+ *         description: Category not found.
  */
 router.delete('/categories/:id', authMiddleware, adminMiddleware, deleteCategoryById);
 
