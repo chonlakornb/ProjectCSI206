@@ -1,4 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import axios from 'axios';
 
 const Products = () => {
   const products = [
@@ -67,9 +69,39 @@ const Products = () => {
     },
   ];
 
+  const [message, setMessage] = useState('');
+  const navigate = useNavigate(); // Initialize useNavigate
+
+  const handleAddToFavorites = async (product) => {
+    try {
+      await axios.post(
+        'http://localhost:3000/api/favorites',
+        {
+          book_id: product.id,
+          title: product.name,
+          author: product.description,
+          cover_image: `/src/img/${product.image}`,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+        }
+      );
+      setMessage(`${product.name} added to favorites!`);
+      setTimeout(() => {
+        setMessage('');
+        navigate('/favorites'); // Navigate to the Favorites page immediately
+      }, 500); // Redirect after 0.5 seconds
+    } catch (error) {
+      setMessage(error.response?.data?.message || 'Failed to add to favorites.');
+    }
+  };
+
   return (
     <div className="products" id="Products">
       <h1>PRODUCTS</h1>
+      {message && <p className="message">{message}</p>}
       <div className="box">
         {products.map((product) => (
           <div className="card" key={product.id}>
@@ -94,7 +126,15 @@ const Products = () => {
                   ></i>
                 ))}
               </div>
-              <a href="#" className="btn">Add To Cart</a>
+              <div className="button-group">
+                <a href="#" className="btn">Add To Cart</a>
+                <button
+                  className="favorite-btn"
+                  onClick={() => handleAddToFavorites(product)}
+                >
+                  Add to Favorites
+                </button>
+              </div>
             </div>
           </div>
         ))}

@@ -2,6 +2,7 @@ import React from 'react';
 import './NikePage.css';
 import Section from './Section';
 import Products from './Products';
+import Favorites from './Favorites'; // Import Favorites component
 import About from './About';
 import Review from './Review';
 import Services from './Services';
@@ -12,6 +13,7 @@ const NikePage = () => {
     <div>
       <Section />
       <Products />
+      <Favorites /> {/* Add Favorites component */}
       {/* <About /> */}
       {/* <Review />
       <Services /> */}

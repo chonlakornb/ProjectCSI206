@@ -68,3 +68,29 @@
 .products .btn:hover {
   background: linear-gradient(to right, #6c14d0, #c72092);
 }
+
+.message {
+  text-align: center;
+  color: #c72092;
+  margin-bottom: 1rem;
+}
+
+.button-group {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.favorite-btn {
+  padding: 0.5rem 1rem;
+  background: linear-gradient(to right, #ff7f50, #ff4500);
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.favorite-btn:hover {
+  background: linear-gradient(to right, #ff4500, #ff7f50);
+}
