@@ -1,15 +1,21 @@
 .favorites-container {
-  padding: 2rem;
-  background-color: #f9f9f9;
-  min-height: 100vh;
-  margin-top: 2rem; /* เพิ่มระยะห่างด้านบน */
-}
+    padding: 2rem;
+    background-color: #f9f9f9;
+    min-height: 100vh;
+    margin-top: 2rem; /* เพิ่มระยะห่างด้านบน */
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* จัดกลางในแนวนอน */
+    justify-content: center; /* จัดกลางในแนวตั้ง */
+    text-align: center; /* ทำให้ข้อความอยู่กลาง */
+  }
 
 .favorites-container h1 {
   text-align: center;
   font-size: 2.5rem;
   margin-bottom: 1.5rem;
-  color: #333;
+  color: #960f0f;
 }
 
 .message {
