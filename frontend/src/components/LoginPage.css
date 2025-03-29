@@ -3,30 +3,55 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 100vh;
-  background-color: #f9f9f9;
+  height: 60vh; /* ความสูง 60% ของหน้าจอ */
+  padding: 6rem; /* เพิ่มช่องว่างรอบๆ ให้ดูไม่หนาเกินไป */
+  background-color: #ffffff; /* ใช้พื้นหลังสีขาว */
+  font-family: 'Arial', sans-serif;
+  border-radius: 15px; /* เพิ่มมุมมนให้ดูนุ่มนวล */
+  box-sizing: border-box;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); /* เพิ่มเงาให้ดูลอย */
+  max-width: 400px; /* จำกัดความกว้างให้เหมาะสม */
+  width: 100%; /* กำหนดให้กว้างเต็มพื้นที่ที่มี */
+  margin: 0 auto; /* จัดกึ่งกลางในแนวนอน */
 }
 
+
 .login-container h1 {
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
+  font-size: 2rem;
+  font-weight: bold;
+  color: #333;
+  text-align: center; /* จัดข้อความให้กึ่งกลาง */
 }
 
 .login-container input {
-  margin: 0.5rem 0;
-  padding: 0.5rem;
-  width: 300px;
+  margin: 0.75rem 0;
+  padding: 0.75rem;
+  width: 100%;
   border: 1px solid #ccc;
-  border-radius: 5px;
+  border-radius: 10px;
+  font-size: 1rem;
+  outline: none;
+  transition: all 0.3s ease-in-out;
+  box-sizing: border-box; /* ทำให้ input ขยายตามพื้นที่ที่มี */
+}
+
+.login-container input:focus {
+  border-color: #6c14d0;
+  box-shadow: 0 0 8px rgba(108, 20, 208, 0.4);
 }
 
 .login-container button {
-  margin: 0.5rem 0;
-  padding: 0.5rem 1rem;
+  margin: 1rem 0;
+  padding: 0.75rem 1.5rem;
   background-color: #6c14d0;
   color: white;
   border: none;
-  border-radius: 5px;
+  border-radius: 10px;
   cursor: pointer;
+  font-size: 1rem;
+  width: 100%; /* ให้ปุ่มขยายเต็มพื้นที่ */
+  transition: background-color 0.3s ease;
 }
 
 .login-container button:hover {
@@ -39,4 +64,10 @@
   border: none;
   cursor: pointer;
   text-decoration: underline;
+  font-size: 1rem;
+  transition: color 0.3s ease;
+}
+
+.switch-button:hover {
+  color: #c72092;
 }
