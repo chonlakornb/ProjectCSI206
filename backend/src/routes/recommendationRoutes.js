@@ -8,16 +8,16 @@ const router = express.Router();
  * @swagger
  * /api/recommendations:
  *   get:
- *     summary: Get user's recommendations
- *     description: Retrieve a list of book recommendations for the currently authenticated user.
+ *     summary: ดึงรายการหนังสือแนะนำของผู้ใช้
+ *     description: ดึงรายการหนังสือที่แนะนำสำหรับผู้ใช้ที่เข้าสู่ระบบ
  *     tags: [Recommendations]
  *     security:
  *       - bearerAuth: []
  *     responses:
  *       200:
- *         description: List of recommendations.
+ *         description: รายการหนังสือแนะนำ
  *       401:
- *         description: Unauthorized.
+ *         description: ไม่มีสิทธิ์เข้าถึง
  */
 router.get('/recommendations', authMiddleware, getRecommendations);
 
@@ -25,8 +25,8 @@ router.get('/recommendations', authMiddleware, getRecommendations);
  * @swagger
  * /api/recommendations:
  *   post:
- *     summary: Add a recommendation
- *     description: Add a new book recommendation for the currently authenticated user.
+ *     summary: เพิ่มคำแนะนำหนังสือ
+ *     description: เพิ่มคำแนะนำหนังสือใหม่สำหรับผู้ใช้ที่เข้าสู่ระบบ
  *     tags: [Recommendations]
  *     security:
  *       - bearerAuth: []
@@ -39,15 +39,15 @@ router.get('/recommendations', authMiddleware, getRecommendations);
  *             properties:
  *               book_id:
  *                 type: string
- *                 description: The ID of the recommended book.
+ *                 description: รหัส ID ของหนังสือที่แนะนำ
  *               reason:
  *                 type: string
- *                 description: The reason for the recommendation.
+ *                 description: เหตุผลที่แนะนำหนังสือเล่มนี้
  *     responses:
  *       201:
- *         description: Recommendation added successfully.
+ *         description: เพิ่มคำแนะนำสำเร็จ
  *       401:
- *         description: Unauthorized.
+ *         description: ไม่มีสิทธิ์เข้าถึง
  */
 router.post('/recommendations', authMiddleware, addRecommendation);
 
@@ -55,8 +55,8 @@ router.post('/recommendations', authMiddleware, addRecommendation);
  * @swagger
  * /api/recommendations/{id}:
  *   delete:
- *     summary: Delete a recommendation by ID
- *     description: Delete a book recommendation by its ID.
+ *     summary: ลบคำแนะนำหนังสือโดยใช้ ID
+ *     description: ลบคำแนะนำหนังสือออกจากระบบโดยใช้รหัส ID
  *     tags: [Recommendations]
  *     security:
  *       - bearerAuth: []
@@ -66,15 +66,16 @@ router.post('/recommendations', authMiddleware, addRecommendation);
  *         schema:
  *           type: string
  *         required: true
- *         description: The ID of the recommendation.
+ *         description: รหัส ID ของคำแนะนำหนังสือ
  *     responses:
  *       200:
- *         description: Recommendation deleted successfully.
+ *         description: ลบคำแนะนำสำเร็จ
  *       401:
- *         description: Unauthorized.
+ *         description: ไม่มีสิทธิ์เข้าถึง
  *       404:
- *         description: Recommendation not found.
+ *         description: ไม่พบคำแนะนำที่ต้องการลบ
  */
 router.delete('/recommendations/:id', authMiddleware, deleteRecommendationById);
+
 
 export default router;

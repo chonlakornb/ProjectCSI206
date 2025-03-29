@@ -8,12 +8,12 @@ const router = express.Router();
  * @swagger
  * /api/users:
  *   get:
- *     summary: Get all users
- *     description: Retrieve a list of all registered users.
+ *     summary: ดึงรายชื่อผู้ใช้ทั้งหมด
+ *     description: ดึงรายชื่อของผู้ใช้ที่ลงทะเบียนทั้งหมดในระบบ
  *     tags: [Users]
  *     responses:
  *       200:
- *         description: List of users.
+ *         description: รายชื่อผู้ใช้ทั้งหมด
  */
 router.get('/users', getUsers);
 
@@ -21,16 +21,16 @@ router.get('/users', getUsers);
  * @swagger
  * /api/users/me:
  *   get:
- *     summary: Get user profile
- *     description: Retrieve the profile of the currently authenticated user.
+ *     summary: ดึงข้อมูลโปรไฟล์ผู้ใช้
+ *     description: ดึงข้อมูลโปรไฟล์ของผู้ใช้ที่เข้าสู่ระบบในขณะนั้น
  *     tags: [Users]
  *     security:
  *       - bearerAuth: []
  *     responses:
  *       200:
- *         description: User profile.
+ *         description: ข้อมูลโปรไฟล์ผู้ใช้
  *       401:
- *         description: Unauthorized.
+ *         description: ไม่มีสิทธิ์เข้าถึง
  */
 router.get('/users/me', authMiddleware, getUserProfile);
 
@@ -38,8 +38,8 @@ router.get('/users/me', authMiddleware, getUserProfile);
  * @swagger
  * /api/users/me:
  *   put:
- *     summary: Update user profile
- *     description: Update the profile of the currently authenticated user. Fields that can be updated include username, password, and role.
+ *     summary: อัปเดตโปรไฟล์ผู้ใช้
+ *     description: อัปเดตข้อมูลโปรไฟล์ของผู้ใช้ที่เข้าสู่ระบบ ข้อมูลที่สามารถอัปเดตได้ ได้แก่ ชื่อผู้ใช้ รหัสผ่าน และบทบาท
  *     tags: [Users]
  *     security:
  *       - bearerAuth: []
@@ -52,18 +52,18 @@ router.get('/users/me', authMiddleware, getUserProfile);
  *             properties:
  *               username:
  *                 type: string
- *                 description: The new username for the user.
+ *                 description: ชื่อผู้ใช้ใหม่ของผู้ใช้
  *               password:
  *                 type: string
- *                 description: The new password for the user.
+ *                 description: รหัสผ่านใหม่ของผู้ใช้
  *               role:
  *                 type: string
- *                 description: The new role for the user.
+ *                 description: บทบาทใหม่ของผู้ใช้
  *     responses:
  *       200:
- *         description: User profile updated successfully.
+ *         description: อัปเดตโปรไฟล์ผู้ใช้สำเร็จ
  *       401:
- *         description: Unauthorized.
+ *         description: ไม่มีสิทธิ์เข้าถึง
  */
 router.put('/users/me', authMiddleware, updateUserProfile);
 
@@ -71,17 +71,18 @@ router.put('/users/me', authMiddleware, updateUserProfile);
  * @swagger
  * /api/users/me:
  *   delete:
- *     summary: Delete user profile
- *     description: Delete the profile of the currently authenticated user.
+ *     summary: ลบโปรไฟล์ผู้ใช้
+ *     description: ลบบัญชีผู้ใช้ของผู้ใช้ที่เข้าสู่ระบบในขณะนั้น
  *     tags: [Users]
  *     security:
  *       - bearerAuth: []
  *     responses:
  *       200:
- *         description: User account deleted successfully.
+ *         description: ลบบัญชีผู้ใช้สำเร็จ
  *       401:
- *         description: Unauthorized.
+ *         description: ไม่มีสิทธิ์เข้าถึง
  */
 router.delete('/users/me', authMiddleware, deleteUserProfile);
+
 
 export default router;

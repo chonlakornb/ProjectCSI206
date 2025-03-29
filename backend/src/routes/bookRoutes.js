@@ -13,7 +13,7 @@ const router = express.Router();
  *     tags: [Books]
  *     responses:
  *       200:
- *         description: รายการหนังสือทั้งหมด
+ *         description: รายการหนังสือ
  */
 router.get('/books', getAllBooks);
 
@@ -41,23 +41,23 @@ router.get('/books/search', searchBooks);
  * @swagger
  * /api/books/filter:
  *   get:
- *     summary: Filter หนังสือ
- *     description: Filter หนังสือตามหมวดหมู่ และ/หรือ ปีที่ตีพิมพ์
+ *     summary: คัดกรองหนังสือ
+ *     description: คัดกรองหนังสือตามหมวดหมู่ และ/หรือ ปีที่ตีพิมพ์
  *     tags: [Books]
  *     parameters:
  *       - in: query
  *         name: category
  *         schema:
  *           type: string
- *         description: The category to filter by.
+ *         description: หมวดหมู่ที่ต้องการคัดกรอง
  *       - in: query
  *         name: year
  *         schema:
  *           type: number
- *         description: The published year to filter by.
+ *         description: ปีที่ตีพิมพ์ที่ต้องการคัดกรอง
  *     responses:
  *       200:
- *         description: List of books matching the filter criteria.
+ *         description: รายการหนังสือที่ตรงกับเกณฑ์การคัดกรอง
  */
 router.get('/books/filter', filterBooks);
 
@@ -65,8 +65,8 @@ router.get('/books/filter', filterBooks);
  * @swagger
  * /api/books/{id}:
  *   get:
- *     summary: Get a book by ID
- *     description: Retrieve the details of a book by its ID.
+ *     summary: รับรายละเอียดหนังสือโดยใช้ ID
+ *     description: ดึงรายละเอียดของหนังสือโดยใช้ ID
  *     tags: [Books]
  *     parameters:
  *       - in: path
@@ -74,12 +74,12 @@ router.get('/books/filter', filterBooks);
  *         schema:
  *           type: string
  *         required: true
- *         description: The ID of the book.
+ *         description: รหัส ID ของหนังสือ
  *     responses:
  *       200:
- *         description: Book details.
+ *         description: รายละเอียดหนังสือ
  *       404:
- *         description: Book not found.
+ *         description: ไม่พบบันทึกของหนังสือ
  */
 router.get('/books/:id', getBookById);
 
@@ -87,8 +87,8 @@ router.get('/books/:id', getBookById);
  * @swagger
  * /api/books:
  *   post:
- *     summary: Add a new book
- *     description: Add a new book to the catalog. Only accessible by admin users.
+ *     summary: เพิ่มหนังสือใหม่
+ *     description: เพิ่มหนังสือใหม่ลงในแคตตาล็อก ฟังก์ชันนี้สามารถใช้งานได้เฉพาะผู้ดูแลระบบ (admin) เท่านั้น
  *     tags: [Books]
  *     security:
  *       - bearerAuth: []
@@ -101,33 +101,33 @@ router.get('/books/:id', getBookById);
  *             properties:
  *               title:
  *                 type: string
- *                 description: The title of the book.
+ *                 description: ชื่อหนังสือ
  *               isbn:
  *                 type: string
- *                 description: The ISBN of the book.
+ *                 description: หมายเลข ISBN ของหนังสือ
  *               author:
  *                 type: string
- *                 description: The author of the book.
+ *                 description: ผู้แต่งหนังสือ
  *               publisher:
  *                 type: string
- *                 description: The publisher of the book.
+ *                 description: สำนักพิมพ์ของหนังสือ
  *               published_year:
  *                 type: number
- *                 description: The published year of the book.
+ *                 description: ปีที่ตีพิมพ์ของหนังสือ
  *               category:
  *                 type: string
- *                 description: The category of the book.
+ *                 description: หมวดหมู่ของหนังสือ
  *               cover_image:
  *                 type: string
- *                 description: The URL of the cover image of the book.
+ *                 description: URL ของภาพปกหนังสือ
  *               pdf_file:
  *                 type: string
- *                 description: The URL of the PDF file of the book.
+ *                 description: URL ของไฟล์ PDF หนังสือ
  *     responses:
  *       201:
- *         description: Book added successfully.
+ *         description: เพิ่มหนังสือสำเร็จ
  *       401:
- *         description: Unauthorized.
+ *         description: ไม่มีสิทธิ์เข้าถึง
  */
 router.post('/books', authMiddleware, adminMiddleware, addBook);
 
@@ -135,8 +135,8 @@ router.post('/books', authMiddleware, adminMiddleware, addBook);
  * @swagger
  * /api/books/{id}:
  *   put:
- *     summary: Update a book by ID
- *     description: Update the details of a book by its ID. Only accessible by admin users.
+ *     summary: อัปเดตหนังสือโดยใช้ ID
+ *     description: อัปเดตรายละเอียดของหนังสือโดยใช้ ID ฟังก์ชันนี้สามารถใช้งานได้เฉพาะผู้ดูแลระบบ (admin) เท่านั้น
  *     tags: [Books]
  *     security:
  *       - bearerAuth: []
@@ -146,7 +146,7 @@ router.post('/books', authMiddleware, adminMiddleware, addBook);
  *         schema:
  *           type: string
  *         required: true
- *         description: The ID of the book.
+ *         description: รหัส ID ของหนังสือ
  *     requestBody:
  *       required: true
  *       content:
@@ -156,35 +156,35 @@ router.post('/books', authMiddleware, adminMiddleware, addBook);
  *             properties:
  *               title:
  *                 type: string
- *                 description: The title of the book.
+ *                 description: ชื่อหนังสือ
  *               isbn:
  *                 type: string
- *                 description: The ISBN of the book.
+ *                 description: หมายเลข ISBN ของหนังสือ
  *               author:
  *                 type: string
- *                 description: The author of the book.
+ *                 description: ผู้แต่งหนังสือ
  *               publisher:
  *                 type: string
- *                 description: The publisher of the book.
+ *                 description: สำนักพิมพ์ของหนังสือ
  *               published_year:
  *                 type: number
- *                 description: The published year of the book.
+ *                 description: ปีที่ตีพิมพ์ของหนังสือ
  *               category:
  *                 type: string
- *                 description: The category of the book.
+ *                 description: หมวดหมู่ของหนังสือ
  *               cover_image:
  *                 type: string
- *                 description: The URL of the cover image of the book.
+ *                 description: URL ของภาพปกหนังสือ
  *               pdf_file:
  *                 type: string
- *                 description: The URL of the PDF file of the book.
+ *                 description: URL ของไฟล์ PDF หนังสือ
  *     responses:
  *       200:
- *         description: Book updated successfully.
+ *         description: อัปเดตหนังสือสำเร็จ
  *       401:
- *         description: Unauthorized.
+ *         description: ไม่มีสิทธิ์เข้าถึง
  *       404:
- *         description: Book not found.
+ *         description: ไม่พบบันทึกของหนังสือ
  */
 router.put('/books/:id', authMiddleware, adminMiddleware, updateBookById);
 
@@ -192,8 +192,8 @@ router.put('/books/:id', authMiddleware, adminMiddleware, updateBookById);
  * @swagger
  * /api/books/{id}:
  *   delete:
- *     summary: Delete a book by ID
- *     description: Delete a book from the catalog by its ID. Only accessible by admin users.
+ *     summary: ลบหนังสือโดยใช้ ID
+ *     description: ลบหนังสือออกจากแคตตาล็อกโดยใช้ ID ฟังก์ชันนี้สามารถใช้งานได้เฉพาะผู้ดูแลระบบ (admin) เท่านั้น
  *     tags: [Books]
  *     security:
  *       - bearerAuth: []
@@ -203,15 +203,16 @@ router.put('/books/:id', authMiddleware, adminMiddleware, updateBookById);
  *         schema:
  *           type: string
  *         required: true
- *         description: The ID of the book.
+ *         description: รหัส ID ของหนังสือ
  *     responses:
  *       200:
- *         description: Book deleted successfully.
+ *         description: ลบหนังสือสำเร็จ
  *       401:
- *         description: Unauthorized.
+ *         description: ไม่มีสิทธิ์เข้าถึง
  *       404:
- *         description: Book not found.
+ *         description: ไม่พบบันทึกของหนังสือ
  */
 router.delete('/books/:id', authMiddleware, adminMiddleware, deleteBookById);
+
 
 export default router;

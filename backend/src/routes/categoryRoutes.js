@@ -8,12 +8,12 @@ const router = express.Router();
  * @swagger
  * /api/categories:
  *   get:
- *     summary: Get all categories
- *     description: Retrieve a list of all book categories.
+ *     summary: รับรายการหมวดหมู่ทั้งหมด
+ *     description: ดึงรายการหมวดหมู่ของหนังสือทั้งหมด
  *     tags: [Categories]
  *     responses:
  *       200:
- *         description: List of categories.
+ *         description: รายการหมวดหมู่หนังสือ
  */
 router.get('/categories', getAllCategories);
 
@@ -21,8 +21,8 @@ router.get('/categories', getAllCategories);
  * @swagger
  * /api/categories:
  *   post:
- *     summary: Add a new category
- *     description: Add a new book category. Only accessible by admin users.
+ *     summary: เพิ่มหมวดหมู่ใหม่
+ *     description: เพิ่มหมวดหมู่หนังสือใหม่ สามารถใช้งานได้เฉพาะผู้ดูแลระบบ (admin) เท่านั้น
  *     tags: [Categories]
  *     security:
  *       - bearerAuth: []
@@ -35,12 +35,12 @@ router.get('/categories', getAllCategories);
  *             properties:
  *               name:
  *                 type: string
- *                 description: The name of the category.
+ *                 description: ชื่อของหมวดหมู่
  *     responses:
  *       201:
- *         description: Category added successfully.
+ *         description: เพิ่มหมวดหมู่สำเร็จ
  *       401:
- *         description: Unauthorized.
+ *         description: ไม่มีสิทธิ์เข้าถึง
  */
 router.post('/categories', authMiddleware, adminMiddleware, addCategory);
 
@@ -48,8 +48,8 @@ router.post('/categories', authMiddleware, adminMiddleware, addCategory);
  * @swagger
  * /api/categories/{id}:
  *   put:
- *     summary: Update a category by ID
- *     description: Update the name of a book category by its ID. Only accessible by admin users.
+ *     summary: อัปเดตหมวดหมู่โดยใช้ ID
+ *     description: อัปเดตชื่อของหมวดหมู่หนังสือโดยใช้ ID ฟังก์ชันนี้สามารถใช้งานได้เฉพาะผู้ดูแลระบบ (admin) เท่านั้น
  *     tags: [Categories]
  *     security:
  *       - bearerAuth: []
@@ -59,7 +59,7 @@ router.post('/categories', authMiddleware, adminMiddleware, addCategory);
  *         schema:
  *           type: string
  *         required: true
- *         description: The ID of the category.
+ *         description: รหัส ID ของหมวดหมู่
  *     requestBody:
  *       required: true
  *       content:
@@ -69,14 +69,14 @@ router.post('/categories', authMiddleware, adminMiddleware, addCategory);
  *             properties:
  *               name:
  *                 type: string
- *                 description: The new name of the category.
+ *                 description: ชื่อใหม่ของหมวดหมู่
  *     responses:
  *       200:
- *         description: Category updated successfully.
+ *         description: อัปเดตหมวดหมู่สำเร็จ
  *       401:
- *         description: Unauthorized.
+ *         description: ไม่มีสิทธิ์เข้าถึง
  *       404:
- *         description: Category not found.
+ *         description: ไม่พบหมวดหมู่
  */
 router.put('/categories/:id', authMiddleware, adminMiddleware, updateCategoryById);
 
@@ -84,8 +84,8 @@ router.put('/categories/:id', authMiddleware, adminMiddleware, updateCategoryByI
  * @swagger
  * /api/categories/{id}:
  *   delete:
- *     summary: Delete a category by ID
- *     description: Delete a book category by its ID. Only accessible by admin users.
+ *     summary: ลบหมวดหมู่โดยใช้ ID
+ *     description: ลบหมวดหมู่หนังสือโดยใช้ ID ฟังก์ชันนี้สามารถใช้งานได้เฉพาะผู้ดูแลระบบ (admin) เท่านั้น
  *     tags: [Categories]
  *     security:
  *       - bearerAuth: []
@@ -95,15 +95,16 @@ router.put('/categories/:id', authMiddleware, adminMiddleware, updateCategoryByI
  *         schema:
  *           type: string
  *         required: true
- *         description: The ID of the category.
+ *         description: รหัส ID ของหมวดหมู่
  *     responses:
  *       200:
- *         description: Category deleted successfully.
+ *         description: ลบหมวดหมู่สำเร็จ
  *       401:
- *         description: Unauthorized.
+ *         description: ไม่มีสิทธิ์เข้าถึง
  *       404:
- *         description: Category not found.
+ *         description: ไม่พบหมวดหมู่
  */
 router.delete('/categories/:id', authMiddleware, adminMiddleware, deleteCategoryById);
+
 
 export default router;

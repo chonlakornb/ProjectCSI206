@@ -8,16 +8,16 @@ const router = express.Router();
  * @swagger
  * /api/favorites:
  *   get:
- *     summary: Get user's favorite books
- *     description: Retrieve a list of books that the currently authenticated user has marked as favorites.
+ *     summary: ดึงรายการหนังสือที่ผู้ใช้ชื่นชอบ
+ *     description: ดึงรายการหนังสือที่ผู้ใช้ที่เข้าสู่ระบบได้ทำเครื่องหมายไว้เป็นรายการโปรด
  *     tags: [Favorites]
  *     security:
  *       - bearerAuth: []
  *     responses:
  *       200:
- *         description: List of favorite books.
+ *         description: รายการหนังสือที่ผู้ใช้ชื่นชอบ
  *       401:
- *         description: Unauthorized.
+ *         description: ไม่มีสิทธิ์เข้าถึง
  */
 router.get('/favorites', authMiddleware, getFavorites);
 
@@ -25,8 +25,8 @@ router.get('/favorites', authMiddleware, getFavorites);
  * @swagger
  * /api/favorites/{bookId}:
  *   post:
- *     summary: Add a book to favorites
- *     description: Add a book to the currently authenticated user's list of favorites.
+ *     summary: เพิ่มหนังสือลงในรายการโปรด
+ *     description: เพิ่มหนังสือลงในรายการโปรดของผู้ใช้ที่เข้าสู่ระบบ
  *     tags: [Favorites]
  *     security:
  *       - bearerAuth: []
@@ -36,14 +36,14 @@ router.get('/favorites', authMiddleware, getFavorites);
  *         schema:
  *           type: string
  *         required: true
- *         description: The ID of the book to add to favorites.
+ *         description: รหัส ID ของหนังสือที่ต้องการเพิ่มในรายการโปรด
  *     responses:
  *       201:
- *         description: Book added to favorites.
+ *         description: เพิ่มหนังสือในรายการโปรดสำเร็จ
  *       400:
- *         description: Book is already in favorites.
+ *         description: หนังสือเล่มนี้อยู่ในรายการโปรดแล้ว
  *       401:
- *         description: Unauthorized.
+ *         description: ไม่มีสิทธิ์เข้าถึง
  */
 router.post('/favorites/:bookId', authMiddleware, addFavorite);
 
@@ -51,8 +51,8 @@ router.post('/favorites/:bookId', authMiddleware, addFavorite);
  * @swagger
  * /api/favorites/{bookId}:
  *   delete:
- *     summary: Remove a book from favorites
- *     description: Remove a book from the currently authenticated user's list of favorites.
+ *     summary: ลบหนังสือออกจากรายการโปรด
+ *     description: ลบหนังสือออกจากรายการโปรดของผู้ใช้ที่เข้าสู่ระบบ
  *     tags: [Favorites]
  *     security:
  *       - bearerAuth: []
@@ -62,15 +62,16 @@ router.post('/favorites/:bookId', authMiddleware, addFavorite);
  *         schema:
  *           type: string
  *         required: true
- *         description: The ID of the book to remove from favorites.
+ *         description: รหัส ID ของหนังสือที่ต้องการลบออกจากรายการโปรด
  *     responses:
  *       200:
- *         description: Book removed from favorites.
+ *         description: ลบหนังสือออกจากรายการโปรดสำเร็จ
  *       401:
- *         description: Unauthorized.
+ *         description: ไม่มีสิทธิ์เข้าถึง
  *       404:
- *         description: Book not found in favorites.
+ *         description: ไม่พบบันทึกของหนังสือในรายการโปรด
  */
 router.delete('/favorites/:bookId', authMiddleware, removeFavorite);
+
 
 export default router;
