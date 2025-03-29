@@ -3,7 +3,7 @@ nav {
   align-items: center;
   justify-content: space-between;
   padding: 1px 2rem;
-  background: rgb(12, 0, 0);
+  background: rgb(255, 255, 255);
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
   position: fixed;
   top: 0;
@@ -14,7 +14,7 @@ nav {
 
 nav .logo h1 {
   font-size: 2rem;
-  color: #fff2f2;
+  color: #000000;
 }
 
 nav .logo span {
@@ -30,7 +30,7 @@ nav ul {
 
 nav ul li a {
     text-decoration: none;
-    color: rgb(255, 255, 255);
+    color: rgb(0, 0, 0);
     font-weight: bold; /* เพิ่มการทำให้ข้อความตัวหนา */
     transition: color 0.3s;
   }

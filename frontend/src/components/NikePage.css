@@ -11,7 +11,7 @@ html {
 }
 
 body {
-  background: linear-gradient(to right, #d31e1e, #000000);
+  background: linear-gradient(to right, #ffffff, #ffffff);
 }
 
 /* Section */
@@ -225,14 +225,17 @@ section nav .icons i:hover {
 
 /* Products */
 .products {
-  padding: 5rem 2rem; /* เพิ่มระยะห่างด้านบนและล่างให้มีความพอดี */
+  padding: 5rem 2rem;
   background: #f6f6f6;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* เพิ่มเงาให้ดูน่าสนใจ */
-  border-radius: 10px; /* ทำมุมโค้งให้ดูนุ่มนวล */
-  margin: 2rem 0; /* เพิ่มระยะห่างจากเนื้อหาด้านบนและด้านล่าง */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  margin: 2rem 0;
   position: relative;
-  overflow: hidden; /* ซ่อนการแสดงผลเกินขอบ */
+  overflow: hidden;
+  border: 5px solid;
+  border-image: linear-gradient(45deg, red, orange, yellow, green, cyan, blue, violet) 1;
 }
+
 
 /* เพิ่มเบลอพื้นหลัง */
 .products::before {
