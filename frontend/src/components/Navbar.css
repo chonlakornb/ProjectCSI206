@@ -89,13 +89,6 @@ nav .icons i:hover {
   margin-right: 0.5rem;
 }
 
-search-btn:hover {
+.search-btn:hover {
   background-color: #6c14d0;
-}
-
-.user-role {
-  margin-left: 1rem;
-  font-size: 1rem;
-  color: #555;
-  font-weight: bold;
 }

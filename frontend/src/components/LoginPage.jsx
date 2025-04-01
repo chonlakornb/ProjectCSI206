@@ -34,11 +34,7 @@ const LoginPage = () => {
         setTimeout(() => navigate('/home'), 1000); // Redirect to home for other users
       }
     } catch (error) {
-      if (error.response?.status === 401) {
-        setMessage('Invalid credentials. Please try again.');
-      } else {
-        setMessage(error.response?.data?.message || 'Login failed!');
-      }
+      setMessage(error.response?.data?.message || 'Login failed!');
     }
   };
 

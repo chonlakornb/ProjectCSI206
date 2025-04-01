@@ -21,8 +21,8 @@ router.get('/books', getAllBooks);
  * @swagger
  * /api/books/search:
  *   get:
- *     summary: Search books
- *     description: Search books by title or author.
+ *     summary: ค้นหาหนังสือ
+ *     description: ค้นหาหนังสือโดยใช้ชื่อหนังสือ, ผู้แต่ง หรือหมวดหมู่
  *     tags: [Books]
  *     parameters:
  *       - in: query
@@ -30,10 +30,10 @@ router.get('/books', getAllBooks);
  *         schema:
  *           type: string
  *         required: true
- *         description: The search query.
+ *         description: คำค้นหาหนังสือ
  *     responses:
  *       200:
- *         description: List of books matching the search query.
+ *         description: รายการหนังสือที่ตรงกับคำค้นหา
  */
 router.get('/books/search', searchBooks);
 
@@ -41,10 +41,15 @@ router.get('/books/search', searchBooks);
  * @swagger
  * /api/books/filter:
  *   get:
- *     summary: Filter books
- *     description: Filter books by published year.
+ *     summary: Filter หนังสือ
+ *     description: Filter หนังสือตามหมวดหมู่ และ/หรือ ปีที่ตีพิมพ์
  *     tags: [Books]
  *     parameters:
+ *       - in: query
+ *         name: category
+ *         schema:
+ *           type: string
+ *         description: The category to filter by.
  *       - in: query
  *         name: year
  *         schema:
@@ -109,6 +114,9 @@ router.get('/books/:id', getBookById);
  *               published_year:
  *                 type: number
  *                 description: The published year of the book.
+ *               category:
+ *                 type: string
+ *                 description: The category of the book.
  *               cover_image:
  *                 type: string
  *                 description: The URL of the cover image of the book.
@@ -161,6 +169,9 @@ router.post('/books', authMiddleware, adminMiddleware, addBook);
  *               published_year:
  *                 type: number
  *                 description: The published year of the book.
+ *               category:
+ *                 type: string
+ *                 description: The category of the book.
  *               cover_image:
  *                 type: string
  *                 description: The URL of the cover image of the book.

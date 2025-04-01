@@ -5,6 +5,7 @@ import { connectDB } from './config/db.js'; // Import connectDB
 import userRoutes from './routes/userRoutes.js';
 import authRoutes from './routes/authRoutes.js';
 import bookRoutes from './routes/bookRoutes.js';
+import categoryRoutes from './routes/categoryRoutes.js';
 import favoriteRoutes from './routes/favoriteRoutes.js';
 import notificationRoutes from './routes/notificationRoutes.js';
 import recommendationRoutes from './routes/recommendationRoutes.js'; // Import recommendation routes
@@ -22,7 +23,7 @@ connectDB();
 app.use('/api', userRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api', bookRoutes);
-// app.use('/api', categoryRoutes);
+app.use('/api', categoryRoutes);
 app.use('/api', favoriteRoutes);
 app.use('/api', notificationRoutes);
 app.use('/api', recommendationRoutes); // Use recommendation routes
