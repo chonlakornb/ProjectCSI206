@@ -1,8 +1,8 @@
-import Notification from '../models/Notification.js';
+import { pool } from '../config/db.js';
 
 export const getNotifications = async (req, res) => {
   try {
-    const notifications = await Notification.find({ user_id: req.user.id });
+    const [notifications] = await pool.query('SELECT * FROM notifications WHERE user_id = ?', [req.user.id]);
     res.json(notifications);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -13,14 +13,14 @@ export const addNotification = async (req, res) => {
   const { user_id, message, status } = req.body;
 
   try {
-    const newNotification = new Notification({
-      user_id,
-      message,
-      status,
+    const [result] = await pool.query(
+      'INSERT INTO notifications (user_id, message, status) VALUES (?, ?, ?)',
+      [user_id, message, status]
+    );
+    res.status(201).json({
+      message: 'Notification added successfully',
+      notification: { id: result.insertId, user_id, message, status },
     });
-
-    await newNotification.save();
-    res.status(201).json({ message: 'Notification added successfully', notification: newNotification });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -28,12 +28,10 @@ export const addNotification = async (req, res) => {
 
 export const deleteNotificationById = async (req, res) => {
   try {
-    const notification = await Notification.findById(req.params.id);
-    if (!notification) {
+    const [result] = await pool.query('DELETE FROM notifications WHERE id = ?', [req.params.id]);
+    if (result.affectedRows === 0) {
       return res.status(404).json({ message: 'Notification not found' });
     }
-
-    await notification.deleteOne();
     res.json({ message: 'Notification deleted successfully' });
   } catch (error) {
     res.status(500).json({ message: error.message });

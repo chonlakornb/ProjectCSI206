@@ -1,19 +1,20 @@
-import Favorite from '../models/Favorite.js';
-import Book from '../models/book.js';
+import mysql from 'mysql2/promise';
+
+// Create a MySQL connection pool
+const pool = mysql.createPool({
+  host: 'localhost', // Update with your MySQL host
+  user: 'root',      // Update with your MySQL username
+  password: 'root',  // Update with your MySQL password
+  database: 'book_catalog', // Update with your MySQL database name
+});
 
 export const getFavorites = async (req, res) => {
   try {
-    const favorites = await Favorite.find({ user_id: req.user.id }).populate('book_id');
-    const detailedFavorites = await Promise.all(
-      favorites.map(async (favorite) => {
-        const book = await Book.findById(favorite.book_id);
-        return {
-          ...favorite.toObject(),
-          book,
-        };
-      })
+    const [favorites] = await pool.query(
+      'SELECT f.*, b.* FROM favorites f JOIN books b ON f.book_id = b.id WHERE f.user_id = ?',
+      [req.user.id]
     );
-    res.json(detailedFavorites);
+    res.json(favorites);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -23,18 +24,16 @@ export const addFavorite = async (req, res) => {
   const { bookId } = req.params;
 
   try {
-    const existingFavorite = await Favorite.findOne({ user_id: req.user.id, book_id: bookId });
-    if (existingFavorite) {
+    const [existingFavorite] = await pool.query(
+      'SELECT * FROM favorites WHERE user_id = ? AND book_id = ?',
+      [req.user.id, bookId]
+    );
+    if (existingFavorite.length > 0) {
       return res.status(400).json({ message: 'Book is already in favorites' });
     }
 
-    const newFavorite = new Favorite({
-      user_id: req.user.id,
-      book_id: bookId,
-    });
-
-    await newFavorite.save();
-    res.status(201).json({ message: 'Book added to favorites', favorite: newFavorite });
+    await pool.query('INSERT INTO favorites (user_id, book_id) VALUES (?, ?)', [req.user.id, bookId]);
+    res.status(201).json({ message: 'Book added to favorites' });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -44,8 +43,11 @@ export const removeFavorite = async (req, res) => {
   const { bookId } = req.params;
 
   try {
-    const favorite = await Favorite.findOneAndDelete({ user_id: req.user.id, book_id: bookId });
-    if (!favorite) {
+    const [result] = await pool.query(
+      'DELETE FROM favorites WHERE user_id = ? AND book_id = ?',
+      [req.user.id, bookId]
+    );
+    if (result.affectedRows === 0) {
       return res.status(404).json({ message: 'Book not found in favorites' });
     }
 

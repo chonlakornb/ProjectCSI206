@@ -1,16 +1,24 @@
-import mongoose from 'mongoose';
+import mysql from "mysql2/promise";
+
+const pool = mysql.createPool({
+  host: "localhost", // Update with your MySQL host
+  user: "root",      // Update with your MySQL username
+  password: "root",  // Update with your MySQL password
+  database: "book_catalog", // Update with your MySQL database name
+  charset: "utf8mb4", // Add this line to support Thai characters
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0,
+});
 
 const connectDB = async () => {
   try {
-    await mongoose.connect('mongodb+srv://chonlakornb:gj2FgBuP@cluster0.c4tic.mongodb.net/book_catalog?retryWrites=true&w=majority&appName=Cluster0', {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
-    console.log('MongoDB connected successfully');
+    await pool.getConnection(); // Test the connection
+    console.log("Connected to MySQL database successfully!");
   } catch (error) {
-    console.error('MongoDB connection failed:', error.message);
+    console.error("Error connecting to MySQL:", error);
     process.exit(1);
   }
 };
 
-export default connectDB;
+export { pool, connectDB };

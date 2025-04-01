@@ -1,25 +1,39 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import User from '../models/user.js';
+import mysql from 'mysql2/promise';
+
+// Create a MySQL connection pool
+const pool = mysql.createPool({
+  host: 'localhost', // Update with your MySQL host
+  user: 'root',      // Update with your MySQL username
+  password: 'root', // Update with your MySQL password
+  database: 'book_catalog', // Update with your MySQL database name
+});
+
 
 export const registerUser = async (req, res) => {
   const { username, password, role } = req.body;
 
   try {
-    const existingUser = await User.findOne({ username });
-    if (existingUser) {
+    // Validate role
+    const validRoles = ['admin', 'user']; // Update with your allowed roles
+    if (!validRoles.includes(role)) {
+      return res.status(400).json({ message: `Invalid role. Allowed roles are: ${validRoles.join(', ')}` });
+    }
+
+    const [existingUser] = await pool.query('SELECT * FROM users WHERE username = ?', [username]);
+    if (existingUser.length > 0) {
       return res.status(400).json({ message: 'User already exists' });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const newUser = new User({
+    await pool.query('INSERT INTO users (username, password, role) VALUES (?, ?, ?)', [
       username,
-      password: hashedPassword,
+      hashedPassword,
       role,
-    });
+    ]);
 
-    await newUser.save();
     res.status(201).json({ message: 'User registered successfully' });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -30,17 +44,18 @@ export const loginUser = async (req, res) => {
   const { username, password } = req.body;
 
   try {
-    const user = await User.findOne({ username });
-    if (!user) {
+    const [users] = await pool.query('SELECT * FROM users WHERE username = ?', [username]);
+    if (users.length === 0) {
       return res.status(400).json({ message: 'Invalid credentials' });
     }
 
+    const user = users[0];
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.status(400).json({ message: 'Invalid credentials' });
     }
 
-    const token = jwt.sign({ id: user._id, role: user.role }, 'your_jwt_secret', { expiresIn: '1h' });
+    const token = jwt.sign({ id: user.id, role: user.role }, 'your_jwt_secret', { expiresIn: '1h' });
 
     res.status(200).json({ token });
   } catch (error) {

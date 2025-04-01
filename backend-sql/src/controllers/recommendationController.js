@@ -1,8 +1,11 @@
-import Recommendation from '../models/Recommendation.js';
+import { pool } from '../config/db.js';
 
 export const getRecommendations = async (req, res) => {
   try {
-    const recommendations = await Recommendation.find({ user_id: req.user.id }).populate('book_id');
+    const [recommendations] = await pool.query(
+      'SELECT r.*, b.title, b.author FROM recommendations r JOIN books b ON r.book_id = b.id WHERE r.user_id = ?',
+      [req.user.id]
+    );
     res.json(recommendations);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -13,14 +16,14 @@ export const addRecommendation = async (req, res) => {
   const { book_id, reason } = req.body;
 
   try {
-    const newRecommendation = new Recommendation({
-      user_id: req.user.id,
-      book_id,
-      reason,
+    const [result] = await pool.query(
+      'INSERT INTO recommendations (user_id, book_id, reason) VALUES (?, ?, ?)',
+      [req.user.id, book_id, reason]
+    );
+    res.status(201).json({
+      message: 'Recommendation added successfully',
+      recommendation: { id: result.insertId, user_id: req.user.id, book_id, reason },
     });
-
-    await newRecommendation.save();
-    res.status(201).json({ message: 'Recommendation added successfully', recommendation: newRecommendation });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -28,12 +31,10 @@ export const addRecommendation = async (req, res) => {
 
 export const deleteRecommendationById = async (req, res) => {
   try {
-    const recommendation = await Recommendation.findById(req.params.id);
-    if (!recommendation) {
+    const [result] = await pool.query('DELETE FROM recommendations WHERE id = ?', [req.params.id]);
+    if (result.affectedRows === 0) {
       return res.status(404).json({ message: 'Recommendation not found' });
     }
-
-    await recommendation.deleteOne();
     res.json({ message: 'Recommendation deleted successfully' });
   } catch (error) {
     res.status(500).json({ message: error.message });
