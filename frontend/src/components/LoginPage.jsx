@@ -15,10 +15,17 @@ const LoginPage = () => {
         username,
         password,
       });
-      setMessage(response.data.message || 'Login successful!');
-      setTimeout(() => navigate('/home'), 1000); // Redirect to home after 1 second
+      const { token, message, role } = response.data; // Ensure token is included in response
+      localStorage.setItem('token', token); // Store token in localStorage
+      localStorage.setItem('userRole', role); // Store role in localStorage
+      setMessage(message || 'Login successful!');
+      setTimeout(() => navigate(role === 'admin' ? '/admin' : '/home'), 1000);
     } catch (error) {
-      setMessage(error.response?.data?.message || 'Login failed!');
+      if (error.response?.status === 401) {
+        setMessage('Invalid credentials. Please try again.');
+      } else {
+        setMessage(error.response?.data?.message || 'Login failed!');
+      }
     }
   };
 
