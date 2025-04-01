@@ -1,0 +1,84 @@
+.admin-page {
+  padding: 2rem;
+  margin: 5rem;
+}
+
+.message {
+  color: green;
+  margin-bottom: 1rem;
+}
+
+.form-container {
+  margin-bottom: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+}
+
+.form-container input {
+  display: block;
+  margin-bottom: 1rem;
+  padding: 0.5rem;
+  width: 100%;
+  max-width: 400px;
+}
+
+#book-title,
+#book-author,
+#book-price,
+#book-cover-image {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+#add-edit-book-btn {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+}
+
+#add-edit-book-btn:hover {
+  background-color: #0056b3;
+}
+
+.books-table table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.books-table th, .books-table td {
+  border: 1px solid #ddd;
+  padding: 0.5rem;
+  text-align: left;
+}
+
+.books-table img {
+  max-width: 50px;
+  border-radius: 5px;
+}
+
+.books-table button {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 0.3rem 0.6rem;
+  cursor: pointer;
+}
+
+.books-table button:hover {
+  background-color: #218838;
+}
+
+.books-table button#delete-book-btn {
+  background-color: #dc3545;
+}
+
+.books-table button#delete-book-btn:hover {
+  background-color: #c82333;
+}

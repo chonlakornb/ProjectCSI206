@@ -11,12 +11,28 @@ const LoginPage = () => {
 
   const handleLogin = async () => {
     try {
-      const response = await axios.post('http://localhost:3000/api/auth/login', {
+      const loginResponse = await axios.post('http://localhost:3000/api/auth/login', {
         username,
         password,
       });
-      setMessage(response.data.message || 'Login successful!');
-      setTimeout(() => navigate('/home'), 1000); // Redirect to home after 1 second
+      const token = loginResponse.data.token; // Get token from login response
+      localStorage.setItem('token', token); // Save token to localStorage
+
+      // Fetch user role using the token
+      const userResponse = await axios.get('http://localhost:3000/api/users/me', {
+        headers: {
+          Authorization: `Bearer ${token}`, // Pass token in Authorization header
+        },
+      });
+      const role = userResponse.data.role; // Get role from user response
+      setMessage(`Login successful! Role: ${role}`); // Include role in the success message
+
+      // Redirect based on role
+      if (role === 'admin') {
+        setTimeout(() => navigate('/admin'), 1000); // Redirect to AdminPage for admin users
+      } else {
+        setTimeout(() => navigate('/home'), 1000); // Redirect to home for other users
+      }
     } catch (error) {
       setMessage(error.response?.data?.message || 'Login failed!');
     }

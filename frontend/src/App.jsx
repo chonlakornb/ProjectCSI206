@@ -5,6 +5,7 @@ import RegisterPage from './components/RegisterPage';
 import NikePage from './components/NikePage';
 import Favorites from './components/Favorites';
 import ViewPage from './components/ViewPage'; // Import ViewPage
+import AdminPage from './components/AdminPage'; // Import AdminPage
 import './App.css';
 
 const App = () => {
@@ -16,6 +17,7 @@ const App = () => {
         <Route path="/home" element={<NikePage />} />
         <Route path="/favorites" element={<Favorites />} />
         <Route path="/view" element={<ViewPage />} /> {/* Add ViewPage route */}
+        <Route path="/admin" element={<AdminPage />} /> {/* Add AdminPage route */}
       </Routes>
     </Router>
   );
