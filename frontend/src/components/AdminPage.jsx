@@ -6,7 +6,7 @@ import './AdminPage.css';
 
 const AdminPage = () => {
   const [books, setBooks] = useState([]);
-  const [formData, setFormData] = useState({ title: '', author: '', price: '', cover_image: '' });
+  const [formData, setFormData] = useState({ title: '', author: '', cover_image: '' });
   const [editingBookId, setEditingBookId] = useState(null);
   const [message, setMessage] = useState('');
   const navigate = useNavigate();
@@ -62,7 +62,7 @@ const AdminPage = () => {
         });
         setMessage('Book added successfully!');
       }
-      setFormData({ title: '', author: '', price: '', cover_image: '' });
+      setFormData({ title: '', author: '', cover_image: '' });
       setEditingBookId(null);
       const updatedBooks = await axios.get('http://localhost:3000/api/books', {
         headers: { Authorization: `Bearer ${token}` },
@@ -115,14 +115,6 @@ const AdminPage = () => {
           onChange={handleInputChange}
         />
         <input
-          id="book-price"
-          type="number"
-          name="price"
-          placeholder="Price"
-          value={formData.price}
-          onChange={handleInputChange}
-        />
-        <input
           id="book-cover-image"
           type="text"
           name="cover_image"
@@ -141,7 +133,6 @@ const AdminPage = () => {
             <tr>
               <th>Title</th>
               <th>Author</th>
-              <th>Price</th>
               <th>Cover</th>
               <th>Actions</th>
             </tr>
@@ -151,7 +142,6 @@ const AdminPage = () => {
               <tr key={book.id}>
                 <td>{book.title}</td>
                 <td>{book.author}</td>
-                <td>${book.price ? book.price.toFixed(2) : 'N/A'}</td>
                 <td><img src={book.cover_image} alt={book.title} width="50" /></td>
                 <td><button id={`edit-book-${book.id}`} onClick={() => handleEditClick(book)}>Edit</button><button id={`delete-book-${book.id}`} onClick={() => handleDeleteBook(book.id)}>Delete</button></td>
               </tr>

@@ -13,6 +13,8 @@ const Navbar = () => {
         <li><a href="/home#Products">Products</a></li>
         <li><a href="/favorites#Favorites">Favorites</a></li>
         <li><a href="#Notifications">Notifications</a></li>
+        <li><Link to="/edit-profile">Edit</Link></li>
+        <li><Link to="/Login">Logout</Link></li>
       </ul>
 
       <div className="search-container">
