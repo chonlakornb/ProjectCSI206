@@ -9,6 +9,11 @@ import AdminPage from './components/AdminPage'; // Import AdminPage
 import EditProfilePage from './components/EditProfilePage'; // Import EditProfilePage
 import './App.css';
 
+const ProtectedRoute = ({ children, role }) => {
+  const userRole = localStorage.getItem('userRole'); // Get user role from localStorage
+  return userRole === role ? children : <Navigate to="/" />; // Check if role matches
+};
+
 const App = () => {
   return (
     <Router>
@@ -16,6 +21,14 @@ const App = () => {
         <Route path="/" element={<Navigate to="/login" />} /> {/* Redirect root to login */}
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute role="admin">
+              <AdminPage />
+            </ProtectedRoute>
+          }
+        />
         <Route path="/home" element={<NikePage />} />
         <Route path="/favorites" element={<Favorites />} />
         <Route path="/view" element={<ViewPage />} /> {/* Add ViewPage route */}
