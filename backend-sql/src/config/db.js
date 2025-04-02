@@ -1,11 +1,11 @@
 import mysql from "mysql2/promise";
 
 const pool = mysql.createPool({
-  host: "localhost", // Update with your MySQL host
-  user: "root",      // Update with your MySQL username
-  password: "root",  // Update with your MySQL password
-  database: "book_catalog", // Update with your MySQL database name
-  charset: "utf8mb4", // Add this line to support Thai characters
+  host: "localhost", // your MySQL host
+  user: "root",      // your MySQL username
+  password: "root",  // your MySQL password
+  database: "book_catalog", // your MySQL database name
+  charset: "utf8mb4", // support Thai characters
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0,
