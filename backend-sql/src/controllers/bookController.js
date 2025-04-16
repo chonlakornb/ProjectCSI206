@@ -5,7 +5,7 @@ const pool = mysql.createPool({
   host: 'localhost', // Update with your MySQL host
   user: 'root',      // Update with your MySQL username
   password: 'root',  // Update with your MySQL password
-  database: 'book_catalog', // Update with your MySQL database name
+  database: 'book_store', // Update with your MySQL database name
   charset: 'utf8mb4', // Ensure this is set
   waitForConnections: true,
   connectionLimit: 10,
@@ -14,7 +14,10 @@ const pool = mysql.createPool({
 
 export const getAllBooks = async (req, res) => {
   try {
-    const [books] = await pool.query('SELECT * FROM books');
+    // Use 'book_id' and include additional fields
+    const [books] = await pool.query(
+      'SELECT book_id, title, isbn, author, publisher, price, stock, category_id, seller_id, created_at FROM books'
+    );
     res.json(books);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -23,7 +26,11 @@ export const getAllBooks = async (req, res) => {
 
 export const getBookById = async (req, res) => {
   try {
-    const [books] = await pool.query('SELECT * FROM books WHERE id = ?', [req.params.id]);
+    // Use 'book_id' instead of 'id'
+    const [books] = await pool.query(
+      'SELECT book_id, title, isbn, author, publisher, price, stock, category_id, seller_id, created_at FROM books WHERE book_id = ?',
+      [req.params.id]
+    );
     if (books.length === 0) {
       return res.status(404).json({ message: 'Book not found' });
     }
@@ -34,39 +41,75 @@ export const getBookById = async (req, res) => {
 };
 
 export const addBook = async (req, res) => {
-  const { title, isbn, author, publisher, published_year, cover_image, pdf_file } = req.body;
+  const { title, isbn, author, publisher, price, stock, category_id, seller_id } = req.body;
 
   try {
-    // Log the input data for debugging
-    console.log('Request Body:', req.body);
+    // Validate category_id
+    if (category_id) {
+      const [categories] = await pool.query('SELECT * FROM categories WHERE category_id = ?', [category_id]);
+      if (categories.length === 0) {
+        return res.status(400).json({ message: 'Invalid category_id. Category does not exist.' });
+      }
+    }
 
-    // Log the query and parameters for debugging
-    console.log('Query:', 'INSERT INTO books (`title`, `isbn`, `author`, `publisher`, `published_year`, `cover_image`, `pdf_file`) VALUES (?, ?, ?, ?, ?, ?, ?)');
-    console.log('Parameters:', [title, isbn, author, publisher, published_year, cover_image, pdf_file]);
+    // Validate seller_id
+    if (seller_id) {
+      const [sellers] = await pool.query('SELECT * FROM users WHERE user_id = ? AND role = ?', [seller_id, 'seller']);
+      if (sellers.length === 0) {
+        return res.status(400).json({ message: 'Invalid seller_id. Seller does not exist.' });
+      }
+    }
 
+    // Insert all fields into the 'books' table
     await pool.query(
-      'INSERT INTO books (`title`, `isbn`, `author`, `publisher`, `published_year`, `cover_image`, `pdf_file`) VALUES (?, ?, ?, ?, ?, ?, ?)',
-      [title, isbn, author, publisher, published_year, cover_image, pdf_file]
+      'INSERT INTO books (title, isbn, author, publisher, price, stock, category_id, seller_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+      [title, isbn, author, publisher, price, stock || 0, category_id || null, seller_id || null]
     );
     res.status(201).json({ message: 'Book added successfully' });
   } catch (error) {
-    console.error('Error adding book:', error.message);
     res.status(500).json({ message: error.message });
   }
 };
 
 export const updateBookById = async (req, res) => {
-  const { title, isbn, author, publisher, published_year, cover_image, pdf_file } = req.body;
+  const { title, isbn, author, publisher, price, stock, category_id, seller_id } = req.body;
 
   try {
-    const [books] = await pool.query('SELECT * FROM books WHERE id = ?', [req.params.id]);
+    const [books] = await pool.query('SELECT * FROM books WHERE book_id = ?', [req.params.id]);
     if (books.length === 0) {
       return res.status(404).json({ message: 'Book not found' });
     }
 
+    // Validate category_id
+    if (category_id) {
+      const [categories] = await pool.query('SELECT * FROM categories WHERE category_id = ?', [category_id]);
+      if (categories.length === 0) {
+        return res.status(400).json({ message: 'Invalid category_id. Category does not exist.' });
+      }
+    }
+
+    // Validate seller_id
+    if (seller_id) {
+      const [sellers] = await pool.query('SELECT * FROM users WHERE user_id = ? AND role = ?', [seller_id, 'seller']);
+      if (sellers.length === 0) {
+        return res.status(400).json({ message: 'Invalid seller_id. Seller does not exist.' });
+      }
+    }
+
+    // Update all fields in the 'books' table
     await pool.query(
-      'UPDATE books SET title = ?, isbn = ?, author = ?, publisher = ?, published_year = ?, cover_image = ?, pdf_file = ? WHERE id = ?',
-      [title, isbn, author, publisher, published_year, cover_image, pdf_file, req.params.id]
+      'UPDATE books SET title = ?, isbn = ?, author = ?, publisher = ?, price = ?, stock = ?, category_id = ?, seller_id = ? WHERE book_id = ?',
+      [
+        title || books[0].title,
+        isbn || books[0].isbn,
+        author || books[0].author,
+        publisher || books[0].publisher,
+        price || books[0].price,
+        stock || books[0].stock,
+        category_id || books[0].category_id,
+        seller_id || books[0].seller_id,
+        req.params.id,
+      ]
     );
     res.json({ message: 'Book updated successfully' });
   } catch (error) {
@@ -76,12 +119,12 @@ export const updateBookById = async (req, res) => {
 
 export const deleteBookById = async (req, res) => {
   try {
-    const [books] = await pool.query('SELECT * FROM books WHERE id = ?', [req.params.id]);
+    const [books] = await pool.query('SELECT * FROM books WHERE book_id = ?', [req.params.id]);
     if (books.length === 0) {
       return res.status(404).json({ message: 'Book not found' });
     }
 
-    await pool.query('DELETE FROM books WHERE id = ?', [req.params.id]);
+    await pool.query('DELETE FROM books WHERE book_id = ?', [req.params.id]);
     res.json({ message: 'Book deleted successfully' });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -93,7 +136,7 @@ export const searchBooks = async (req, res) => {
 
   try {
     const [books] = await pool.query(
-      'SELECT * FROM books WHERE title LIKE ? OR author LIKE ?',
+      'SELECT book_id, title, isbn, author, publisher, price, stock, category_id, seller_id, created_at FROM books WHERE title LIKE ? OR author LIKE ?',
       [`%${query}%`, `%${query}%`]
     );
     res.json(books);
@@ -103,18 +146,25 @@ export const searchBooks = async (req, res) => {
 };
 
 export const filterBooks = async (req, res) => {
-  const { year } = req.query;
+  const { category_id, seller_id } = req.query;
 
   try {
     const conditions = [];
     const values = [];
 
-    if (year) {
-      conditions.push('published_year = ?');
-      values.push(year);
+    if (category_id) {
+      conditions.push('category_id = ?');
+      values.push(category_id);
     }
 
-    const query = `SELECT * FROM books ${conditions.length ? 'WHERE ' + conditions.join(' AND ') : ''}`;
+    if (seller_id) {
+      conditions.push('seller_id = ?');
+      values.push(seller_id);
+    }
+
+    const query = `SELECT book_id, title, isbn, author, publisher, price, stock, category_id, seller_id, created_at FROM books ${
+      conditions.length ? 'WHERE ' + conditions.join(' AND ') : ''
+    }`;
     const [books] = await pool.query(query, values);
     res.json(books);
   } catch (error) {

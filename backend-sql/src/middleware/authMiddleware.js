@@ -18,8 +18,8 @@ export const authMiddleware = async (req, res, next) => {
 };
 
 export const adminMiddleware = async (req, res, next) => {
-  if (req.user.role !== 'admin') {
-    return res.status(403).json({ message: 'Access denied, admin only' });
+  if (req.user.role !== 'admin' && req.user.role !== 'seller') { // Allow 'seller' role
+    return res.status(403).json({ message: 'Access denied, admin or seller only' });
   }
   next();
 };

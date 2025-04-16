@@ -1,5 +1,5 @@
 import express from 'express';
-import { getUsers, getUserProfile, updateUserProfile, deleteUserProfile } from '../controllers/userController.js';
+import { getUsers, getUserProfile, updateUserProfile, deleteUserProfile, updateUserById } from '../controllers/userController.js';
 import { authMiddleware } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
@@ -83,5 +83,47 @@ router.put('/users/me', authMiddleware, updateUserProfile);
  *         description: Unauthorized.
  */
 router.delete('/users/me', authMiddleware, deleteUserProfile);
+
+/**
+ * @swagger
+ * /api/users/{id}:
+ *   put:
+ *     summary: Update user account
+ *     description: Update the account details of a user by their ID. Fields that can be updated include name, phone, and password.
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The ID of the user to update.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 description: The new name for the user.
+ *               phone:
+ *                 type: string
+ *                 description: The new phone number for the user.
+ *               password:
+ *                 type: string
+ *                 description: The new password for the user.
+ *     responses:
+ *       200:
+ *         description: User account updated successfully.
+ *       401:
+ *         description: Unauthorized.
+ *       404:
+ *         description: User not found.
+ */
+router.put('/users/:id', authMiddleware, updateUserById);
 
 export default router;

@@ -5,7 +5,7 @@ const pool = mysql.createPool({
   host: 'localhost', // Update with your MySQL host
   user: 'root',      // Update with your MySQL username
   password: 'root',  // Update with your MySQL password
-  database: 'book_catalog', // Update with your MySQL database name
+  database: 'book_store', // Update with your MySQL database name
 });
 
 export const getReviewsByBookId = async (req, res) => {

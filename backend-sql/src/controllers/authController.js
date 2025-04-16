@@ -7,32 +7,34 @@ const pool = mysql.createPool({
   host: 'localhost', // Update with your MySQL host
   user: 'root',      // Update with your MySQL username
   password: 'root', // Update with your MySQL password
-  database: 'book_catalog', // Update with your MySQL database name
+  database: 'book_store', // Update with your MySQL database name
 });
 
 
 export const registerUser = async (req, res) => {
-  const { username, password, role } = req.body;
+  const { name, email, password, phone, role } = req.body;
 
   try {
     // Validate role
-    const validRoles = ['admin', 'user']; // Update with your allowed roles
+    const validRoles = ['customer', 'seller', 'admin']; // Allow only 'customer', 'seller', and 'admin'
     if (!validRoles.includes(role)) {
       return res.status(400).json({ message: `Invalid role. Allowed roles are: ${validRoles.join(', ')}` });
     }
 
-    const [existingUser] = await pool.query('SELECT * FROM users WHERE username = ?', [username]);
+    // Check if the email already exists
+    const [existingUser] = await pool.query('SELECT * FROM users WHERE email = ?', [email]);
     if (existingUser.length > 0) {
-      return res.status(400).json({ message: 'User already exists' });
+      return res.status(400).json({ message: 'Email is already registered' });
     }
 
+    // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    await pool.query('INSERT INTO users (username, password, role) VALUES (?, ?, ?)', [
-      username,
-      hashedPassword,
-      role,
-    ]);
+    // Insert the new user into the database
+    await pool.query(
+      'INSERT INTO users (name, email, password, phone, role) VALUES (?, ?, ?, ?, ?)',
+      [name, email, hashedPassword, phone || null, role || 'customer']
+    );
 
     res.status(201).json({ message: 'User registered successfully' });
   } catch (error) {
@@ -41,23 +43,25 @@ export const registerUser = async (req, res) => {
 };
 
 export const loginUser = async (req, res) => {
-  const { username, password } = req.body;
+  const { email, password } = req.body;
 
   try {
-    const [users] = await pool.query('SELECT * FROM users WHERE username = ?', [username]);
+    const [users] = await pool.query('SELECT * FROM users WHERE email = ?', [email]);
     if (users.length === 0) {
       return res.status(400).json({ message: 'Invalid credentials' });
     }
 
     const user = users[0];
+
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.status(400).json({ message: 'Invalid credentials' });
     }
 
-    const token = jwt.sign({ id: user.id, role: user.role }, 'your_jwt_secret', { expiresIn: '1h' });
+    // Use 'user_id' instead of 'id' in the JWT payload
+    const token = jwt.sign({ id: user.user_id, role: user.role }, 'your_jwt_secret', { expiresIn: '1h' });
 
-    res.status(200).json({ token });
+    res.status(200).json({ token, message: 'Login successful' });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

@@ -4,7 +4,7 @@ const pool = mysql.createPool({
   host: "localhost", // your MySQL host
   user: "root",      // your MySQL username
   password: "root",  // your MySQL password
-  database: "book_catalog", // your MySQL database name
+  database: "book_store", // Update to an existing database name
   charset: "utf8mb4", // support Thai characters
   waitForConnections: true,
   connectionLimit: 10,
