@@ -8,6 +8,7 @@ import ViewPage from './components/ViewPage'; // Import ViewPage
 import AdminPage from './components/AdminPage'; // Import AdminPage
 import EditProfilePage from './components/EditProfilePage'; // Import EditProfilePage
 import CartPage from './components/CartPage'; // Import CartPage
+import CheckoutPage from './components/CheckoutPage'; // Import CheckoutPage
 import './App.css';
 
 const App = () => {
@@ -23,6 +24,7 @@ const App = () => {
         <Route path="/admin" element={<AdminPage />} /> {/* Add AdminPage route */}
         <Route path="/edit-profile" element={<EditProfilePage />} /> {/* Add EditProfilePage route */}
         <Route path="/cart" element={<CartPage />} /> {/* Add CartPage route */}
+        <Route path="/checkout" element={<CheckoutPage />} /> {/* Add CheckoutPage route */}
       </Routes>
     </Router>
   );

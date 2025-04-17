@@ -16,6 +16,7 @@ const Navbar = () => {
         <li><Link to="/edit-profile">Edit</Link></li>
         <li><Link to="/Login">Logout</Link></li>
         <li><Link to="/cart">Cart</Link></li> {/* Add Cart link */}
+        <li><Link to="/checkout">ชำระเงิน</Link></li> {/* Add Checkout link */}
       </ul>
 
       <div className="search-container">

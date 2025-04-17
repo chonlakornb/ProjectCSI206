@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Navbar from './Navbar';
 import './CartPage.css';
 
@@ -19,6 +20,8 @@ const CartPage = () => {
       cover_image: '/src/img/3.png',
     },
   ]);
+
+  const navigate = useNavigate();
 
   const handleRemoveItem = (id) => {
     setCartItems(cartItems.filter((item) => item.id !== id));
@@ -72,7 +75,9 @@ const CartPage = () => {
         </div>
         <div className="cart-summary">
           <h2>Total: ${totalPrice.toFixed(2)}</h2>
-          <button className="checkout-btn">Proceed to Checkout</button>
+          <button className="checkout-btn" onClick={() => navigate('/checkout')}>
+            ดำเนินการชำระเงิน
+          </button> {/* Ensure this button navigates to /checkout */}
         </div>
       </div>
     </div>

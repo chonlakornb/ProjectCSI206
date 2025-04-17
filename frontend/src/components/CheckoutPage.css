@@ -1,0 +1,57 @@
+.checkout-page {
+  padding-top: 70px; /* Account for fixed navbar */
+}
+
+.checkout-container {
+  padding: 2rem;
+  max-width: 600px;
+  margin: 0 auto;
+  background: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.checkout-container h1 {
+  text-align: center;
+  margin-bottom: 2rem;
+  color: #333;
+}
+
+.checkout-container .message {
+  text-align: center;
+  color: green;
+  margin-bottom: 1rem;
+}
+
+.checkout-container form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.checkout-container input {
+  padding: 0.8rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 1rem;
+}
+
+.checkout-container input:focus {
+  border-color: #6c14d0;
+  box-shadow: 0 0 5px rgba(108, 20, 208, 0.5);
+  outline: none;
+}
+
+.checkout-container button {
+  padding: 0.8rem;
+  background: #6c14d0;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.checkout-container button:hover {
+  background: #c72092;
+}
