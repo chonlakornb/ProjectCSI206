@@ -13,6 +13,12 @@ const CheckoutPage = () => {
 
   const [message, setMessage] = useState('');
 
+  const items = [
+    { id: 1, name: 'สินค้า A', price: 100 },
+    { id: 2, name: 'สินค้า B', price: 200 },
+    { id: 3, name: 'สินค้า C', price: 300 },
+  ];
+
   const handleInputChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -36,6 +42,16 @@ const CheckoutPage = () => {
       <Navbar />
       <div className="checkout-container">
         <h1>ชำระเงิน</h1>
+        <div className="items-list">
+          <h2>รายการสินค้า</h2>
+          <ul>
+            {items.map((item) => (
+              <li key={item.id}>
+                {item.name} - ฿{item.price}
+              </li>
+            ))}
+          </ul>
+        </div>
         {message && <p className="message">{message}</p>}
         <form>
           <input

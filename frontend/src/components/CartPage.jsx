@@ -42,6 +42,8 @@ const CartPage = () => {
     0
   );
 
+  const totalQuantity = cartItems.reduce((total, item) => total + item.quantity, 0);
+
   return (
     <div className="cart-page">
       <Navbar />
@@ -74,6 +76,7 @@ const CartPage = () => {
           ))}
         </div>
         <div className="cart-summary">
+          <h2>Total Items: {totalQuantity}</h2> {/* Display total quantity */}
           <h2>Total: ${totalPrice.toFixed(2)}</h2>
           <button className="checkout-btn" onClick={() => navigate('/checkout')}>
             ดำเนินการชำระเงิน
