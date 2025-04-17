@@ -7,6 +7,7 @@ const ProductReviewPage = () => {
     { id: 1, name: 'John Doe', rating: 5, comment: 'Great product!' },
     { id: 2, name: 'Jane Smith', rating: 4, comment: 'Very useful and affordable.' },
   ]);
+
   const [newReview, setNewReview] = useState({ name: '', rating: 0, comment: '' });
 
   const handleInputChange = (e) => {
@@ -19,9 +20,20 @@ const ProductReviewPage = () => {
     setNewReview({ name: '', rating: 0, comment: '' });
   };
 
+  const handleIncreaseReviewRating = (id) => {
+    setReviews(
+      reviews.map((review) =>
+        review.id === id && review.rating < 5
+          ? { ...review, rating: review.rating + 1 }
+          : review
+      )
+    );
+  };
+
   return (
     <div className="product-review-page">
       <Navbar />
+      {/* Removed Products section */}
       <div className="review-container">
         <h1>Product Reviews</h1>
         <div className="review-list">
@@ -30,6 +42,7 @@ const ProductReviewPage = () => {
               <h3>{review.name}</h3>
               <p>Rating: {'⭐'.repeat(review.rating)}</p>
               <p>{review.comment}</p>
+              <button onClick={() => handleIncreaseReviewRating(review.id)}>Add Star</button>
             </div>
           ))}
         </div>
