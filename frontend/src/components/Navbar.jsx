@@ -15,6 +15,7 @@ const Navbar = () => {
         <li><a href="#Notifications">Notifications</a></li>
         <li><Link to="/edit-profile">Edit</Link></li>
         <li><Link to="/Login">Logout</Link></li>
+        <li><Link to="/cart">Cart</Link></li> {/* Add Cart link */}
       </ul>
 
       <div className="search-container">
