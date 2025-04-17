@@ -15,8 +15,8 @@ const Navbar = () => {
         <li><a href="#Notifications">Notifications</a></li>
         <li><Link to="/edit-profile">Edit</Link></li>
         <li><Link to="/Login">Logout</Link></li>
-        <li><Link to="/cart">Cart</Link></li> {/* Add Cart link */}
-        <li><Link to="/checkout">ชำระเงิน</Link></li> {/* Add Checkout link */}
+        <li><Link to="/cart">Cart</Link></li> {/* Restored Cart link */}
+        <li><Link to="/reviews">Reviews</Link></li> {/* Add Reviews link */}
       </ul>
 
       <div className="search-container">
@@ -28,7 +28,7 @@ const Navbar = () => {
 
       <div className="icons">
         <i className="fa-solid fa-heart"></i>
-        <i className="fa-solid fa-cart-shopping"></i>
+        <i className="fa-solid fa-cart-shopping"></i> {/* Restored cart icon */}
         <i className="fa-solid fa-user"></i>
       </div>
     </nav>
