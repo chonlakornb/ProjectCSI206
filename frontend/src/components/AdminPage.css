@@ -49,6 +49,36 @@
     box-shadow: 0px 0px 5px rgba(0, 123, 255, 0.5);
     outline: none;
   }
+
+  #book-categories {
+    margin-bottom: 1rem;
+    padding: 0.75rem;
+    width: 100%;
+    max-width: 400px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    transition: all 0.3s ease-in-out;
+  }
+  #book-categories:focus {
+    border-color: #007bff;
+    box-shadow: 0px 0px 5px rgba(0, 123, 255, 0.5);
+    outline: none;
+  }
+
+  #book-isbn {
+    margin-bottom: 1rem;
+    padding: 0.75rem;
+    width: 100%;
+    max-width: 400px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    transition: all 0.3s ease-in-out;
+  }
+  #book-isbn:focus {
+    border-color: #007bff;
+    box-shadow: 0px 0px 5px rgba(0, 123, 255, 0.5);
+    outline: none;
+  }
   
   /* ปุ่มหลัก */
   #add-edit-book-btn {
@@ -153,4 +183,3 @@
       padding: 0.75rem;
     }
   }
-  

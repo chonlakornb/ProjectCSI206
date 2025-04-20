@@ -6,7 +6,7 @@ import './AdminPage.css';
 
 const AdminPage = () => {
   const [books, setBooks] = useState([]);
-  const [formData, setFormData] = useState({ title: '', author: '', cover_image: '' });
+  const [formData, setFormData] = useState({ title: '', author: '', cover_image: '', categories: '', isbn: '', publisher: '', published_year: '' });
   const [editingBookId, setEditingBookId] = useState(null);
   const [message, setMessage] = useState('');
   const navigate = useNavigate();
@@ -47,38 +47,56 @@ const AdminPage = () => {
   };
 
   const handleAddOrEditBook = async () => {
-    if (!formData.title || !formData.author || !formData.cover_image) {
-      setMessage('All fields are required.');
-      return;
-    }
-
     try {
       const token = localStorage.getItem('token');
-      console.log('Submitting formData:', formData); // Debugging: Log the payload
+  
+      // เพิ่มการตรวจสอบว่า 'isbn' มีค่าหรือยัง
+      if (!formData.isbn) {
+        setMessage('ISBN is required.');
+        return;
+      }
+  
+      // 1. ส่งหมวดหมู่ (categories) ไปยัง API /api/categories ก่อน
+      if (formData.categories) {
+        // ส่งหมวดหมู่ใหม่ไปยัง API /api/categories
+        await axios.post('http://localhost:3000/api/categories', {
+          name: formData.categories
+        }, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+      }
+  
+      // 2. ถ้ากำลังแก้ไขหนังสือ (update)
       if (editingBookId) {
         await axios.put(
           `http://localhost:3000/api/books/${editingBookId}`,
-          formData,
+          { ...formData },
           { headers: { Authorization: `Bearer ${token}` } }
         );
         setMessage('Book updated successfully!');
       } else {
-        await axios.post('http://localhost:3000/api/books', formData, {
+        // 3. ถ้าเพิ่มหนังสือใหม่
+        await axios.post('http://localhost:3000/api/books', { ...formData }, {
           headers: { Authorization: `Bearer ${token}` },
         });
         setMessage('Book added successfully!');
       }
-      setFormData({ title: '', author: '', cover_image: '' });
+  
+      // รีเซ็ตฟอร์ม
+      setFormData({ title: '', author: '', cover_image: '', categories: '', isbn: '', publisher: '', published_year: '' });
       setEditingBookId(null);
+  
+      // รีเฟรชรายการหนังสือ
       const updatedBooks = await axios.get('http://localhost:3000/api/books', {
         headers: { Authorization: `Bearer ${token}` },
       });
       setBooks(updatedBooks.data);
+  
     } catch (error) {
-      console.error('Error response:', error.response); // Debugging: Log server response
-      setMessage('Failed to save book. Please check your input and try again.');
+      setMessage('Failed to save book.');
     }
   };
+  
 
   const handleEditClick = (book) => {
     setFormData(book);
@@ -127,6 +145,38 @@ const AdminPage = () => {
           name="cover_image"
           placeholder="Cover Image URL"
           value={formData.cover_image}
+          onChange={handleInputChange}
+        />
+        <input
+          id="book-categories"
+          type="text"
+          name="categories"
+          placeholder="Categories (comma-separated)"
+          value={formData.categories}
+          onChange={handleInputChange}
+        />
+        <input
+          id="book-isbn"
+          type="text"
+          name="isbn"
+          placeholder="ISBN"
+          value={formData.isbn}
+          onChange={handleInputChange}
+        />
+        <input
+          id="book-publisher"
+          type="text"
+          name="publisher"
+          placeholder="Publisher"
+          value={formData.publisher}
+          onChange={handleInputChange}
+        />
+        <input
+          id="book-published-year"
+          type="text"
+          name="published_year"
+          placeholder="Published Year"
+          value={formData.published_year}
           onChange={handleInputChange}
         />
         <button id="add-edit-book-btn" onClick={handleAddOrEditBook}>

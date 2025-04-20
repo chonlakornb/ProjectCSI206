@@ -1,79 +1,27 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 const Products = () => {
-  const products = [
-    {
-      id: 1,
-      name: 'KAGURABACHI',
-      description: 'Lorem ipsum dolor sit, amet consectetur adipisicing elit.',
-      price: 140.00,
-      image: '1.png',
-    },
-    {
-      id: 2,
-      name: 'ONE PIECE 104',
-      description: 'Lorem ipsum dolor sit, amet consectetur adipisicing elit.',
-      price: 120.00,
-      image: '3.png',
-    },
-    {
-      id: 3,
-      name: 'SAKAMOTO DAYS ',
-      description: 'Lorem ipsum dolor sit, amet consectetur adipisicing elit.',
-      price: 140.00,
-      image: '5.png',
-    },
-    {
-      id: 4,
-      name: 'SAKAMOTO DAYS 16',
-      description: 'Lorem ipsum dolor sit, amet consectetur adipisicing elit.',
-      price: 160.00,
-      image: '6.png',
-    },
-    {
-      id: 5,
-      name: 'JUJUTSU KAISEN 28',
-      description: 'Lorem ipsum dolor sit, amet consectetur adipisicing elit.',
-      price: 180.00,
-      image: '7.png',
-    },
-    {
-      id: 6,
-      name: 'MY HERO ACADEMIA ',
-      description: 'Lorem ipsum dolor sit, amet consectetur adipisicing elit.',
-      price: 200.00,
-      image: '8.png',
-    },
-    {
-      id: 7,
-      name: 'KAIJU NO.8 12',
-      description: 'Lorem ipsum dolor sit, amet consectetur adipisicing elit.',
-      price: 220.00,
-      image: '9.png',
-    },
-    {
-      id: 8,
-      name: 'KAIJU NO.8 8',
-      description: 'Lorem ipsum dolor sit, amet consectetur adipisicing elit.',
-      price: 240.00,
-      image: '10.png',
-    },
-    {
-      id: 9,
-      name: 'JUJUTSU KAISEN 26',
-      description: 'Lorem ipsum dolor sit, amet consectetur adipisicing elit.',
-      price: 260.00,
-      image: '11.png',
-    },
-  ];
-
+  const [products, setProducts] = useState([]);
   const [message, setMessage] = useState('');
-  const navigate = useNavigate(); // Initialize useNavigate
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchBooks = async () => {
+      try {
+        const response = await axios.get('http://localhost:3000/api/books');
+        setProducts(response.data);
+      } catch (error) {
+        setMessage('Failed to fetch products.');
+      }
+    };
+
+    fetchBooks();
+  }, []);
 
   const handleViewProduct = (product) => {
-    navigate('/view', { state: { product: { ...product, image: `/src/img/${product.image}` } } }); // Pass full image path
+    navigate('/view', { state: { product: { ...product, image: product.cover_image } } });
   };
 
   const handleAddToFavorites = async (product) => {
@@ -82,9 +30,9 @@ const Products = () => {
         'http://localhost:3000/api/favorites',
         {
           book_id: product.id,
-          title: product.name,
-          author: product.description,
-          cover_image: `/src/img/${product.image}`,
+          title: product.title,
+          author: product.author,
+          cover_image: product.cover_image,
         },
         {
           headers: {
@@ -92,11 +40,11 @@ const Products = () => {
           },
         }
       );
-      setMessage(`${product.name} added to favorites!`);
+      setMessage(`${product.title} added to favorites!`);
       setTimeout(() => {
         setMessage('');
-        navigate('/favorites'); // Navigate to the Favorites page immediately
-      }, 500); // Redirect after 0.5 seconds
+        navigate('/favorites');
+      }, 500);
     } catch (error) {
       setMessage(error.response?.data?.message || 'Failed to add to favorites.');
     }
@@ -114,12 +62,12 @@ const Products = () => {
               <i className="fa-solid fa-share"></i>
             </div>
             <div className="image">
-              <img src={`./src/img/${product.image}`} alt={`Product ${product.id}`} />
+              <img src={product.cover_image} alt={`Product ${product.id}`} />
             </div>
             <div className="products_text">
-              <h2>{product.name}</h2>
-              <p>{product.description}</p>
-              <h3>${product.price.toFixed(2)}</h3>
+              <h2>{product.title}</h2>
+              <p>{product.author}</p>
+              <h3>${product.price?.toFixed(2) || 'N/A'}</h3>
               <div className="products_star">
                 {[...Array(5)].map((_, starIndex) => (
                   <i
@@ -133,7 +81,7 @@ const Products = () => {
               <div className="button-group">
                 <button
                   className="btn"
-                  onClick={() => handleViewProduct(product)} // Navigate to ViewPage
+                  onClick={() => handleViewProduct(product)}
                 >
                   View
                 </button>
