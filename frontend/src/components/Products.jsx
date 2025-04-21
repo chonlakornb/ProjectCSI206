@@ -21,18 +21,24 @@ const Products = () => {
   }, []);
 
   const handleViewProduct = (product) => {
-    navigate('/view', { state: { product: { ...product, image: product.cover_image } } });
+    try {
+      navigate('/viewpage', { state: { product } }); // Ensure the route matches the one in your router
+    } catch (error) {
+      console.error('Navigation failed:', error);
+      setMessage('Failed to navigate to the product view page.');
+    }
   };
 
-  const handleAddToFavorites = async (product) => {
+  const handleAddToCart = async (product) => {
     try {
       await axios.post(
-        'http://localhost:3000/api/favorites',
+        'http://localhost:3000/api/cart',
         {
           book_id: product.id,
           title: product.title,
           author: product.author,
           cover_image: product.cover_image,
+          price: product.price,
         },
         {
           headers: {
@@ -40,13 +46,10 @@ const Products = () => {
           },
         }
       );
-      setMessage(`${product.title} added to favorites!`);
-      setTimeout(() => {
-        setMessage('');
-        navigate('/favorites');
-      }, 500);
+      setMessage(`${product.title} added to cart!`);
+      setTimeout(() => setMessage(''), 500);
     } catch (error) {
-      setMessage(error.response?.data?.message || 'Failed to add to favorites.');
+      setMessage(error.response?.data?.message || 'Failed to add to cart.');
     }
   };
 
@@ -87,9 +90,9 @@ const Products = () => {
                 </button>
                 <button
                   className="favorite-btn"
-                  onClick={() => handleAddToFavorites(product)}
+                  onClick={() => handleAddToCart(product)}
                 >
-                  Add to Favorites
+                  Add to Cart
                 </button>
               </div>
             </div>

@@ -22,6 +22,7 @@ const App = () => {
         <Route path="/home" element={<NikePage />} />
         <Route path="/favorites" element={<Favorites />} />
         <Route path="/view" element={<ViewPage />} /> {/* Add ViewPage route */}
+        <Route path="/viewpage" element={<ViewPage />} /> {/* Add ViewPage route */}
         <Route path="/admin" element={<AdminPage />} /> {/* Add AdminPage route */}
         <Route path="/edit-profile" element={<EditProfilePage />} /> {/* Add EditProfilePage route */}
         <Route path="/cart" element={<CartPage />} /> {/* Add CartPage route */}

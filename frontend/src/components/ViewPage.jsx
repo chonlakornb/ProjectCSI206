@@ -1,17 +1,39 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import Navbar from './Navbar'; // นำเข้า Navbar
 import './ViewPage.css';
 
 const ViewPage = () => {
   const location = useLocation();
-  const product = location.state?.product || {
+  const [product, setProduct] = useState({
     id: 0,
-    name: 'Unknown Product',
+    title: 'Unknown Product',
+    author: 'Unknown Author',
     description: 'No description available.',
     price: 0.0,
-    image: '/src/img/default.png', // รูปเริ่มต้นหากไม่มีข้อมูล
-  };
+    image: '/src/img/default.png',
+  });
+
+  useEffect(() => {
+    const fetchProduct = async () => {
+      const productId = location.state?.product?.id;
+      if (productId) {
+        try {
+          const response = await fetch(`http://localhost:3000/api/books/${productId}`);
+          if (response.ok) {
+            const data = await response.json();
+            setProduct(data);
+          } else {
+            console.error('Failed to fetch product details');
+          }
+        } catch (error) {
+          console.error('Error fetching product:', error);
+        }
+      }
+    };
+
+    fetchProduct();
+  }, [location.state]);
 
   const recommendedProducts = [
     { id: 2, name: 'ONE PIECE 104', price: 120.0, image: '/src/img/3.png' },
@@ -22,16 +44,17 @@ const ViewPage = () => {
 
   return (
     <div className="view-page">
-      <Navbar /> {/* ✅ เพิ่ม Navbar กลับมา */}
+      <Navbar /> 
       
       <div className="product-details">
         <div className="product-card">
-          <img src={product.image} alt={product.name} />
+          <img src={product.image} alt={product.title} />
         </div>
         <div className="product-info">
-          <h1>{product.name}</h1>
+          <h1>{product.title}</h1>
+          <h3>by {product.author}</h3>
           <p>{product.description}</p>
-          <h2>${product.price.toFixed(2)}</h2>
+          <h2>${(product.price ?? 0).toFixed(2)}</h2>
           <button className="add-to-cart-btn">Add to Cart</button>
         </div>
       </div>
