@@ -5,15 +5,20 @@ import axios from 'axios';
 const Products = () => {
   const [products, setProducts] = useState([]);
   const [message, setMessage] = useState('');
+  const [error, setError] = useState(null); // Add error state
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchBooks = async () => {
       try {
+        console.log('Fetching products...'); // Debugging log
         const response = await axios.get('http://localhost:3000/api/books');
+        console.log('Products fetched:', response.data); // Debugging log
         setProducts(response.data);
-      } catch (error) {
+      } catch (err) {
+        console.error('Error fetching products:', err); // Debugging log
         setMessage('Failed to fetch products.');
+        setError('Failed to fetch products. Please try again later.');
       }
     };
 
@@ -29,7 +34,7 @@ const Products = () => {
       await axios.post(
         'http://localhost:3000/api/favorites',
         {
-          book_id: product.id,
+          book_id: product.book_id, // Use book_id from backend
           title: product.title,
           author: product.author,
           cover_image: product.cover_image,
@@ -50,52 +55,63 @@ const Products = () => {
     }
   };
 
+  if (error) {
+    return <p className="error-message">{error}</p>; // Display error message
+  }
+
   return (
     <div className="products" id="Products">
       <h1>PRODUCTS</h1>
       {message && <p className="message">{message}</p>}
-      <div className="box">
-        {products.map((product) => (
-          <div className="card" key={product.id}>
-            <div className="small_card">
-              <i className="fa-solid fa-heart"></i>
-              <i className="fa-solid fa-share"></i>
-            </div>
-            <div className="image">
-              <img src={product.cover_image} alt={`Product ${product.id}`} />
-            </div>
-            <div className="products_text">
-              <h2>{product.title}</h2>
-              <p>{product.author}</p>
-              <h3>${product.price?.toFixed(2) || 'N/A'}</h3>
-              <div className="products_star">
-                {[...Array(5)].map((_, starIndex) => (
-                  <i
-                    key={starIndex}
-                    className={`fa-solid ${
-                      starIndex < 4 ? 'fa-star' : 'fa-star-half-stroke'
-                    }`}
-                  ></i>
-                ))}
+      {products.length === 0 ? (
+        <p>No products available.</p>
+      ) : (
+        <div className="box">
+          {products.map((product) => (
+            <div className="card" key={product.book_id}> {/* Use book_id */}
+              <div className="small_card">
+                <i className="fa-solid fa-heart"></i>
+                <i className="fa-solid fa-share"></i>
               </div>
-              <div className="button-group">
-                <button
-                  className="btn"
-                  onClick={() => handleViewProduct(product)}
-                >
-                  View
-                </button>
-                <button
-                  className="favorite-btn"
-                  onClick={() => handleAddToFavorites(product)}
-                >
-                  Add to Favorites
-                </button>
+              <div className="image">
+                <img src={product.cover_image} alt={`Product ${product.book_id}`} />
+              </div>
+              <div className="products_text">
+                <h2>{product.title}</h2>
+                <p>{product.author}</p>
+                <h3>
+                  $
+                  {typeof product.price === 'number' ? product.price.toFixed(2) : 'N/A'}
+                </h3>
+                <div className="products_star">
+                  {[...Array(5)].map((_, starIndex) => (
+                    <i
+                      key={starIndex}
+                      className={`fa-solid ${
+                        starIndex < 4 ? 'fa-star' : 'fa-star-half-stroke'
+                      }`}
+                    ></i>
+                  ))}
+                </div>
+                <div className="button-group">
+                  <button
+                    className="btn"
+                    onClick={() => handleViewProduct(product)}
+                  >
+                    View
+                  </button>
+                  <button
+                    className="favorite-btn"
+                    onClick={() => handleAddToFavorites(product)}
+                  >
+                    Add to Favorites
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };

@@ -1,5 +1,5 @@
 import express from 'express';
-import { getCartItems, addToCart } from '../controllers/cartController.js';
+import { getCartItems, addToCart, updateCartItem, deleteCartItem } from '../controllers/cartController.js';
 import { authMiddleware } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
@@ -86,5 +86,71 @@ router.get('/cart', authMiddleware, getCartItems);
  *         description: Internal server error.
  */
 router.post('/cart', authMiddleware, addToCart);
+
+/**
+ * @swagger
+ * /api/cart/{id}:
+ *   put:
+ *     summary: Update cart item quantity
+ *     description: Update the quantity of a specific item in the cart.
+ *     tags: [Cart]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The ID of the cart item to update.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               quantity:
+ *                 type: number
+ *                 description: The new quantity for the cart item.
+ *     responses:
+ *       200:
+ *         description: Cart item updated successfully.
+ *       404:
+ *         description: Cart item or book not found.
+ *       401:
+ *         description: Unauthorized.
+ *       500:
+ *         description: Internal server error.
+ */
+router.put('/cart/:id', authMiddleware, updateCartItem);
+
+/**
+ * @swagger
+ * /api/cart/{id}:
+ *   delete:
+ *     summary: Delete a cart item
+ *     description: Remove a specific item from the cart by its ID.
+ *     tags: [Cart]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The ID of the cart item to delete.
+ *     responses:
+ *       200:
+ *         description: Cart item deleted successfully.
+ *       404:
+ *         description: Cart item not found.
+ *       401:
+ *         description: Unauthorized.
+ *       500:
+ *         description: Internal server error.
+ */
+router.delete('/cart/:id', authMiddleware, deleteCartItem);
 
 export default router;

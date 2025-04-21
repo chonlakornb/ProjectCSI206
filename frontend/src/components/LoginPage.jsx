@@ -4,7 +4,7 @@ import axios from 'axios';
 import './LoginPage.css';
 
 const LoginPage = () => {
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
   const navigate = useNavigate();
@@ -12,7 +12,7 @@ const LoginPage = () => {
   const handleLogin = async () => {
     try {
       const loginResponse = await axios.post('http://localhost:3000/api/auth/login', {
-        username,
+        email, // Ensure email is used instead of username
         password,
       });
       const token = loginResponse.data.token; // Get token from login response
@@ -30,6 +30,8 @@ const LoginPage = () => {
       // Redirect based on role
       if (role === 'admin') {
         setTimeout(() => navigate('/admin'), 1000); // Redirect to AdminPage for admin users
+      } else if (role === 'seller') {
+        setTimeout(() => navigate('/seller'), 1000); // Redirect to SellerPage for seller users
       } else {
         setTimeout(() => navigate('/home'), 1000); // Redirect to home for other users
       }
@@ -42,10 +44,10 @@ const LoginPage = () => {
     <div className="login-container" id='Login'>
       <h1>Login</h1>
       <input
-        type="text"
-        placeholder="Username"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
+        type="email"
+        placeholder="Email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
       />
       <input
         type="password"

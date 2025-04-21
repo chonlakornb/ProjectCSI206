@@ -16,7 +16,7 @@ export const getAllBooks = async (req, res) => {
   try {
     // Use 'book_id' and include additional fields
     const [books] = await pool.query(
-      'SELECT book_id, title, isbn, author, publisher, price, stock, category_id, seller_id, created_at FROM books'
+      'SELECT book_id, title, isbn, author, publisher, price, stock, category_id, user_id, created_at FROM books'
     );
     res.json(books);
   } catch (error) {
@@ -28,7 +28,7 @@ export const getBookById = async (req, res) => {
   try {
     // Use 'book_id' instead of 'id'
     const [books] = await pool.query(
-      'SELECT book_id, title, isbn, author, publisher, price, stock, category_id, seller_id, created_at FROM books WHERE book_id = ?',
+      'SELECT book_id, title, isbn, author, publisher, price, stock, category_id, user_id, created_at FROM books WHERE book_id = ?',
       [req.params.id]
     );
     if (books.length === 0) {
@@ -41,9 +41,14 @@ export const getBookById = async (req, res) => {
 };
 
 export const addBook = async (req, res) => {
-  const { title, isbn, author, publisher, price, stock, category_id, seller_id } = req.body;
+  const { title, isbn, author, publisher, price, stock, category_id, user_id } = req.body;
 
   try {
+    // Role-based authorization
+    if (!['seller', 'admin'].includes(req.user.role)) {
+      return res.status(403).json({ message: 'Forbidden: You do not have permission to add books.' });
+    }
+
     // Validate category_id
     if (category_id) {
       const [categories] = await pool.query('SELECT * FROM categories WHERE category_id = ?', [category_id]);
@@ -52,18 +57,18 @@ export const addBook = async (req, res) => {
       }
     }
 
-    // Validate seller_id
-    if (seller_id) {
-      const [sellers] = await pool.query('SELECT * FROM users WHERE user_id = ? AND role = ?', [seller_id, 'seller']);
+    // Validate user_id as a seller
+    if (user_id) {
+      const [sellers] = await pool.query('SELECT * FROM users WHERE user_id = ? AND role = ?', [user_id, 'seller']);
       if (sellers.length === 0) {
-        return res.status(400).json({ message: 'Invalid seller_id. Seller does not exist.' });
+        return res.status(400).json({ message: 'Invalid user_id. Seller does not exist.' });
       }
     }
 
     // Insert all fields into the 'books' table
     await pool.query(
-      'INSERT INTO books (title, isbn, author, publisher, price, stock, category_id, seller_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
-      [title, isbn, author, publisher, price, stock || 0, category_id || null, seller_id || null]
+      'INSERT INTO books (title, isbn, author, publisher, price, stock, category_id, user_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+      [title, isbn, author, publisher, price, stock || 0, category_id || null, user_id || null]
     );
     res.status(201).json({ message: 'Book added successfully' });
   } catch (error) {
@@ -72,9 +77,14 @@ export const addBook = async (req, res) => {
 };
 
 export const updateBookById = async (req, res) => {
-  const { title, isbn, author, publisher, price, stock, category_id, seller_id } = req.body;
+  const { title, isbn, author, publisher, price, stock, category_id, user_id } = req.body;
 
   try {
+    // Role-based authorization
+    if (!['seller', 'admin'].includes(req.user.role)) {
+      return res.status(403).json({ message: 'Forbidden: You do not have permission to update books.' });
+    }
+
     const [books] = await pool.query('SELECT * FROM books WHERE book_id = ?', [req.params.id]);
     if (books.length === 0) {
       return res.status(404).json({ message: 'Book not found' });
@@ -88,17 +98,17 @@ export const updateBookById = async (req, res) => {
       }
     }
 
-    // Validate seller_id
-    if (seller_id) {
-      const [sellers] = await pool.query('SELECT * FROM users WHERE user_id = ? AND role = ?', [seller_id, 'seller']);
+    // Validate user_id as a seller
+    if (user_id) {
+      const [sellers] = await pool.query('SELECT * FROM users WHERE user_id = ? AND role = ?', [user_id, 'seller']);
       if (sellers.length === 0) {
-        return res.status(400).json({ message: 'Invalid seller_id. Seller does not exist.' });
+        return res.status(400).json({ message: 'Invalid user_id. Seller does not exist.' });
       }
     }
 
     // Update all fields in the 'books' table
     await pool.query(
-      'UPDATE books SET title = ?, isbn = ?, author = ?, publisher = ?, price = ?, stock = ?, category_id = ?, seller_id = ? WHERE book_id = ?',
+      'UPDATE books SET title = ?, isbn = ?, author = ?, publisher = ?, price = ?, stock = ?, category_id = ?, user_id = ? WHERE book_id = ?',
       [
         title || books[0].title,
         isbn || books[0].isbn,
@@ -107,7 +117,7 @@ export const updateBookById = async (req, res) => {
         price || books[0].price,
         stock || books[0].stock,
         category_id || books[0].category_id,
-        seller_id || books[0].seller_id,
+        user_id || books[0].user_id,
         req.params.id,
       ]
     );
@@ -119,6 +129,11 @@ export const updateBookById = async (req, res) => {
 
 export const deleteBookById = async (req, res) => {
   try {
+    // Role-based authorization
+    if (!['seller', 'admin'].includes(req.user.role)) {
+      return res.status(403).json({ message: 'Forbidden: You do not have permission to delete books.' });
+    }
+
     const [books] = await pool.query('SELECT * FROM books WHERE book_id = ?', [req.params.id]);
     if (books.length === 0) {
       return res.status(404).json({ message: 'Book not found' });
@@ -136,7 +151,7 @@ export const searchBooks = async (req, res) => {
 
   try {
     const [books] = await pool.query(
-      'SELECT book_id, title, isbn, author, publisher, price, stock, category_id, seller_id, created_at FROM books WHERE title LIKE ? OR author LIKE ?',
+      'SELECT book_id, title, isbn, author, publisher, price, stock, category_id, user_id, created_at FROM books WHERE title LIKE ? OR author LIKE ?',
       [`%${query}%`, `%${query}%`]
     );
     res.json(books);
@@ -146,7 +161,7 @@ export const searchBooks = async (req, res) => {
 };
 
 export const filterBooks = async (req, res) => {
-  const { category_id, seller_id } = req.query;
+  const { category_id, user_id } = req.query;
 
   try {
     const conditions = [];
@@ -157,12 +172,12 @@ export const filterBooks = async (req, res) => {
       values.push(category_id);
     }
 
-    if (seller_id) {
-      conditions.push('seller_id = ?');
-      values.push(seller_id);
+    if (user_id) {
+      conditions.push('user_id = ?');
+      values.push(user_id);
     }
 
-    const query = `SELECT book_id, title, isbn, author, publisher, price, stock, category_id, seller_id, created_at FROM books ${
+    const query = `SELECT book_id, title, isbn, author, publisher, price, stock, category_id, user_id, created_at FROM books ${
       conditions.length ? 'WHERE ' + conditions.join(' AND ') : ''
     }`;
     const [books] = await pool.query(query, values);

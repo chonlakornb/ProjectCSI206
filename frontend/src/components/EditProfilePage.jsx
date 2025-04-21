@@ -1,24 +1,44 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './EditProfilePage.css';
 
 const EditProfilePage = () => {
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [phone, setPhone] = useState('');
   const [message, setMessage] = useState('');
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        const response = await axios.get('http://localhost:3000/api/users/me', {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        const { email, phone } = response.data;
+        setEmail(email);
+        setPhone(phone || '');
+      } catch (error) {
+        setMessage('Failed to load profile data.');
+      }
+    };
+
+    fetchUserProfile();
+  }, []);
 
   const handleSave = async () => {
     try {
       const token = localStorage.getItem('token');
+      const payload = { email, password, phone };
       await axios.put(
         'http://localhost:3000/api/users/me',
-        { username, password },
+        payload,
         { headers: { Authorization: `Bearer ${token}` } }
       );
       setMessage('Profile updated successfully!');
-      setTimeout(() => navigate('/home'), 1000); // Redirect to home after 1 second
+      setTimeout(() => navigate('/home'), 1000);
     } catch (error) {
       setMessage(error.response?.data?.message || 'Failed to update profile.');
     }
@@ -31,7 +51,7 @@ const EditProfilePage = () => {
         headers: { Authorization: `Bearer ${token}` },
       });
       setMessage('Profile deleted successfully!');
-      setTimeout(() => navigate('/'), 1000); // Redirect to login after 1 second
+      setTimeout(() => navigate('/'), 1000);
     } catch (error) {
       setMessage(error.response?.data?.message || 'Failed to delete profile.');
     }
@@ -41,16 +61,22 @@ const EditProfilePage = () => {
     <div className="edit-profile-container" id='Edit'>
       <h1>Edit Profile</h1>
       <input
-        type="text"
-        placeholder="New Username"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
+        type="email"
+        placeholder="New Email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
       />
       <input
         type="password"
         placeholder="New Password"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
+      />
+      <input
+        type="text"
+        placeholder="New Phone Number"
+        value={phone}
+        onChange={(e) => setPhone(e.target.value)}
       />
       <button onClick={handleSave}>Save</button>
       <button onClick={handleDelete} className="delete-button">Delete Profile</button>

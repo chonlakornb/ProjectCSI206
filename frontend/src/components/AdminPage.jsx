@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import Navbar from './Navbar'; // Optional: Add Navbar for navigation
+import Navbar from './Navbar';
 import './AdminPage.css';
 
 const AdminPage = () => {
@@ -9,17 +9,21 @@ const AdminPage = () => {
   const [formData, setFormData] = useState({ title: '', author: '', cover_image: '', categories: '', isbn: '', publisher: '', published_year: '' });
   const [editingBookId, setEditingBookId] = useState(null);
   const [message, setMessage] = useState('');
+  const [loading, setLoading] = useState(true); // Loading state
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchBooks = async () => {
       try {
         const token = localStorage.getItem('token');
+        console.log('Fetching books...'); // Debugging log
         const response = await axios.get('http://localhost:3000/api/books', {
           headers: { Authorization: `Bearer ${token}` },
         });
+        console.log('Books fetched:', response.data); // Debugging log
         setBooks(response.data);
       } catch (error) {
+        console.error('Error fetching books:', error); // Debugging log
         setMessage('Failed to fetch books.');
       }
     };
@@ -27,19 +31,27 @@ const AdminPage = () => {
     const checkAdminRole = async () => {
       try {
         const token = localStorage.getItem('token');
+        console.log('Checking admin role...'); // Debugging log
         const response = await axios.get('http://localhost:3000/api/users/me', {
           headers: { Authorization: `Bearer ${token}` },
         });
+        console.log('User role:', response.data.role); // Debugging log
         if (response.data.role !== 'admin') {
-          navigate('/'); // Redirect non-admin users
+          setMessage('Access denied. Redirecting...');
+          setTimeout(() => navigate('/'), 2000); // Redirect non-admin users
+        } else {
+          await fetchBooks(); // Fetch books only if the user is an admin
         }
       } catch (error) {
-        navigate('/'); // Redirect if token is invalid
+        console.error('Error checking admin role:', error); // Debugging log
+        setMessage('Invalid session. Redirecting...');
+        setTimeout(() => navigate('/'), 2000); // Redirect if token is invalid
+      } finally {
+        setLoading(false); // Ensure loading is set to false
       }
     };
 
     checkAdminRole();
-    fetchBooks();
   }, [navigate]);
 
   const handleInputChange = (e) => {
@@ -49,75 +61,82 @@ const AdminPage = () => {
   const handleAddOrEditBook = async () => {
     try {
       const token = localStorage.getItem('token');
-  
-      // เพิ่มการตรวจสอบว่า 'isbn' มีค่าหรือยัง
-      if (!formData.isbn) {
-        setMessage('ISBN is required.');
+      console.log('Saving book:', formData); // Debugging log
+      if (!formData.isbn || !formData.title) {
+        setMessage('ISBN and Title are required.');
         return;
       }
-  
-      // 1. ส่งหมวดหมู่ (categories) ไปยัง API /api/categories ก่อน
+
+      let category_id = null;
       if (formData.categories) {
-        // ส่งหมวดหมู่ใหม่ไปยัง API /api/categories
-        await axios.post('http://localhost:3000/api/categories', {
-          name: formData.categories
-        }, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
+        console.log('Creating category:', formData.categories); // Debugging log
+        const categoryResponse = await axios.post(
+          'http://localhost:3000/api/categories',
+          { name: formData.categories },
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        category_id = categoryResponse.data.id;
+        console.log('Category created with ID:', category_id); // Debugging log
       }
-  
-      // 2. ถ้ากำลังแก้ไขหนังสือ (update)
+
+      const bookData = { ...formData, category_id };
       if (editingBookId) {
+        console.log('Updating book with ID:', editingBookId); // Debugging log
         await axios.put(
           `http://localhost:3000/api/books/${editingBookId}`,
-          { ...formData },
+          bookData,
           { headers: { Authorization: `Bearer ${token}` } }
         );
         setMessage('Book updated successfully!');
       } else {
-        // 3. ถ้าเพิ่มหนังสือใหม่
-        await axios.post('http://localhost:3000/api/books', { ...formData }, {
+        console.log('Adding new book:', bookData); // Debugging log
+        await axios.post('http://localhost:3000/api/books', bookData, {
           headers: { Authorization: `Bearer ${token}` },
         });
         setMessage('Book added successfully!');
       }
-  
-      // รีเซ็ตฟอร์ม
+
       setFormData({ title: '', author: '', cover_image: '', categories: '', isbn: '', publisher: '', published_year: '' });
       setEditingBookId(null);
-  
-      // รีเฟรชรายการหนังสือ
+
       const updatedBooks = await axios.get('http://localhost:3000/api/books', {
         headers: { Authorization: `Bearer ${token}` },
       });
+      console.log('Books after save:', updatedBooks.data); // Debugging log
       setBooks(updatedBooks.data);
-  
     } catch (error) {
-      setMessage('Failed to save book.');
+      console.error('Error saving book:', error); // Debugging log
+      setMessage(error.response?.data?.message || 'Failed to save book.');
     }
   };
-  
 
   const handleEditClick = (book) => {
-    setFormData(book);
-    setEditingBookId(book.id);
+    console.log('Editing book:', book); // Debugging log
+    setFormData({ ...book, categories: book.category_id });
+    setEditingBookId(book.book_id);
   };
 
-  const handleDeleteBook = async (id) => {
+  const handleDeleteBook = async (book_id) => {
     try {
       const token = localStorage.getItem('token');
-      await axios.delete(`http://localhost:3000/api/books/${id}`, {
+      console.log('Deleting book with ID:', book_id); // Debugging log
+      await axios.delete(`http://localhost:3000/api/books/${book_id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      setBooks(books.filter((book) => book.id !== id));
+      setBooks(books.filter((book) => book.book_id !== book_id));
       setMessage('Book deleted successfully!');
     } catch (error) {
-      setMessage('Failed to delete book.');
+      console.error('Error deleting book:', error); // Debugging log
+      setMessage(error.response?.data?.message || 'Failed to delete book.');
     }
   };
 
+  if (loading) {
+    return <p>Loading...</p>; // Display loading message while checking role
+  }
+
   return (
-    <div className="admin-page" id='admin'>
+    <div className="admin-page" id="admin">
       <Navbar />
       <h1>Admin Panel</h1>
       {message && <p className="message">{message}</p>}
@@ -185,26 +204,33 @@ const AdminPage = () => {
       </div>
       <div className="books-table">
         <h2>Books List</h2>
-        <table>
-          <thead>
-            <tr>
-              <th>Title</th>
-              <th>Author</th>
-              <th>Cover</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {books.map((book) => (
-              <tr key={book.id}>
-                <td>{book.title}</td>
-                <td>{book.author}</td>
-                <td><img src={book.cover_image} alt={book.title} width="50" /></td>
-                <td><button id={`edit-book-${book.id}`} onClick={() => handleEditClick(book)}>Edit</button><button id={`delete-book-${book.id}`} onClick={() => handleDeleteBook(book.id)}>Delete</button></td>
+        {books.length === 0 ? (
+          <p>No books available. Add a new book to get started.</p>
+        ) : (
+          <table>
+            <thead>
+              <tr>
+                <th>Title</th>
+                <th>Author</th>
+                <th>Cover</th>
+                <th>Actions</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {books.map((book) => (
+                <tr key={book.book_id}>
+                  <td>{book.title}</td>
+                  <td>{book.author}</td>
+                  <td><img src={book.cover_image} alt={book.title} width="50" /></td>
+                  <td>
+                    <button id={`edit-book-${book.book_id}`} onClick={() => handleEditClick(book)}>Edit</button>
+                    <button id={`delete-book-${book.book_id}`} onClick={() => handleDeleteBook(book.book_id)}>Delete</button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
       </div>
     </div>
   );

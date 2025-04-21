@@ -43,10 +43,10 @@ export const registerUser = async (req, res) => {
 };
 
 export const loginUser = async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password } = req.body; // Use email instead of username
 
   try {
-    const [users] = await pool.query('SELECT * FROM users WHERE email = ?', [email]);
+    const [users] = await pool.query('SELECT * FROM users WHERE email = ?', [email]); // Query by email
     if (users.length === 0) {
       return res.status(400).json({ message: 'Invalid credentials' });
     }
@@ -58,7 +58,6 @@ export const loginUser = async (req, res) => {
       return res.status(400).json({ message: 'Invalid credentials' });
     }
 
-    // Use 'user_id' instead of 'id' in the JWT payload
     const token = jwt.sign({ id: user.user_id, role: user.role }, 'your_jwt_secret', { expiresIn: '1h' });
 
     res.status(200).json({ token, message: 'Login successful' });
