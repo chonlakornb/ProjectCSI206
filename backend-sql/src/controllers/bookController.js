@@ -34,7 +34,7 @@ export const getBookById = async (req, res) => {
 };
 
 export const addBook = async (req, res) => {
-  const { title, isbn, author, publisher, published_year, categories, cover_image, pdf_file } = req.body;
+  const { title, isbn, author, publisher, published_year, categories, cover_image, pdf_file, price } = req.body;
 
   try {
     // Log the input data for debugging
@@ -48,12 +48,12 @@ export const addBook = async (req, res) => {
     }
 
     // Log the query and parameters for debugging
-    console.log('Query:', 'INSERT INTO books (`title`, `isbn`, `author`, `publisher`, `published_year`, `categories`, `cover_image`, `pdf_file`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)');
-    console.log('Parameters:', [title, isbn, author, publisher, published_year, categories, cover_image, pdf_file]);
+    console.log('Query:', 'INSERT INTO books (`title`, `isbn`, `author`, `publisher`, `published_year`, `categories`, `cover_image`, `pdf_file`, `price`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)');
+    console.log('Parameters:', [title, isbn, author, publisher, published_year, categories, cover_image, pdf_file, price]);
 
     await pool.query(
-      'INSERT INTO books (`title`, `isbn`, `author`, `publisher`, `published_year`, `categories`, `cover_image`, `pdf_file`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
-      [title, isbn, author, publisher, published_year, categories, cover_image, pdf_file]
+      'INSERT INTO books (`title`, `isbn`, `author`, `publisher`, `published_year`, `categories`, `cover_image`, `pdf_file`, `price`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+      [title, isbn, author, publisher, published_year, categories, cover_image, pdf_file, price]
     );
     res.status(201).json({ message: 'Book added successfully' });
   } catch (error) {
@@ -63,7 +63,7 @@ export const addBook = async (req, res) => {
 };
 
 export const updateBookById = async (req, res) => {
-  const { title, isbn, author, publisher, published_year, categories, cover_image, pdf_file } = req.body;
+  const { title, isbn, author, publisher, published_year, categories, cover_image, pdf_file, price} = req.body;
 
   try {
     const [books] = await pool.query('SELECT * FROM books WHERE id = ?', [req.params.id]);
@@ -72,9 +72,9 @@ export const updateBookById = async (req, res) => {
     }
 
     await pool.query(
-      'UPDATE books SET title = ?, isbn = ?, author = ?, publisher = ?, published_year = ?, cover_image = ?, pdf_file = ? WHERE id = ?',
-      [title, isbn, author, publisher, published_year, cover_image, pdf_file, req.params.id]
-    );
+      'UPDATE books SET title = ?, isbn = ?, author = ?, publisher = ?, published_year = ?, cover_image = ?, pdf_file = ? WHERE id = ?,price = ?',
+      [title, isbn, author, publisher, published_year, cover_image, pdf_file,price, req.params.id]
+    );x
     res.json({ message: 'Book updated successfully' });
   } catch (error) {
     res.status(500).json({ message: error.message });

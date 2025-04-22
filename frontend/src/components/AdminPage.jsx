@@ -49,54 +49,65 @@ const AdminPage = () => {
   const handleAddOrEditBook = async () => {
     try {
       const token = localStorage.getItem('token');
-  
-      // เพิ่มการตรวจสอบว่า 'isbn' มีค่าหรือยัง
+
+      // ตรวจสอบว่า 'isbn' มีค่าหรือยัง
       if (!formData.isbn) {
         setMessage('ISBN is required.');
         return;
       }
-  
-      // 1. ส่งหมวดหมู่ (categories) ไปยัง API /api/categories ก่อน
+
+      // ส่งหมวดหมู่ (categories) ไปยัง API /api/categories ก่อน
       if (formData.categories) {
-        // ส่งหมวดหมู่ใหม่ไปยัง API /api/categories
-        await axios.post('http://localhost:3000/api/categories', {
-          name: formData.categories
-        }, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
+        try {
+          await axios.post('http://localhost:3000/api/categories', {
+            name: formData.categories
+          }, {
+            headers: { Authorization: `Bearer ${token}` }
+          });
+        } catch (error) {
+          if (error.response && error.response.data && error.response.data.message) {
+            setMessage(`Failed to save category: ${error.response.data.message}`);
+          } else {
+            setMessage('Failed to save category. Please try again later.');
+          }
+          return; // หยุดการทำงานถ้าการส่งข้อมูล categories ล้มเหลว
+        }
       }
-  
-      // 2. ถ้ากำลังแก้ไขหนังสือ (update)
+
+      // ถ้ากำลังแก้ไขหนังสือ (update)
       if (editingBookId) {
         await axios.put(
           `http://localhost:3000/api/books/${editingBookId}`,
           { ...formData },
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
+          { headers: { Authorization: `Bearer ${token}` }
+        });
         setMessage('Book updated successfully!');
       } else {
-        // 3. ถ้าเพิ่มหนังสือใหม่
+        // เพิ่มหนังสือใหม่
         await axios.post('http://localhost:3000/api/books', { ...formData }, {
           headers: { Authorization: `Bearer ${token}` },
         });
         setMessage('Book added successfully!');
       }
-  
+
       // รีเซ็ตฟอร์ม
       setFormData({ title: '', author: '', cover_image: '', categories: '', isbn: '', publisher: '', published_year: '', price: '' });
       setEditingBookId(null);
-  
+
       // รีเฟรชรายการหนังสือ
       const updatedBooks = await axios.get('http://localhost:3000/api/books', {
         headers: { Authorization: `Bearer ${token}` },
       });
       setBooks(updatedBooks.data);
-  
+
     } catch (error) {
-      setMessage('Failed to save book.');
+      if (error.response && error.response.data && error.response.data.message) {
+        setMessage(`Failed to save book: ${error.response.data.message}`);
+      } else {
+        setMessage('Failed to save book. Please try again later.');
+      }
     }
   };
-  
 
   const handleEditClick = (book) => {
     setFormData(book);
