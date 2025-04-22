@@ -76,7 +76,7 @@ const Products = () => {
         {products.map((product) => (
           <div className="card" key={product.id}>
             <div className="image">
-              <img src={product.cover_image} alt={`Product ${product.id}`} />
+              <img src={product.cover_image.startsWith('/uploads') ? `http://localhost:3000${product.cover_image}` : product.cover_image} alt={`Product ${product.id}`} />
             </div>
             <div className="products_text">
               <h2>{product.title}</h2>

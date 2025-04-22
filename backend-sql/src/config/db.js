@@ -1,4 +1,6 @@
 import mysql from "mysql2/promise";
+import fs from 'fs';
+import path from 'path';
 
 const pool = mysql.createPool({
   host: "localhost", // Update with your MySQL host
@@ -10,6 +12,12 @@ const pool = mysql.createPool({
   connectionLimit: 10,
   queueLimit: 0,
 });
+
+// Ensure uploads directory exists
+const uploadsDir = path.resolve('uploads');
+if (!fs.existsSync(uploadsDir)) {
+  fs.mkdirSync(uploadsDir);
+}
 
 const connectDB = async () => {
   try {

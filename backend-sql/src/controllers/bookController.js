@@ -34,7 +34,8 @@ export const getBookById = async (req, res) => {
 };
 
 export const addBook = async (req, res) => {
-  const { title, isbn, author, publisher, published_year, categories, cover_image, pdf_file, price } = req.body;
+  const { title, isbn, author, publisher, published_year, categories, pdf_file, price } = req.body;
+  const cover_image = req.file ? `/uploads/${req.file.filename}` : null;
 
   try {
     // Log the input data for debugging
@@ -57,13 +58,14 @@ export const addBook = async (req, res) => {
     );
     res.status(201).json({ message: 'Book added successfully' });
   } catch (error) {
-    console.error('Error adding book:', error.message);
-    res.status(500).json({ message: error.message });
+    console.error('Error adding book:', error); // Log the error for debugging
+    res.status(500).json({ message: 'Internal Server Error', error: error.message });
   }
 };
 
 export const updateBookById = async (req, res) => {
-  const { title, isbn, author, publisher, published_year, categories, cover_image, pdf_file, price} = req.body;
+  const { title, isbn, author, publisher, published_year, categories, pdf_file, price } = req.body;
+  const cover_image = req.file ? `/uploads/${req.file.filename}` : null;
 
   try {
     const [books] = await pool.query('SELECT * FROM books WHERE id = ?', [req.params.id]);
@@ -72,9 +74,9 @@ export const updateBookById = async (req, res) => {
     }
 
     await pool.query(
-      'UPDATE books SET title = ?, isbn = ?, author = ?, publisher = ?, published_year = ?, cover_image = ?, pdf_file = ? WHERE id = ?,price = ?',
-      [title, isbn, author, publisher, published_year, cover_image, pdf_file,price, req.params.id]
-    );x
+      'UPDATE books SET title = ?, isbn = ?, author = ?, publisher = ?, published_year = ?, categories = ?, cover_image = COALESCE(?, cover_image), pdf_file = ?, price = ? WHERE id = ?',
+      [title, isbn, author, publisher, published_year, categories, cover_image, pdf_file, price, req.params.id]
+    );
     res.json({ message: 'Book updated successfully' });
   } catch (error) {
     res.status(500).json({ message: error.message });

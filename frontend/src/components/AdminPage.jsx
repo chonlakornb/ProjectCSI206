@@ -49,44 +49,19 @@ const AdminPage = () => {
   const handleAddOrEditBook = async () => {
     try {
       const token = localStorage.getItem('token');
-
-      // ตรวจสอบว่า 'isbn' มีค่าหรือยัง
-      if (!formData.isbn) {
-        setMessage('ISBN is required.');
-        return;
+      const formDataToSend = new FormData();
+      Object.keys(formData).forEach((key) => formDataToSend.append(key, formData[key]));
+      if (formData.cover_image instanceof File) {
+        formDataToSend.append('cover_image', formData.cover_image);
       }
 
-      // ส่งหมวดหมู่ (categories) ไปยัง API /api/categories ก่อน
-      if (formData.categories) {
-        try {
-          await axios.post('http://localhost:3000/api/categories', {
-            name: formData.categories
-          }, {
-            headers: { Authorization: `Bearer ${token}` }
-          });
-        } catch (error) {
-          if (error.response && error.response.data && error.response.data.message) {
-            setMessage(`Failed to save category: ${error.response.data.message}`);
-          } else {
-            setMessage('Failed to save category. Please try again later.');
-          }
-          return; // หยุดการทำงานถ้าการส่งข้อมูล categories ล้มเหลว
-        }
-      }
+      const config = { headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'multipart/form-data' } };
 
-      // ถ้ากำลังแก้ไขหนังสือ (update)
       if (editingBookId) {
-        await axios.put(
-          `http://localhost:3000/api/books/${editingBookId}`,
-          { ...formData },
-          { headers: { Authorization: `Bearer ${token}` }
-        });
+        await axios.put(`http://localhost:3000/api/books/${editingBookId}`, formDataToSend, config);
         setMessage('Book updated successfully!');
       } else {
-        // เพิ่มหนังสือใหม่
-        await axios.post('http://localhost:3000/api/books', { ...formData }, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        await axios.post('http://localhost:3000/api/books', formDataToSend, config);
         setMessage('Book added successfully!');
       }
 
@@ -101,11 +76,8 @@ const AdminPage = () => {
       setBooks(updatedBooks.data);
 
     } catch (error) {
-      if (error.response && error.response.data && error.response.data.message) {
-        setMessage(`Failed to save book: ${error.response.data.message}`);
-      } else {
-        setMessage('Failed to save book. Please try again later.');
-      }
+      console.error('Error saving book:', error.response?.data || error.message); // Log the error
+      setMessage(error.response?.data?.message || 'Failed to save book.');
     }
   };
 
@@ -152,11 +124,25 @@ const AdminPage = () => {
         />
         <input
           id="book-cover-image"
-          type="text"
+          type="file"
           name="cover_image"
-          placeholder="Cover Image URL"
-          value={formData.cover_image}
-          onChange={handleInputChange}
+          onChange={(e) => {
+            const file = e.target.files[0];
+            setFormData({ ...formData, cover_image: file });
+            if (file) {
+              const reader = new FileReader();
+              reader.onload = (event) => {
+                document.getElementById('preview-image').src = event.target.result;
+              };
+              reader.readAsDataURL(file);
+            }
+          }}
+        />
+        <img
+          id="preview-image"
+          src={formData.cover_image instanceof File ? '' : formData.cover_image}
+          alt="Preview"
+          style={{ width: '100px', marginTop: '10px', display: formData.cover_image ? 'block' : 'none' }}
         />
         <input
           id="book-categories"
