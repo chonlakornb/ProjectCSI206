@@ -5,14 +5,14 @@ export const processPayment = async (req, res) => {
 
   try {
     // Role-based authorization
-    if (req.user.role !== 'customer') {
-      return res.status(403).json({ message: 'Forbidden: Only customers can make payments.' });
+    if (req.user.role !== 'user') { // Changed from 'customer' to 'user'
+      return res.status(403).json({ message: 'Forbidden: Only users can make payments.' });
     }
 
-    // Check if the order exists and belongs to the user
-    const [order] = await pool.query('SELECT * FROM orders WHERE order_id = ? AND user_id = ?', [order_id, req.user.id]);
+    // Check if the order exists
+    const [order] = await pool.query('SELECT * FROM orders WHERE order_id = ?', [order_id]);
     if (order.length === 0) {
-      return res.status(404).json({ message: 'Order not found or does not belong to the user.' });
+      return res.status(404).json({ message: 'Order not found.' });
     }
 
     // Check if the payment amount matches the order total
@@ -28,8 +28,8 @@ export const processPayment = async (req, res) => {
 
     // Record the payment in the payments table
     await pool.query(
-      'INSERT INTO payments (order_id, user_id, payment_method, amount, created_at) VALUES (?, ?, ?, ?, NOW())',
-      [order_id, req.user.id, payment_method, amount]
+      'INSERT INTO payments (order_id, payment_method, amount, status, paid_at) VALUES (?, ?, ?, ?, NOW())', // Removed user_id
+      [order_id, payment_method, amount, 'completed']
     );
 
     res.status(201).json({ message: 'Payment processed successfully.' });

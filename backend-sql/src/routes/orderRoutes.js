@@ -42,7 +42,7 @@ const validateCreateOrder = (req, res, next) => {
  *       500:
  *         description: Internal server error.
  */
-router.post('/', validateCreateOrder, createOrder); // Added validation middleware
+router.post('/', authMiddleware, createOrder);
 
 /**
  * @swagger

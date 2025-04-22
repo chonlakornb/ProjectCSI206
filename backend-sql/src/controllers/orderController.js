@@ -1,28 +1,52 @@
 import { pool } from '../config/db.js'; // Corrected path
 
 export const createOrder = async (req, res) => {
-    try {
-        const { userId, items, totalAmount } = req.body;
+  try {
+    const user_id = req.user.id; // Get the authenticated user's ID
+    const { address_id } = req.body;
 
-        // Validate request body
-        if (!userId || !items || !totalAmount) {
-            return res.status(400).json({ message: 'Missing required fields' });
-        }
-
-        // Simulate order creation (replace with actual database logic)
-        const newOrder = {
-            id: Date.now(),
-            userId,
-            items,
-            totalAmount,
-            createdAt: new Date(),
-        };
-
-        // Respond with the created order
-        res.status(201).json({ message: 'Order created successfully', order: newOrder });
-    } catch (error) {
-        res.status(500).json({ message: 'Server error', error: error.message });
+    // Validate required fields
+    if (!address_id) {
+      return res.status(400).json({ message: 'Missing required fields: address_id' });
     }
+
+    // Fetch cart items for the user
+    const [cartItems] = await pool.query(
+      `SELECT c.book_id, c.quantity, c.total_price 
+       FROM cart c 
+       WHERE c.user_id = ?`,
+      [user_id]
+    );
+
+    if (cartItems.length === 0) {
+      return res.status(400).json({ message: 'Cart is empty. Add items to the cart before placing an order.' });
+    }
+
+    // Calculate the total amount for the order
+    const totalAmount = cartItems.reduce((sum, item) => sum + parseFloat(item.total_price), 0);
+
+    // Create the order
+    const [orderResult] = await pool.query(
+      'INSERT INTO orders (user_id, total_price, status, address_id) VALUES (?, ?, ?, ?)',
+      [user_id, totalAmount, 'pending', address_id]
+    );
+
+    const order_id = orderResult.insertId;
+
+    // Add items to the order_items table
+    const orderItems = cartItems.map((item) => [order_id, item.book_id, item.quantity, item.total_price]);
+    await pool.query(
+      'INSERT INTO order_items (order_id, book_id, quantity, price) VALUES ?',
+      [orderItems]
+    );
+
+    // Clear the cart for the user
+    await pool.query('DELETE FROM cart WHERE user_id = ?', [user_id]);
+
+    res.status(201).json({ message: 'Order created successfully', order_id });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 };
 
 export const getOrders = async (req, res) => {
@@ -41,7 +65,7 @@ export const getOrders = async (req, res) => {
                u.phone AS user_phone
         FROM orders o
         JOIN address a ON o.address_id = a.address_id
-        JOIN users u ON o.user_id = u.user_id
+        JOIN users u ON o.user_id = u.id -- Corrected column name from u.user_id to u.id
         ORDER BY o.created_at DESC
       `;
     } else {
@@ -52,7 +76,7 @@ export const getOrders = async (req, res) => {
                u.phone AS user_phone
         FROM orders o
         JOIN address a ON o.address_id = a.address_id
-        JOIN users u ON o.user_id = u.user_id
+        JOIN users u ON o.user_id = u.id -- Corrected column name from u.user_id to u.id
         WHERE o.user_id = ?
         ORDER BY o.created_at DESC
       `;

@@ -13,8 +13,8 @@ import cartRoutes from './routes/cartRoutes.js'; // Import cart routes
 import orderRoutes from './routes/orderRoutes.js'; // Import order routes
 import shippingRoutes from './routes/shippingRoutes.js'; // Import shipping routes
 import addressRoutes from './routes/addressRoutes.js'; // Import address routes
+import paymentRoutes from './routes/paymentRoutes.js'; // Import payment routes
 import { authMiddleware } from './middleware/authMiddleware.js'; // Import auth middleware
-
 
 const app = express();
 const PORT = 3000;
@@ -37,6 +37,7 @@ app.use('/api', cartRoutes); // Use cart routes
 app.use('/api/orders', orderRoutes); // Use order routes
 app.use('/api/shipping', shippingRoutes); // Use shipping routes
 app.use('/api/address', addressRoutes); // Ensure this is registered
+app.use('/api/payments', paymentRoutes); // Register payment routes
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

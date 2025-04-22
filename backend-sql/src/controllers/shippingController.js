@@ -36,39 +36,17 @@ export const createShipping = async (req, res) => {
       return res.status(404).json({ message: 'Order not found' });
     }
 
-    // If address_id is provided, validate it
-    if (address_id) {
-      const [address] = await pool.query('SELECT * FROM address WHERE address_id = ?', [address_id]);
-      if (address.length === 0) {
-        return res.status(404).json({ message: 'Address not found' });
-      }
+    // Use the address_id from the order if not provided in the request body
+    const resolvedAddressId = address_id || order[0].address_id;
 
-      // Allow admins to use any address_id
-      if (req.user.role !== 'admin') {
-        // Ensure the address belongs to the authenticated user
-        const [userAddress] = await pool.query(
-          'SELECT * FROM address WHERE address_id = ? AND user_id = ?',
-          [address_id, req.user.id]
-        );
-        if (userAddress.length === 0) {
-          return res.status(403).json({ message: 'Access denied. Address does not belong to the user.' });
-        }
-      }
+    if (!resolvedAddressId) {
+      return res.status(400).json({ message: 'Address ID is required but not found in the order or request body.' });
     }
 
     // Create a new shipping record
     const [result] = await pool.query(
       'INSERT INTO shipping (order_id, address_id, status) VALUES (?, ?, ?)',
-      [order_id, address_id || null, 'preparing']
-    );
-
-    // Fetch the user's phone number for the response
-    const [user] = await pool.query(
-      `SELECT u.phone AS user_phone 
-       FROM users u 
-       JOIN address a ON a.user_id = u.user_id 
-       WHERE a.address_id = ?`,
-      [address_id]
+      [order_id, resolvedAddressId, 'preparing']
     );
 
     res.status(201).json({
@@ -76,9 +54,8 @@ export const createShipping = async (req, res) => {
       shipping: {
         shipping_id: result.insertId,
         order_id,
-        address_id: address_id || null,
+        address_id: resolvedAddressId,
         status: 'preparing',
-        user_phone: user.length > 0 ? user[0].user_phone : null,
       },
     });
   } catch (error) {

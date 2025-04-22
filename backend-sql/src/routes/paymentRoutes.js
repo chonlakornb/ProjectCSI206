@@ -1,6 +1,6 @@
 import express from 'express';
 import { processPayment, getPaymentByOrderId, updatePaymentStatus } from '../controllers/paymentController.js';
-import { authMiddleware } from '../../../backend-sql สำเนา/src/middleware/authMiddleware.js';
+import { authMiddleware } from '../middleware/authMiddleware.js'; // Corrected path
 
 const router = express.Router();
 
