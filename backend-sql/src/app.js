@@ -12,6 +12,7 @@ import recommendationRoutes from './routes/recommendationRoutes.js'; // Import r
 import cartRoutes from './routes/cartRoutes.js'; // Import cart routes
 import orderRoutes from './routes/orderRoutes.js'; // Import order routes
 import shippingRoutes from './routes/shippingRoutes.js'; // Import shipping routes
+import addressRoutes from './routes/addressRoutes.js'; // Import address routes
 import { authMiddleware } from './middleware/authMiddleware.js'; // Import auth middleware
 
 
@@ -33,12 +34,13 @@ app.use('/api', favoriteRoutes);
 app.use('/api', notificationRoutes);
 app.use('/api', recommendationRoutes); // Use recommendation routes
 app.use('/api', cartRoutes); // Use cart routes
-app.use('/api', orderRoutes); // Use order routes
+app.use('/api/orders', orderRoutes); // Use order routes
 app.use('/api/shipping', shippingRoutes); // Use shipping routes
-
-
+app.use('/api/address', addressRoutes); // Ensure this is registered
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
+
+export default app;
 

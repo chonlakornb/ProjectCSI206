@@ -8,8 +8,8 @@ const router = express.Router();
  * @swagger
  * /api/address:
  *   post:
- *     summary: Add a new shipping address
- *     description: Add a new shipping address for the authenticated user.
+ *     summary: Add a new address
+ *     description: Add a new address for the authenticated user.
  *     tags: [Address]
  *     security:
  *       - bearerAuth: []
@@ -20,15 +20,12 @@ const router = express.Router();
  *           schema:
  *             type: object
  *             properties:
- *               address_line:
+ *               street_address:
  *                 type: string
- *                 description: The address line.
- *               city:
+ *                 description: The street address.
+ *               province:
  *                 type: string
- *                 description: The city.
- *               state:
- *                 type: string
- *                 description: The state.
+ *                 description: The province.
  *               postal_code:
  *                 type: string
  *                 description: The postal code.
@@ -38,10 +35,12 @@ const router = express.Router();
  *     responses:
  *       201:
  *         description: Address added successfully.
+ *       400:
+ *         description: Missing required fields.
  *       500:
  *         description: Internal server error.
  */
-router.post('/address', authMiddleware, addAddress);
+router.post('/', authMiddleware, addAddress);
 
 /**
  * @swagger
@@ -86,7 +85,7 @@ router.post('/address', authMiddleware, addAddress);
  *       500:
  *         description: Internal server error.
  */
-router.put('/address/:id', authMiddleware, updateAddressById);
+router.put('/:id', authMiddleware, updateAddressById);
 
 /**
  * @swagger
@@ -133,6 +132,6 @@ router.put('/address/:id', authMiddleware, updateAddressById);
  *       500:
  *         description: Internal server error.
  */
-router.get('/address', authMiddleware, getAllAddresses);
+router.get('/', authMiddleware, getAllAddresses);
 
 export default router;

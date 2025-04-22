@@ -1,68 +1,28 @@
 import { pool } from '../config/db.js'; // Corrected path
 
 export const createOrder = async (req, res) => {
-  const { address_id } = req.body;
+    try {
+        const { userId, items, totalAmount } = req.body;
 
-  try {
-    // Use req.user.id to get the authenticated user's ID
-    const user_id = req.user.id;
+        // Validate request body
+        if (!userId || !items || !totalAmount) {
+            return res.status(400).json({ message: 'Missing required fields' });
+        }
 
-    // Validate that the address belongs to the user
-    const [address] = await pool.query(
-      'SELECT * FROM address WHERE address_id = ? AND user_id = ?',
-      [address_id, user_id]
-    );
+        // Simulate order creation (replace with actual database logic)
+        const newOrder = {
+            id: Date.now(),
+            userId,
+            items,
+            totalAmount,
+            createdAt: new Date(),
+        };
 
-    if (address.length === 0) {
-      return res.status(404).json({ message: 'Address not found or does not belong to the user' });
+        // Respond with the created order
+        res.status(201).json({ message: 'Order created successfully', order: newOrder });
+    } catch (error) {
+        res.status(500).json({ message: 'Server error', error: error.message });
     }
-
-    // Fetch cart items for the user
-    const [cartItems] = await pool.query(
-      `SELECT c.cart_id, c.book_id, c.quantity, 
-              (c.quantity * b.price) AS total_price, b.price AS book_price 
-       FROM cart c 
-       JOIN books b ON c.book_id = b.book_id 
-       WHERE c.user_id = ?`,
-      [user_id]
-    );
-
-    if (cartItems.length === 0) {
-      return res.status(400).json({ message: 'Cart is empty. Cannot create an order.' });
-    }
-
-    // Calculate the total order price
-    const totalOrderPrice = cartItems.reduce((sum, item) => sum + parseFloat(item.total_price), 0);
-
-    // Create a new order
-    const [orderResult] = await pool.query(
-      'INSERT INTO orders (user_id, address_id, total_price, created_at) VALUES (?, ?, ?, NOW())',
-      [user_id, address_id, totalOrderPrice]
-    );
-
-    const orderId = orderResult.insertId;
-
-    // Insert order items
-    const orderItems = cartItems.map(item => [
-      orderId,
-      item.book_id,
-      item.quantity,
-      item.book_price,
-      item.total_price,
-    ]);
-
-    await pool.query(
-      'INSERT INTO order_items (order_id, book_id, quantity, price, total_price) VALUES ?',
-      [orderItems]
-    );
-
-    // Clear the user's cart
-    await pool.query('DELETE FROM cart WHERE user_id = ?', [user_id]);
-
-    res.status(201).json({ message: 'Order created successfully', orderId });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
 };
 
 export const getOrders = async (req, res) => {

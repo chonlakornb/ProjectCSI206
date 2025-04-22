@@ -4,6 +4,15 @@ import { authMiddleware } from '../middleware/authMiddleware.js'; // Corrected p
 
 const router = express.Router();
 
+// Middleware to validate request body for creating an order
+const validateCreateOrder = (req, res, next) => {
+    const { address_id } = req.body;
+    if (!address_id) {
+        return res.status(400).json({ message: "Missing required fields: address_id" });
+    }
+    next();
+};
+
 /**
  * @swagger
  * /api/orders:
@@ -33,7 +42,7 @@ const router = express.Router();
  *       500:
  *         description: Internal server error.
  */
-router.post('/', authMiddleware, createOrder);
+router.post('/', validateCreateOrder, createOrder); // Added validation middleware
 
 /**
  * @swagger

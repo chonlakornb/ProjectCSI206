@@ -1,4 +1,4 @@
-import { pool } from '../../../backend-sql สำเนา/src/config/db.js';
+import { pool } from '../config/db.js'; // Corrected path
 
 export const addAddress = async (req, res) => {
   const { street_address, province, postal_code, country } = req.body;
@@ -70,10 +70,11 @@ export const getAllAddresses = async (req, res) => {
     // Admin can view all addresses
     if (user_role === 'admin') {
       query = `
-        SELECT a.address_id, a.user_id, u.name AS user_name, a.street_address, a.province, a.postal_code, a.country 
+        SELECT a.address_id, a.user_id, u.id AS user_id, u.username AS user_name, 
+               a.street_address, a.province, a.postal_code, a.country 
         FROM address a 
-        JOIN users u ON a.user_id = u.user_id
-      `;
+        JOIN users u ON a.user_id = u.id
+      `; // Corrected 'u.user_id' to 'u.id'
     } 
     // Users and sellers can view only their own addresses
     else {
