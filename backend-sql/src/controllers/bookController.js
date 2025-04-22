@@ -38,27 +38,24 @@ export const addBook = async (req, res) => {
   const cover_image = req.file ? `/uploads/${req.file.filename}` : null;
 
   try {
-    // Log the input data for debugging
-    console.log('Request Body:', req.body);
-    console.log('Categories:', categories);
+    // Validate required fields
+    if (!title || !author || !price) {
+      return res.status(400).json({ message: 'Title, author, and price are required.' });
+    }
 
     // Validate categories
     if (!categories || typeof categories !== 'string' || categories.trim() === '') {
-      console.error('Invalid categories value:', categories);
       return res.status(400).json({ message: 'Invalid categories value. It must be a non-empty string.' });
     }
 
-    // Log the query and parameters for debugging
-    console.log('Query:', 'INSERT INTO books (`title`, `isbn`, `author`, `publisher`, `published_year`, `categories`, `cover_image`, `pdf_file`, `price`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)');
-    console.log('Parameters:', [title, isbn, author, publisher, published_year, categories, cover_image, pdf_file, price]);
-
+    // Insert book into the database
     await pool.query(
       'INSERT INTO books (`title`, `isbn`, `author`, `publisher`, `published_year`, `categories`, `cover_image`, `pdf_file`, `price`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
       [title, isbn, author, publisher, published_year, categories, cover_image, pdf_file, price]
     );
     res.status(201).json({ message: 'Book added successfully' });
   } catch (error) {
-    console.error('Error adding book:', error); // Log the error for debugging
+    console.error('Error adding book:', error);
     res.status(500).json({ message: 'Internal Server Error', error: error.message });
   }
 };

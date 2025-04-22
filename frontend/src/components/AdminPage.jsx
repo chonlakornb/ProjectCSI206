@@ -18,7 +18,7 @@ const AdminPage = () => {
         const response = await axios.get('http://localhost:3000/api/books', {
           headers: { Authorization: `Bearer ${token}` },
         });
-        setBooks(response.data);
+        setBooks(response.data); // Ensure this matches the structure of the Postman API response
       } catch (error) {
         setMessage('Failed to fetch books.');
       }
@@ -46,14 +46,18 @@ const AdminPage = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  const createFormData = (data) => {
+    const formData = new FormData();
+    Object.entries(data).forEach(([key, value]) => {
+      formData.append(key, value);
+    });
+    return formData;
+  };
+
   const handleAddOrEditBook = async () => {
     try {
       const token = localStorage.getItem('token');
-      const formDataToSend = new FormData();
-      Object.keys(formData).forEach((key) => formDataToSend.append(key, formData[key]));
-      if (formData.cover_image instanceof File) {
-        formDataToSend.append('cover_image', formData.cover_image);
-      }
+      const formDataToSend = createFormData(formData);
 
       const config = { headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'multipart/form-data' } };
 
@@ -65,18 +69,16 @@ const AdminPage = () => {
         setMessage('Book added successfully!');
       }
 
-      // รีเซ็ตฟอร์ม
       setFormData({ title: '', author: '', cover_image: '', categories: '', isbn: '', publisher: '', published_year: '', price: '' });
       setEditingBookId(null);
 
-      // รีเฟรชรายการหนังสือ
       const updatedBooks = await axios.get('http://localhost:3000/api/books', {
         headers: { Authorization: `Bearer ${token}` },
       });
       setBooks(updatedBooks.data);
 
     } catch (error) {
-      console.error('Error saving book:', error.response?.data || error.message); // Log the error
+      console.error('Error saving book:', error.response?.data || error.message);
       setMessage(error.response?.data?.message || 'Failed to save book.');
     }
   };
@@ -125,7 +127,7 @@ const AdminPage = () => {
         <input
           id="book-cover-image"
           type="file"
-          name="cover_image"
+          name="cover_image" // Ensure this matches the backend field name
           onChange={(e) => {
             const file = e.target.files[0];
             setFormData({ ...formData, cover_image: file });
@@ -205,7 +207,17 @@ const AdminPage = () => {
               <tr key={book.id}>
                 <td>{book.title}</td>
                 <td>{book.author}</td>
-                <td><img src={book.cover_image} alt={book.title} width="50" /></td>
+                <td>
+                  <img
+                    src={
+                      typeof book.cover_image === 'string' && book.cover_image.startsWith('http')
+                        ? book.cover_image
+                        : `http://localhost:3000/${book.cover_image}`
+                    }
+                    alt={book.title}
+                    width="50"
+                  />
+                </td>
                 <td>{book.price}</td>
                 <td>
                   <button id={`edit-book-${book.id}`} onClick={() => handleEditClick(book)}>Edit</button>

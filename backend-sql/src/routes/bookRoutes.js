@@ -16,11 +16,10 @@ const storage = multer.diskStorage({
   },
 });
 
-// Ensure multer only accepts the expected field name
 const upload = multer({
   storage,
   fileFilter: (req, file, cb) => {
-    if (file.fieldname === 'cover_image') {
+    if (file.fieldname === 'cover_image') { // Ensure this matches the frontend field name
       cb(null, true);
     } else {
       cb(new multer.MulterError('LIMIT_UNEXPECTED_FILE', file.fieldname));
