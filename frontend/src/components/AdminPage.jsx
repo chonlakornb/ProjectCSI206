@@ -55,11 +55,18 @@ const AdminPage = () => {
   };
 
   const handleAddOrEditBook = async () => {
+    if (!formData.title || !formData.author || !formData.cover_image) {
+      setMessage('All fields are required.');
+      return;
+    }
+
     try {
       const token = localStorage.getItem('token');
+
       const formDataToSend = createFormData(formData);
 
       const config = { headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'multipart/form-data' } };
+
 
       if (editingBookId) {
         await axios.put(`http://localhost:3000/api/books/${editingBookId}`, formDataToSend, config);
@@ -85,8 +92,10 @@ const AdminPage = () => {
       setBooks(updatedBooks.data);
 
     } catch (error) {
+
       console.error('Error saving book:', error.response?.data || error.message);
       setMessage(error.response?.data?.message || 'Failed to save book.');
+
     }
   };
 

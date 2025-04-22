@@ -40,6 +40,7 @@ export const getBookById = async (req, res) => {
 };
 
 export const addBook = async (req, res) => {
+
   const { title, isbn, author, publisher, published_year, categories, pdf_file, price } = req.body;
   const cover_image = req.file ? `/uploads/${req.file.filename}` : null;
 
@@ -58,6 +59,7 @@ export const addBook = async (req, res) => {
     await pool.query(
       'INSERT INTO books (`title`, `isbn`, `author`, `publisher`, `published_year`, `categories`, `cover_image`, `pdf_file`, `price`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
       [title, isbn, author, publisher, published_year, categories, cover_image, pdf_file, price]
+
     );
     res.status(201).json({ message: 'Book added successfully' });
   } catch (error) {
@@ -67,8 +69,10 @@ export const addBook = async (req, res) => {
 };
 
 export const updateBookById = async (req, res) => {
+
   const { title, isbn, author, publisher, published_year, categories, pdf_file, price } = req.body;
   const cover_image = req.file ? `/uploads/${req.file.filename}` : null;
+
 
   try {
     const [books] = await pool.query('SELECT * FROM books WHERE id = ?', [req.params.id]);
@@ -105,8 +109,8 @@ export const searchBooks = async (req, res) => {
 
   try {
     const [books] = await pool.query(
-      'SELECT * FROM books WHERE title LIKE ? OR author LIKE ? OR categories LIKE ?',
-      [`%${query}%`, `%${query}%`, `%${query}%`]
+      'SELECT * FROM books WHERE title LIKE ? OR author LIKE ?',
+      [`%${query}%`, `%${query}%`]
     );
     res.json(books);
   } catch (error) {
@@ -115,16 +119,12 @@ export const searchBooks = async (req, res) => {
 };
 
 export const filterBooks = async (req, res) => {
-  const { categories, year } = req.query;
+  const { year } = req.query;
 
   try {
     const conditions = [];
     const values = [];
 
-    if (categories) {
-      conditions.push('categories = ?');
-      values.push(categories);
-    }
     if (year) {
       conditions.push('published_year = ?');
       values.push(year);
