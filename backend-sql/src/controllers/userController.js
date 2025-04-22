@@ -12,7 +12,10 @@ export const getUsers = async (req, res) => {
 
 export const getUserProfile = async (req, res) => {
   try {
-    const [users] = await pool.query('SELECT id, username, role FROM users WHERE id = ?', [req.user.id]);
+    const [users] = await pool.query(
+      'SELECT id, username, role, phone FROM users WHERE id = ?', // Include the phone field
+      [req.user.id]
+    );
     if (users.length === 0) {
       return res.status(404).json({ message: 'User not found' });
     }
