@@ -12,6 +12,7 @@ import recommendationRoutes from './routes/recommendationRoutes.js'; // Import r
 import cartRoutes from './routes/cartRoutes.js'; // Import cart routes
 import orderRoutes from './routes/orderRoutes.js'; // Import order routes
 import shippingRoutes from './routes/shippingRoutes.js'; // Import shipping routes
+import { authMiddleware } from './middleware/authMiddleware.js'; // Import auth middleware
 
 
 const app = express();
@@ -34,6 +35,7 @@ app.use('/api', recommendationRoutes); // Use recommendation routes
 app.use('/api', cartRoutes); // Use cart routes
 app.use('/api', orderRoutes); // Use order routes
 app.use('/api/shipping', shippingRoutes); // Use shipping routes
+
 
 
 app.listen(PORT, () => {
