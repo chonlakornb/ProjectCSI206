@@ -15,7 +15,11 @@ const pool = mysql.createPool({
 export const getAllBooks = async (req, res) => {
   try {
     const [books] = await pool.query('SELECT * FROM books');
-    res.json(books);
+    const updatedBooks = books.map((book) => ({
+      ...book,
+      cover_image: book.cover_image ? `http://localhost:3000${book.cover_image}` : null,
+    }));
+    res.json(updatedBooks);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -27,36 +31,48 @@ export const getBookById = async (req, res) => {
     if (books.length === 0) {
       return res.status(404).json({ message: 'Book not found' });
     }
-    res.json(books[0]);
+    const book = books[0];
+    book.cover_image = book.cover_image ? `http://localhost:3000${book.cover_image}` : null;
+    res.json(book);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
 
 export const addBook = async (req, res) => {
-  const { title, isbn, author, publisher, published_year, cover_image, pdf_file } = req.body;
+
+  const { title, isbn, author, publisher, published_year, categories, pdf_file, price } = req.body;
+  const cover_image = req.file ? `/uploads/${req.file.filename}` : null;
 
   try {
-    // Log the input data for debugging
-    console.log('Request Body:', req.body);
+    // Validate required fields
+    if (!title || !author || !price) {
+      return res.status(400).json({ message: 'Title, author, and price are required.' });
+    }
 
-    // Log the query and parameters for debugging
-    console.log('Query:', 'INSERT INTO books (`title`, `isbn`, `author`, `publisher`, `published_year`, `cover_image`, `pdf_file`) VALUES (?, ?, ?, ?, ?, ?, ?)');
-    console.log('Parameters:', [title, isbn, author, publisher, published_year, cover_image, pdf_file]);
+    // Validate categories
+    if (!categories || typeof categories !== 'string' || categories.trim() === '') {
+      return res.status(400).json({ message: 'Invalid categories value. It must be a non-empty string.' });
+    }
 
+    // Insert book into the database
     await pool.query(
-      'INSERT INTO books (`title`, `isbn`, `author`, `publisher`, `published_year`, `cover_image`, `pdf_file`) VALUES (?, ?, ?, ?, ?, ?, ?)',
-      [title, isbn, author, publisher, published_year, cover_image, pdf_file]
+      'INSERT INTO books (`title`, `isbn`, `author`, `publisher`, `published_year`, `categories`, `cover_image`, `pdf_file`, `price`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+      [title, isbn, author, publisher, published_year, categories, cover_image, pdf_file, price]
+
     );
     res.status(201).json({ message: 'Book added successfully' });
   } catch (error) {
-    console.error('Error adding book:', error.message);
-    res.status(500).json({ message: error.message });
+    console.error('Error adding book:', error);
+    res.status(500).json({ message: 'Internal Server Error', error: error.message });
   }
 };
 
 export const updateBookById = async (req, res) => {
-  const { title, isbn, author, publisher, published_year, cover_image, pdf_file } = req.body;
+
+  const { title, isbn, author, publisher, published_year, categories, pdf_file, price } = req.body;
+  const cover_image = req.file ? `/uploads/${req.file.filename}` : null;
+
 
   try {
     const [books] = await pool.query('SELECT * FROM books WHERE id = ?', [req.params.id]);
@@ -65,8 +81,8 @@ export const updateBookById = async (req, res) => {
     }
 
     await pool.query(
-      'UPDATE books SET title = ?, isbn = ?, author = ?, publisher = ?, published_year = ?, cover_image = ?, pdf_file = ? WHERE id = ?',
-      [title, isbn, author, publisher, published_year, cover_image, pdf_file, req.params.id]
+      'UPDATE books SET title = ?, isbn = ?, author = ?, publisher = ?, published_year = ?, categories = ?, cover_image = COALESCE(?, cover_image), pdf_file = ?, price = ? WHERE id = ?',
+      [title, isbn, author, publisher, published_year, categories, cover_image, pdf_file, price, req.params.id]
     );
     res.json({ message: 'Book updated successfully' });
   } catch (error) {

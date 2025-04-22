@@ -13,7 +13,7 @@ const NikePage = () => {
     <div>
       <Section />
       <Products />
-      <Favorites /> {/* Add Favorites component */}
+      {/* Add Favorites component */}
       {/* <About /> */}
       {/* <Review />
       <Services /> */}

@@ -16,7 +16,7 @@ export const registerUser = async (req, res) => {
 
   try {
     // Validate role
-    const validRoles = ['admin', 'user']; // Update with your allowed roles
+    const validRoles = ['admin', 'user']; // Changed from 'customer' to 'user'
     if (!validRoles.includes(role)) {
       return res.status(400).json({ message: `Invalid role. Allowed roles are: ${validRoles.join(', ')}` });
     }

@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import Navbar from './Navbar'; // Optional: Add Navbar for navigation
+import AdminNavbar from './AdminNavbar'; // Replace Navbar with AdminNavbar
 import './AdminPage.css';
 
 const AdminPage = () => {
   const [books, setBooks] = useState([]);
-  const [formData, setFormData] = useState({ title: '', author: '', cover_image: '' });
+  const [formData, setFormData] = useState({ title: '', author: '', cover_image: '', categories: '', isbn: '', publisher: '', published_year: '', price: '' });
   const [editingBookId, setEditingBookId] = useState(null);
   const [message, setMessage] = useState('');
   const navigate = useNavigate();
@@ -18,7 +18,7 @@ const AdminPage = () => {
         const response = await axios.get('http://localhost:3000/api/books', {
           headers: { Authorization: `Bearer ${token}` },
         });
-        setBooks(response.data);
+        setBooks(response.data); // Ensure this matches the structure of the Postman API response
       } catch (error) {
         setMessage('Failed to fetch books.');
       }
@@ -46,6 +46,14 @@ const AdminPage = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  const createFormData = (data) => {
+    const formData = new FormData();
+    Object.entries(data).forEach(([key, value]) => {
+      formData.append(key, value);
+    });
+    return formData;
+  };
+
   const handleAddOrEditBook = async () => {
     if (!formData.title || !formData.author || !formData.cover_image) {
       setMessage('All fields are required.');
@@ -54,29 +62,40 @@ const AdminPage = () => {
 
     try {
       const token = localStorage.getItem('token');
-      console.log('Submitting formData:', formData); // Debugging: Log the payload
+
+      const formDataToSend = createFormData(formData);
+
+      const config = { headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'multipart/form-data' } };
+
+
       if (editingBookId) {
-        await axios.put(
-          `http://localhost:3000/api/books/${editingBookId}`,
-          formData,
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
+        await axios.put(`http://localhost:3000/api/books/${editingBookId}`, formDataToSend, config);
         setMessage('Book updated successfully!');
       } else {
-        await axios.post('http://localhost:3000/api/books', formData, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        await axios.post('http://localhost:3000/api/books', formDataToSend, config);
         setMessage('Book added successfully!');
       }
-      setFormData({ title: '', author: '', cover_image: '' });
+
+      setFormData({ title: '', author: '', cover_image: '', categories: '', isbn: '', publisher: '', published_year: '', price: '' });
       setEditingBookId(null);
+
+      // Reset the file input and preview image
+      const fileInput = document.getElementById('book-cover-image');
+      if (fileInput) {
+        fileInput.value = '';
+      }
+     
+
       const updatedBooks = await axios.get('http://localhost:3000/api/books', {
         headers: { Authorization: `Bearer ${token}` },
       });
       setBooks(updatedBooks.data);
+
     } catch (error) {
-      console.error('Error response:', error.response); // Debugging: Log server response
-      setMessage('Failed to save book. Please check your input and try again.');
+
+      console.error('Error saving book:', error.response?.data || error.message);
+      setMessage(error.response?.data?.message || 'Failed to save book.');
+
     }
   };
 
@@ -100,7 +119,7 @@ const AdminPage = () => {
 
   return (
     <div className="admin-page" id='admin'>
-      <Navbar />
+      <AdminNavbar /> {/* Use AdminNavbar */}
       <h1>Admin Panel</h1>
       {message && <p className="message">{message}</p>}
       <div className="form-container">
@@ -123,10 +142,64 @@ const AdminPage = () => {
         />
         <input
           id="book-cover-image"
+          type="file"
+          name="cover_image" // Ensure this matches the backend field name
+          onChange={(e) => {
+            const file = e.target.files[0];
+            setFormData({ ...formData, cover_image: file });
+            if (file) {
+              const reader = new FileReader();
+              reader.onload = (event) => {
+                document.getElementById('preview-image').src = event.target.result;
+              };
+              reader.readAsDataURL(file);
+            }
+          }}
+        />
+        <img
+          id="preview-image"
+          src={formData.cover_image instanceof File ? '' : formData.cover_image}
+          alt="Preview"
+          style={{ width: '100px', marginTop: '10px', display: formData.cover_image ? 'block' : 'none' }}
+        />
+        <input
+          id="book-categories"
           type="text"
-          name="cover_image"
-          placeholder="Cover Image URL"
-          value={formData.cover_image}
+          name="categories"
+          placeholder="Categories (comma-separated)"
+          value={formData.categories}
+          onChange={handleInputChange}
+        />
+        <input
+          id="book-isbn"
+          type="text"
+          name="isbn"
+          placeholder="ISBN"
+          value={formData.isbn}
+          onChange={handleInputChange}
+        />
+        <input
+          id="book-publisher"
+          type="text"
+          name="publisher"
+          placeholder="Publisher"
+          value={formData.publisher}
+          onChange={handleInputChange}
+        />
+        <input
+          id="book-published-year"
+          type="text"
+          name="published_year"
+          placeholder="Published Year"
+          value={formData.published_year}
+          onChange={handleInputChange}
+        />
+        <input
+          id="book-price"
+          type="text"
+          name="price"
+          placeholder="Price"
+          value={formData.price}
           onChange={handleInputChange}
         />
         <button id="add-edit-book-btn" onClick={handleAddOrEditBook}>
@@ -141,6 +214,7 @@ const AdminPage = () => {
               <th>Title</th>
               <th>Author</th>
               <th>Cover</th>
+              <th>Price</th>
               <th>Actions</th>
             </tr>
           </thead>
@@ -149,8 +223,22 @@ const AdminPage = () => {
               <tr key={book.id}>
                 <td>{book.title}</td>
                 <td>{book.author}</td>
-                <td><img src={book.cover_image} alt={book.title} width="50" /></td>
-                <td><button id={`edit-book-${book.id}`} onClick={() => handleEditClick(book)}>Edit</button><button id={`delete-book-${book.id}`} onClick={() => handleDeleteBook(book.id)}>Delete</button></td>
+                <td>
+                  <img
+                    src={
+                      book.cover_image.startsWith('http') 
+                        ? book.cover_image 
+                        : `http://localhost:3000${book.cover_image}`
+                    }
+                    alt={book.title}
+                    width="50"
+                  />
+                </td>
+                <td>{book.price}</td>
+                <td>
+                  <button id={`edit-book-${book.id}`} onClick={() => handleEditClick(book)}>Edit</button>
+                  <button id={`delete-book-${book.id}`} onClick={() => handleDeleteBook(book.id)}>Delete</button>
+                </td>
               </tr>
             ))}
           </tbody>

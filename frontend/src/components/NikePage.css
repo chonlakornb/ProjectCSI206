@@ -190,13 +190,13 @@ section nav .icons i:hover {
   gap: 1rem;
 }
 
-.social_icon i {
+social_icon i {
   font-size: 1.5rem;
   cursor: pointer;
   transition: color 0.3s;
 }
 
-.social_icon i:hover {
+social_icon i:hover {
   color: #c72092;
 }
 
@@ -387,69 +387,71 @@ section nav .icons i:hover {
   background: linear-gradient(to right, #6c14d0, #c72092);
 }
 
+/* Button Group */
+.button-group {
+  display: flex;
+  justify-content: center; /* Align buttons horizontally */
+  gap: 0.6rem; /* Add spacing between buttons */
+  margin-top: 0.8rem;
+}
+
+.top-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 0.6rem;
+}
+
+.top-buttons .btn:nth-child(1) {
+  background: linear-gradient(to right, #ff7f50, #ff4500); /* Orange gradient */
+}
+
+.top-buttons .btn:nth-child(2) {
+  background: linear-gradient(to right, #1e90ff, #00bfff); /* Blue gradient */
+}
+
+.top-buttons .btn:nth-child(3) {
+  background: linear-gradient(to right, #32cd32, #7fff00); /* Green gradient */
+}
+
+.btn {
+  padding: 0.4rem 0.9rem;
+  font-size: 13px;
+  border: none;
+  border-radius: 6px;
+  color: white;
+  cursor: pointer;
+  transition: transform 0.2s ease, background 0.3s ease;
+  min-width: 100px;
+  text-align: center;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.05);
+}
+
+
 /* favorite */
 
 .favorite-btn {
-  padding: 0.5rem 1rem;
-  background: linear-gradient(to right, #ff7f50, #ff4500);
-  color: white;
+  display: block;
+  margin: 0 auto; /* Center align the button */
+  width: 100px; /* Match button size */
+  height: 35px; /* Match button size */
+  font-size: 14px;
   border: none;
-  border-radius: 5px;
+  border-radius: 3px;
   cursor: pointer;
-  transition: background 0.3s;
+  text-align: center;
+  padding: 0.3rem 0.8rem;
+  background: linear-gradient(to right, #ff4500, #ff7f50); /* Gradient background */
+  color: white;
+  transition: background 0.3s, transform 0.3s;
 }
 
 .favorite-btn:hover {
-  background: linear-gradient(to right, #ff4500, #ff7f50);
-}
-
-
-/* About */
-.about {
-  padding: 4rem 2rem;
-}
-
-.about h1 {
-  text-align: center;
-  font-size: 3rem;
-  margin-bottom: 2rem;
-}
-
-.about h1 span {
-  color: #c72092;
-}
-
-.about_main {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 2rem;
-}
-
-.about_image {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.about_small_image img {
-  width: 80px;
-  cursor: pointer;
-  transition: transform 0.3s;
-}
-
-.about_small_image img:hover {
-  transform: scale(1.1);
-}
-
-.image_contaner img {
-  width: 300px;
-  border-radius: 10px;
-}
-
-.about_text p {
-  line-height: 1.5;
-  color: #555;
+  background: linear-gradient(to right, #ff7f50, #ff4500); /* Reverse gradient on hover */
+  transform: translateY(-1px); /* Slight lift effect */
 }
 
 /* Footer */

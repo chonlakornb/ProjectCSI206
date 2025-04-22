@@ -1,104 +1,84 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 const Products = () => {
-  const products = [
-    {
-      id: 1,
-      name: 'KAGURABACHI',
-      description: 'Lorem ipsum dolor sit, amet consectetur adipisicing elit.',
-      price: 140.00,
-      image: '1.png',
-    },
-    {
-      id: 2,
-      name: 'ONE PIECE 104',
-      description: 'Lorem ipsum dolor sit, amet consectetur adipisicing elit.',
-      price: 120.00,
-      image: '3.png',
-    },
-    {
-      id: 3,
-      name: 'SAKAMOTO DAYS ',
-      description: 'Lorem ipsum dolor sit, amet consectetur adipisicing elit.',
-      price: 140.00,
-      image: '5.png',
-    },
-    {
-      id: 4,
-      name: 'SAKAMOTO DAYS 16',
-      description: 'Lorem ipsum dolor sit, amet consectetur adipisicing elit.',
-      price: 160.00,
-      image: '6.png',
-    },
-    {
-      id: 5,
-      name: 'JUJUTSU KAISEN 28',
-      description: 'Lorem ipsum dolor sit, amet consectetur adipisicing elit.',
-      price: 180.00,
-      image: '7.png',
-    },
-    {
-      id: 6,
-      name: 'MY HERO ACADEMIA ',
-      description: 'Lorem ipsum dolor sit, amet consectetur adipisicing elit.',
-      price: 200.00,
-      image: '8.png',
-    },
-    {
-      id: 7,
-      name: 'KAIJU NO.8 12',
-      description: 'Lorem ipsum dolor sit, amet consectetur adipisicing elit.',
-      price: 220.00,
-      image: '9.png',
-    },
-    {
-      id: 8,
-      name: 'KAIJU NO.8 8',
-      description: 'Lorem ipsum dolor sit, amet consectetur adipisicing elit.',
-      price: 240.00,
-      image: '10.png',
-    },
-    {
-      id: 9,
-      name: 'JUJUTSU KAISEN 26',
-      description: 'Lorem ipsum dolor sit, amet consectetur adipisicing elit.',
-      price: 260.00,
-      image: '11.png',
-    },
-  ];
-
+  const [products, setProducts] = useState([]);
   const [message, setMessage] = useState('');
-  const navigate = useNavigate(); // Initialize useNavigate
+  const navigate = useNavigate();
 
-  const handleViewProduct = (product) => {
-    navigate('/view', { state: { product: { ...product, image: `/src/img/${product.image}` } } }); // Pass full image path
+  useEffect(() => {
+    const fetchBooks = async () => {
+      try {
+        const response = await axios.get('http://localhost:3000/api/books');
+        setProducts(response.data);
+      } catch (error) {
+        setMessage('Failed to fetch products.');
+      }
+    };
+
+    fetchBooks();
+  }, []);
+
+  const handleBuyNow = (product) => {
+    try {
+      const cart = JSON.parse(localStorage.getItem('cart')) || [];
+      const existingProduct = cart.find((item) => item.id === product.id);
+
+      if (!existingProduct) {
+        cart.push({ ...product, quantity: 1 });
+      } else {
+        existingProduct.quantity = 1; // Ensure quantity is set to 1
+      }
+
+      localStorage.setItem('cart', JSON.stringify(cart));
+      navigate('/checkout', { state: { product } });
+    } catch {
+      setMessage('Failed to process the purchase.');
+    }
+  };
+
+  const handleAddToCart = (product) => {
+    try {
+      const cart = JSON.parse(localStorage.getItem('cart')) || [];
+      const existingProduct = cart.find((item) => item.id === product.id);
+
+      if (!existingProduct) {
+        cart.push({ ...product, quantity: 1 });
+        localStorage.setItem('cart', JSON.stringify(cart));
+        setMessage(`${product.title} added to cart!`);
+      } else {
+        setMessage(`${product.title} is already in the cart.`);
+      }
+
+      setTimeout(() => setMessage(''), 1000);
+    } catch {
+      setMessage('Failed to add to cart.');
+    }
   };
 
   const handleAddToFavorites = async (product) => {
     try {
+      const token = localStorage.getItem('token');
       await axios.post(
-        'http://localhost:3000/api/favorites',
-        {
-          book_id: product.id,
-          title: product.name,
-          author: product.description,
-          cover_image: `/src/img/${product.image}`,
-        },
+        `http://localhost:3000/api/favorites/${product.id}`,
+        {},
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
-          },
+            Authorization: `Bearer ${token}`
+          }
         }
       );
-      setMessage(`${product.name} added to favorites!`);
-      setTimeout(() => {
-        setMessage('');
-        navigate('/favorites'); // Navigate to the Favorites page immediately
-      }, 500); // Redirect after 0.5 seconds
+      setMessage(`${product.title} added to favorites!`);
+      setTimeout(() => setMessage(''), 1000);
     } catch (error) {
-      setMessage(error.response?.data?.message || 'Failed to add to favorites.');
+      if (error.response?.status === 400) {
+        setMessage('This book is already in your favorites.');
+      } else if (error.response?.status === 401) {
+        setMessage('You need to login to add favorites.');
+      } else {
+        setMessage('Failed to add to favorites.');
+      }
     }
   };
 
@@ -108,40 +88,56 @@ const Products = () => {
       {message && <p className="message">{message}</p>}
       <div className="box">
         {products.map((product) => (
-          <div className="card" key={product.id}>
-            <div className="small_card">
-              <i className="fa-solid fa-heart"></i>
-              <i className="fa-solid fa-share"></i>
-            </div>
+          <div
+            className="card"
+            key={product.id}
+            onClick={() => navigate('/viewpage', { state: { product } })}
+            style={{ cursor: 'pointer' }}
+          >
             <div className="image">
-              <img src={`./src/img/${product.image}`} alt={`Product ${product.id}`} />
+              <img
+                src={
+                  product.cover_image.startsWith('http')
+                    ? product.cover_image
+                    : `http://localhost:3000${product.cover_image}`
+                }
+                alt={`Product ${product.id}`}
+              />
             </div>
             <div className="products_text">
-              <h2>{product.name}</h2>
-              <p>{product.description}</p>
-              <h3>${product.price.toFixed(2)}</h3>
+              <h2>{product.title}</h2>
+              <p>{product.author}</p>
+              <h3>${product.price?.toFixed(2) || 'N/A'}</h3>
               <div className="products_star">
                 {[...Array(5)].map((_, starIndex) => (
                   <i
                     key={starIndex}
-                    className={`fa-solid ${
-                      starIndex < 4 ? 'fa-star' : 'fa-star-half-stroke'
-                    }`}
+                    className={`fa-solid ${starIndex < 4 ? 'fa-star' : 'fa-star-half-stroke'}`}
                   ></i>
                 ))}
               </div>
+
+              {/* Buttons */}
               <div className="button-group">
+                <div className="top-buttons">
+                  <button
+                    className="btn cart-btn"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleAddToCart(product);
+                    }}
+                  >
+                    Add to Cart
+                  </button>
+                </div>
                 <button
-                  className="btn"
-                  onClick={() => handleViewProduct(product)} // Navigate to ViewPage
+                  className="btn favorite-btn"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleAddToFavorites(product);
+                  }}
                 >
-                  View
-                </button>
-                <button
-                  className="favorite-btn"
-                  onClick={() => handleAddToFavorites(product)}
-                >
-                  Add to Favorites
+                  Favorite
                 </button>
               </div>
             </div>

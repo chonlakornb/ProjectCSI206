@@ -1,8 +1,34 @@
 import express from 'express';
+import multer from 'multer';
+import path from 'path';
 import { getAllBooks, getBookById, addBook, updateBookById, deleteBookById, searchBooks, filterBooks } from '../controllers/bookController.js';
 import { authMiddleware, adminMiddleware } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
+
+// Serve the uploads folder as static content
+router.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
+
+// Configure multer
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'uploads/');
+  },
+  filename: (req, file, cb) => {
+    cb(null, `${Date.now()}-${file.originalname}`);
+  },
+});
+
+const upload = multer({
+  storage,
+  fileFilter: (req, file, cb) => {
+    if (file.fieldname === 'cover_image') { // Ensure this matches the frontend field name
+      cb(null, true);
+    } else {
+      cb(new multer.MulterError('LIMIT_UNEXPECTED_FILE', file.fieldname));
+    }
+  },
+});
 
 /**
  * @swagger
@@ -129,7 +155,7 @@ router.get('/books/:id', getBookById);
  *       401:
  *         description: Unauthorized.
  */
-router.post('/books', authMiddleware, adminMiddleware, addBook);
+router.post('/books', authMiddleware, adminMiddleware, upload.single('cover_image'), addBook);
 
 /**
  * @swagger
@@ -186,7 +212,7 @@ router.post('/books', authMiddleware, adminMiddleware, addBook);
  *       404:
  *         description: Book not found.
  */
-router.put('/books/:id', authMiddleware, adminMiddleware, updateBookById);
+router.put('/books/:id', authMiddleware, adminMiddleware, upload.single('cover_image'), updateBookById);
 
 /**
  * @swagger

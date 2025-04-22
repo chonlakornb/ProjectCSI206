@@ -1,0 +1,160 @@
+.checkout-page {
+  padding-top: 70px;
+  min-height: 100vh;
+  font-family: 'Prompt', sans-serif;
+}
+
+.checkout-container {
+  max-width: 1200px;
+  margin: 2rem auto;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+}
+
+.checkout-content {
+  display: flex;
+  gap: 2rem;
+  flex-direction: row;
+}
+
+/* ซ้าย: รายการสินค้า */
+.checkout-left {
+  flex: 1;
+  padding: 1rem;
+  border-right: 1px solid #ddd;
+}
+
+.checkout-left h2 {
+  margin-bottom: 1rem;
+  color: #333;
+}
+
+.checkout-left ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.checkout-left li {
+  padding: 0.5rem 0;
+  border-bottom: 1px dashed #ccc;
+  font-size: 1rem;
+  color: #444;
+}
+
+.cart-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.cart-item-image {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 5px;
+}
+
+.summary {
+  margin-top: 1.5rem;
+  background-color: #f9f9f9;
+  padding: 1rem;
+  border-radius: 8px;
+}
+
+.summary p {
+  margin: 0.3rem 0;
+  color: #333;
+}
+
+.summary .total {
+  font-weight: bold;
+  color: #d63384;
+  font-size: 1.1rem;
+}
+
+/* ที่อยู่ */
+.address-display {
+  margin-top: 1.5rem;
+  background-color: #f1f3f5;
+  padding: 1rem;
+  border-radius: 8px;
+  color: #495057;
+}
+
+/* ขวา: ฟอร์มผู้ใช้ */
+.checkout-right {
+  flex: 1;
+  padding: 1rem;
+}
+
+.checkout-right h2 {
+  margin-bottom: 1rem;
+  color: #333;
+}
+
+.checkout-right form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.checkout-right input,
+.checkout-right select {
+  padding: 0.8rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: border 0.2s;
+}
+
+.checkout-right input:focus,
+.checkout-right select:focus {
+  border-color: #6c14d0;
+  outline: none;
+  box-shadow: 0 0 5px rgba(108, 20, 208, 0.3);
+}
+
+.checkout-right button {
+  padding: 0.9rem;
+  background: #6c14d0;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: bold;
+  transition: background 0.3s;
+}
+
+.checkout-right button:hover {
+  background: #c72092;
+}
+
+/* QR Code */
+.qr-instructions {
+  text-align: center;
+  padding: 1rem;
+  background: #81ffa1;
+  border: 1px solid #ffffff;
+  border-radius: 8px;
+}
+
+.qr-instructions img {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+/* Message */
+.message {
+  background-color: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+  padding: 0.8rem;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+  text-align: center;
+}

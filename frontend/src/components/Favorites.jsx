@@ -1,31 +1,39 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Navbar from './Navbar'; // นำเข้า Navbar
 import './Favorites.css';
+import axios from 'axios';
 
 const Favorites = () => {
-  const [favorites, setFavorites] = useState([
-    {
-      id: 1,
-      title: 'KAGURABACHI',
-      author: 'Lorem ipsum dolor sit amet.',
-      cover_image: '/src/img/1.png',
-    },
-    {
-      id: 8,
-      title: 'KAIJU NO.8 8',
-      author: 'Lorem ipsum dolor sit, amet ',
-      cover_image: '/src/img/10.png',
-    },
-    {
-      id: 3,
-      title: 'SAKAMOTO DAYS ',
-      author: 'Lorem ipsum dolor sit amet.',
-      cover_image: '/src/img/5.png',
-    },
-  ]);
+  const [favorites, setFavorites] = useState([]);
+  const navigate = useNavigate();
 
-  const handleRemoveFavorite = (id) => {
-    setFavorites(favorites.filter((favorite) => favorite.id !== id));
+  useEffect(() => {
+    const fetchFavorites = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        const response = await axios.get('http://localhost:3000/api/favorites', {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setFavorites(response.data);
+      } catch (error) {
+        console.error('Failed to fetch favorites:', error);
+      }
+    };
+
+    fetchFavorites();
+  }, []);
+
+  const handleRemoveFavorite = async (id) => {
+    try {
+      const token = localStorage.getItem('token');
+      await axios.delete(`http://localhost:3000/api/favorites/${id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setFavorites(favorites.filter((favorite) => favorite.id !== id));
+    } catch (error) {
+      console.error('Failed to remove favorite:', error);
+    }
   };
 
   return (
@@ -37,11 +45,28 @@ const Favorites = () => {
         <h1>YOUR FAVORITES</h1>
         <div className="favorites-row">
           {favorites.map((favorite) => (
-            <div className="favorite-card" key={favorite.id}>
-              <img src={favorite.cover_image} alt={favorite.title} />
+            <div
+              className="favorite-card"
+              key={favorite.id}
+              onClick={() => navigate('/viewpage', { state: { product: favorite } })}
+              style={{ cursor: 'pointer' }}
+            >
+              <img
+                src={
+                  favorite.cover_image.startsWith('http')
+                    ? favorite.cover_image
+                    : `http://localhost:3000${favorite.cover_image}`
+                }
+                alt={favorite.title}
+              />
               <h2>{favorite.title}</h2>
               <p>{favorite.author}</p>
-              <button onClick={() => handleRemoveFavorite(favorite.id)}>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleRemoveFavorite(favorite.id);
+                }}
+              >
                 Remove from Favorites
               </button>
             </div>
