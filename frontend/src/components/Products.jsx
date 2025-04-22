@@ -20,8 +20,22 @@ const Products = () => {
     fetchBooks();
   }, []);
 
-  const handleViewProduct = (product) => {
-    navigate('/viewpage', { state: { product } });
+  const handleBuyNow = (product) => {
+    try {
+      const cart = JSON.parse(localStorage.getItem('cart')) || [];
+      const existingProduct = cart.find((item) => item.id === product.id);
+
+      if (!existingProduct) {
+        cart.push({ ...product, quantity: 1 });
+      } else {
+        existingProduct.quantity = 1; // Ensure quantity is set to 1
+      }
+
+      localStorage.setItem('cart', JSON.stringify(cart));
+      navigate('/checkout', { state: { product } });
+    } catch {
+      setMessage('Failed to process the purchase.');
+    }
   };
 
   const handleAddToCart = (product) => {
@@ -29,14 +43,14 @@ const Products = () => {
       const cart = JSON.parse(localStorage.getItem('cart')) || [];
       const existingProduct = cart.find((item) => item.id === product.id);
 
-      if (existingProduct) {
-        existingProduct.quantity += 1;
-      } else {
+      if (!existingProduct) {
         cart.push({ ...product, quantity: 1 });
+        localStorage.setItem('cart', JSON.stringify(cart));
+        setMessage(`${product.title} added to cart!`);
+      } else {
+        setMessage(`${product.title} is already in the cart.`);
       }
 
-      localStorage.setItem('cart', JSON.stringify(cart));
-      setMessage(`${product.title} added to cart!`);
       setTimeout(() => setMessage(''), 1000);
     } catch {
       setMessage('Failed to add to cart.');
@@ -74,7 +88,12 @@ const Products = () => {
       {message && <p className="message">{message}</p>}
       <div className="box">
         {products.map((product) => (
-          <div className="card" key={product.id}>
+          <div
+            className="card"
+            key={product.id}
+            onClick={() => navigate('/viewpage', { state: { product } })}
+            style={{ cursor: 'pointer' }}
+          >
             <div className="image">
               <img
                 src={
@@ -101,18 +120,26 @@ const Products = () => {
               {/* Buttons */}
               <div className="button-group">
                 <div className="top-buttons">
-                  <button className="btn view-btn" onClick={() => handleViewProduct(product)}>
-                    View
-                  </button>
-                  <button className="btn cart-btn" onClick={() => handleAddToCart(product)}>
+                  <button
+                    className="btn cart-btn"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleAddToCart(product);
+                    }}
+                  >
                     Add to Cart
                   </button>
                 </div>
-                <button className="btn favorite-btn" onClick={() => handleAddToFavorites(product)}>
+                <button
+                  className="btn favorite-btn"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleAddToFavorites(product);
+                  }}
+                >
                   Favorite
                 </button>
               </div>
-
             </div>
           </div>
         ))}

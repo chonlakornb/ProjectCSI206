@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import Navbar from './Navbar';
 import './CheckoutPage.css';
 
 const CheckoutPage = () => {
+  const location = useLocation();
+  const productFromState = location.state?.product;
+
   const [formData, setFormData] = useState({
     name: '',
     address: '',
@@ -14,8 +18,17 @@ const CheckoutPage = () => {
 
   useEffect(() => {
     const storedCart = JSON.parse(localStorage.getItem('cart')) || [];
+    if (productFromState) {
+      const existingProduct = storedCart.find((item) => item.id === productFromState.id);
+      if (existingProduct) {
+        existingProduct.quantity += 1;
+      } else {
+        storedCart.push({ ...productFromState, quantity: 1 });
+      }
+      localStorage.setItem('cart', JSON.stringify(storedCart));
+    }
     setCartItems(storedCart);
-  }, []);
+  }, [productFromState]);
 
   const totalPrice = cartItems.reduce(
     (sum, item) => sum + item.price * item.quantity,
