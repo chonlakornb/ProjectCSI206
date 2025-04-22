@@ -3,45 +3,20 @@ import { pool } from '../config/db.js'; // Corrected path
 export const createOrder = async (req, res) => {
   try {
     const user_id = req.user.id; // Get the authenticated user's ID
-    const { address_id } = req.body;
+    const { address_id, total_price, payment_method } = req.body;
 
     // Validate required fields
-    if (!address_id) {
-      return res.status(400).json({ message: 'Missing required fields: address_id' });
+    if (!address_id || !total_price || !payment_method) {
+      return res.status(400).json({ message: 'Missing required fields: address_id, total_price, or payment_method' });
     }
 
-    // Fetch cart items for the user
-    const [cartItems] = await pool.query(
-      `SELECT c.book_id, c.quantity, c.total_price 
-       FROM cart c 
-       WHERE c.user_id = ?`,
-      [user_id]
-    );
-
-    if (cartItems.length === 0) {
-      return res.status(400).json({ message: 'Cart is empty. Add items to the cart before placing an order.' });
-    }
-
-    // Calculate the total amount for the order
-    const totalAmount = cartItems.reduce((sum, item) => sum + parseFloat(item.total_price), 0);
-
-    // Create the order
+    // Create the order with default status as 'pending'
     const [orderResult] = await pool.query(
-      'INSERT INTO orders (user_id, total_price, status, address_id) VALUES (?, ?, ?, ?)',
-      [user_id, totalAmount, 'pending', address_id]
+      'INSERT INTO orders (user_id, address_id, total_price, payment_method, status) VALUES (?, ?, ?, ?, ?)',
+      [user_id, address_id, total_price, payment_method, 'pending']
     );
 
     const order_id = orderResult.insertId;
-
-    // Add items to the order_items table
-    const orderItems = cartItems.map((item) => [order_id, item.book_id, item.quantity, item.total_price]);
-    await pool.query(
-      'INSERT INTO order_items (order_id, book_id, quantity, price) VALUES ?',
-      [orderItems]
-    );
-
-    // Clear the cart for the user
-    await pool.query('DELETE FROM cart WHERE user_id = ?', [user_id]);
 
     res.status(201).json({ message: 'Order created successfully', order_id });
   } catch (error) {

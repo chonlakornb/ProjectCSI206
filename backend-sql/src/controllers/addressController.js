@@ -67,24 +67,15 @@ export const getAllAddresses = async (req, res) => {
     let query = '';
     let params = [];
 
-    // Admin can view all addresses
-    if (user_role === 'admin') {
+   
+      // Regular users can view only their own addresses
       query = `
-        SELECT a.address_id, a.user_id, u.id AS user_id, u.username AS user_name, 
-               a.street_address, a.province, a.postal_code, a.country 
-        FROM address a 
-        JOIN users u ON a.user_id = u.id
-      `; // Corrected 'u.user_id' to 'u.id'
-    } 
-    // Users and sellers can view only their own addresses
-    else {
-      query = `
-        SELECT a.address_id, a.user_id, a.street_address, a.province, a.postal_code, a.country 
+        SELECT a.address_id, a.street_address, a.province, a.postal_code, a.country 
         FROM address a 
         WHERE a.user_id = ?
-      `;
+      `;  
       params = [user_id];
-    }
+    
 
     // Execute the query
     const [addresses] = await pool.query(query, params);
