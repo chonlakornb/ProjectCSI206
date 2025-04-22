@@ -70,9 +70,12 @@ const CartPage = () => {
         <div className="cart-summary">
           <h2>Total Items: {totalQuantity}</h2> {/* Display total quantity */}
           <h2>Total: ${totalPrice.toFixed(2)}</h2>
-          <button className="checkout-btn" onClick={() => navigate('/checkout')}>
+          <button
+            className="checkout-btn"
+            onClick={() => navigate('/admin/orders')} // Navigate to AdminOrderPage
+          >
             ดำเนินการชำระเงิน
-          </button> {/* Ensure this button navigates to /checkout */}
+          </button>
         </div>
       </div>
     </div>

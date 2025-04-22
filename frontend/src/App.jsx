@@ -12,6 +12,7 @@ import CheckoutPage from './components/CheckoutPage'; // Import CheckoutPage
 import ProductReviewPage from './components/ProductReviewPage'; // Import ProductReviewPage
 import ShippingPage from './components/ShippingPage'; // Import ShippingPage
 import AdminUserPage from './components/AdminUserPage'; // Import AdminUserPage
+import AdminOrderPage from './components/AdminOrderPage'; // Import AdminOrderPage
 import './App.css';
 
 const App = () => {
@@ -32,6 +33,7 @@ const App = () => {
         <Route path="/reviews" element={<ProductReviewPage />} /> {/* Add ProductReviewPage route */}
         <Route path="/shipping" element={<ShippingPage />} /> {/* Add ShippingPage route */}
         <Route path="/admin/users" element={<AdminUserPage />} /> {/* Add AdminUserPage route */}
+        <Route path="/admin/orders" element={<AdminOrderPage />} /> {/* Add AdminOrderPage route */}
       </Routes>
     </Router>
   );
