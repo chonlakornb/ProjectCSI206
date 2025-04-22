@@ -1,6 +1,6 @@
 import express from 'express';
 import { createShipping, getShippingStatus, updateShippingStatus } from '../controllers/shippingController.js';
-import { authMiddleware } from '../../../backend-sql สำเนา/src/middleware/authMiddleware.js';
+import { authMiddleware } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 

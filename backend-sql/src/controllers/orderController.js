@@ -1,4 +1,4 @@
-import { pool } from '../../../backend-sql สำเนา/src/config/db.js';
+import { pool } from '../config/db.js'; // Corrected path
 
 export const createOrder = async (req, res) => {
   const { address_id } = req.body;

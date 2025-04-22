@@ -9,14 +9,14 @@ const Navbar = () => {
         <h1>BOOK<span></span></h1>
       </div>
       <ul>
-        <li><a href="/home#Home">Recomment</a></li>
+        {/* <li><a href="/home#Home">Recomment</a></li> */}
         <li><a href="/home#Products">Products</a></li>
         <li><a href="/favorites#Favorites">Favorites</a></li>
         {/* <li><a href="#Notifications">Notifications</a></li> */}
         <li><Link to="/edit-profile">Edit</Link></li>
-        <li><Link to="/Login">Logout</Link></li>
         <li><Link to="/cart">Cart</Link></li> {/* Restored Cart link */}
         <li><Link to="/reviews">Reviews</Link></li> {/* Add Reviews link */}
+        <li><Link to="/Login">Logout</Link></li>
       </ul>
 
       <div className="search-container">

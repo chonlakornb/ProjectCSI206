@@ -29,30 +29,51 @@ const Products = () => {
     }
   };
 
-  const handleAddToCart = async (product) => {
+  const handleAddToCart = (product) => {
     try {
-      await axios.post(
-        'http://localhost:3000/api/cart',
-        {
-          book_id: product.id,
-          title: product.title,
-          author: product.author,
-          cover_image: product.cover_image,
-          price: product.price,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
-          },
-        }
-      );
+      const cart = JSON.parse(localStorage.getItem('cart')) || [];
+      const existingProduct = cart.find((item) => item.id === product.id);
+
+      if (existingProduct) {
+        existingProduct.quantity += 1;
+      } else {
+        cart.push({ ...product, quantity: 1 });
+      }
+
+      localStorage.setItem('cart', JSON.stringify(cart));
       setMessage(`${product.title} added to cart!`);
       setTimeout(() => setMessage(''), 500);
     } catch (error) {
-      setMessage(error.response?.data?.message || 'Failed to add to cart.');
+      setMessage('Failed to add to cart.');
     }
   };
 
+  const handleAddToFavorites = async (product) => {
+    try {
+      const token = localStorage.getItem('token');
+      await axios.post(
+        `http://localhost:3000/api/favorites/${product.id}`, // ✅ ใส่ bookId ใน path ตาม backend
+        {}, // body ว่าง
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      );
+      setMessage(`${product.title} added to favorites!`);
+      setTimeout(() => setMessage(''), 500);
+    } catch (error) {
+      console.error('Error adding to favorites:', error.response || error.message);
+      if (error.response?.status === 400) {
+        setMessage('This book is already in your favorites.');
+      } else if (error.response?.status === 401) {
+        setMessage('You need to login to add favorites.');
+      } else {
+        setMessage('Failed to add to favorites.');
+      }
+    }
+  };
+  
   return (
     <div className="products" id="Products">
       <h1>PRODUCTS</h1>
@@ -93,6 +114,12 @@ const Products = () => {
                   onClick={() => handleAddToCart(product)}
                 >
                   Add to Cart
+                </button>
+                <button
+                  className="favorite-btn small"
+                  onClick={() => handleAddToFavorites(product)}
+                >
+                  Favorite
                 </button>
               </div>
             </div>

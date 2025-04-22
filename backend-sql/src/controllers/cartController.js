@@ -1,4 +1,4 @@
-import { pool } from '../../../backend-sql สำเนา/src/config/db.js';
+import { pool } from '../config/db.js'; // Corrected path
 
 export const getCartItems = async (req, res) => {
   try {
@@ -6,7 +6,7 @@ export const getCartItems = async (req, res) => {
     const [cartItems] = await pool.query(
       `SELECT c.cart_id, c.user_id, c.book_id, b.title, b.author, b.price, c.quantity, c.total_price 
        FROM cart c 
-       JOIN books b ON c.book_id = b.book_id 
+       JOIN books b ON c.book_id = b.id 
        WHERE c.user_id = ?`,
       [req.user.id]
     );
@@ -25,7 +25,7 @@ export const addToCart = async (req, res) => {
 
   try {
     // Check if the book exists
-    const [books] = await pool.query('SELECT * FROM books WHERE book_id = ?', [book_id]);
+    const [books] = await pool.query('SELECT * FROM books WHERE id = ?', [book_id]);
     if (books.length === 0) {
       return res.status(404).json({ message: 'Book not found' });
     }
@@ -77,7 +77,7 @@ export const updateCartItem = async (req, res) => {
     const cartItem = cartItems[0];
 
     // Check if the book exists
-    const [books] = await pool.query('SELECT * FROM books WHERE book_id = ?', [cartItem.book_id]);
+    const [books] = await pool.query('SELECT * FROM books WHERE id = ?', [cartItem.book_id]);
     if (books.length === 0) {
       return res.status(404).json({ message: 'Book not found' });
     }
