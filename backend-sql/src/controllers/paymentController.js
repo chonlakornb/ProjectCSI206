@@ -41,14 +41,14 @@ export const processPayment = async (req, res) => {
 export const getPaymentByOrderId = async (req, res) => {
   try {
     // Role-based authorization
-    if (req.user.role !== 'customer') {
-      return res.status(403).json({ message: 'Forbidden: Only customers can view payment details.' });
+    if (req.user.role !== 'user') { // Changed from 'customer' to 'user'
+      return res.status(403).json({ message: 'Forbidden: Only users can view payment details.' });
     }
 
     // Fetch payment details for the specified order_id
     const [payment] = await pool.query(
-      'SELECT * FROM payments WHERE order_id = ? AND user_id = ?',
-      [req.params.order_id, req.user.id]
+      'SELECT * FROM payments WHERE order_id = ?',
+      [req.params.order_id]
     );
 
     if (payment.length === 0) {

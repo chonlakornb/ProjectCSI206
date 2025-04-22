@@ -112,7 +112,7 @@ export const getOrderById = async (req, res) => {
                u.phone AS user_phone
         FROM orders o
         JOIN address a ON o.address_id = a.address_id
-        JOIN users u ON o.user_id = u.user_id
+        JOIN users u ON o.user_id = u.id -- Corrected column name from u.user_id to u.id
         WHERE o.order_id = ?
       `;
       params = [id];
@@ -124,7 +124,7 @@ export const getOrderById = async (req, res) => {
                u.phone AS user_phone
         FROM orders o
         JOIN address a ON o.address_id = a.address_id
-        JOIN users u ON o.user_id = u.user_id
+        JOIN users u ON o.user_id = u.id -- Corrected column name from u.user_id to u.id
         WHERE o.order_id = ? AND o.user_id = ?
       `;
       params = [id, user_id];
