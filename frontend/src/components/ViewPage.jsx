@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios'; // เพิ่มการนำเข้า axios
 import Navbar from './Navbar'; // นำเข้า Navbar
 import './ViewPage.css';
 
 const ViewPage = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const [product, setProduct] = useState({
     id: 0,
     title: 'Unknown Product',
@@ -15,6 +16,8 @@ const ViewPage = () => {
     image: '/src/img/default.png',
   });
   const [message, setMessage] = useState('');
+  const [reviews, setReviews] = useState([]);
+  const [newReview, setNewReview] = useState('');
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -40,6 +43,24 @@ const ViewPage = () => {
     };
 
     fetchProduct();
+  }, [location.state]);
+
+  useEffect(() => {
+    const fetchReviews = async () => {
+      const productId = location.state?.product?.id;
+      if (productId) {
+        try {
+          const response = await axios.get(`http://localhost:3000/api/reviews/${productId}`);
+          if (response.status === 200) {
+            setReviews(response.data);
+          }
+        } catch (error) {
+          console.error('Error fetching reviews:', error);
+        }
+      }
+    };
+
+    fetchReviews();
   }, [location.state]);
 
   const recommendedProducts = [
@@ -106,8 +127,34 @@ const ViewPage = () => {
   };
 
   const handleBuyNow = () => {
-    console.log(`Buying ${product.title} now!`);
-    // Add logic for buy now functionality here
+    navigate('/checkout', { state: { product } });
+  };
+
+  const handleReviewSubmit = async () => {
+    const productId = location.state?.product?.id;
+    const token = localStorage.getItem('token');
+    if (productId && newReview.trim()) {
+      try {
+        const response = await axios.post(
+          `http://localhost:3000/api/reviews/${productId}`,
+          { review: newReview },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        if (response.status === 201) {
+          setReviews([...reviews, response.data]);
+          setNewReview('');
+          setMessage('Review submitted successfully!');
+          setTimeout(() => setMessage(''), 500);
+        }
+      } catch (error) {
+        console.error('Error submitting review:', error);
+        setMessage('Failed to submit review.');
+      }
+    }
   };
 
   return (
@@ -130,6 +177,31 @@ const ViewPage = () => {
       </div>
 
       {message && <div className="message">{message}</div>}
+
+      {/* Review Section */}
+      <div className="review-section">
+        <h2>Reviews</h2>
+        <div className="reviews">
+          {reviews.length > 0 ? (
+            reviews.map((review, index) => (
+              <div key={index} className="review">
+                <p>{review.text}</p>
+                <small>By: {review.author}</small>
+              </div>
+            ))
+          ) : (
+            <p>No reviews yet. Be the first to review!</p>
+          )}
+        </div>
+        <textarea
+          value={newReview}
+          onChange={(e) => setNewReview(e.target.value)}
+          placeholder="Write your review here..."
+        ></textarea>
+        <button className="submit-review-btn" onClick={handleReviewSubmit}>
+          Submit Review
+        </button>
+      </div>
 
       {/* Recommended Products */}
       <div className="recommended-products">
