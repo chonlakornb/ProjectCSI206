@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Navbar from './Navbar';
 import './CheckoutPage.css';
 
@@ -10,15 +10,17 @@ const CheckoutPage = () => {
   });
 
   const [message, setMessage] = useState('');
+  const [cartItems, setCartItems] = useState([]);
 
-  const items = [
-    { id: 1, name: 'สินค้า A', price: 100 },
-    { id: 2, name: 'สินค้า B', price: 200 },
-    { id: 3, name: 'สินค้า C', price: 300 },
-  ];
+  useEffect(() => {
+    const storedCart = JSON.parse(localStorage.getItem('cart')) || [];
+    setCartItems(storedCart);
+  }, []);
 
-  const selectedItems = [items[0], items[2]];
-  const totalPrice = selectedItems.reduce((sum, item) => sum + item.price, 0);
+  const totalPrice = cartItems.reduce(
+    (sum, item) => sum + item.price * item.quantity,
+    0
+  );
   const shippingCost = 29;
   const grandTotal = totalPrice + shippingCost;
 
@@ -43,17 +45,20 @@ const CheckoutPage = () => {
           <div className="checkout-left">
             <h2>รายการสินค้า</h2>
             <ul>
-              {selectedItems.map((item) => (
-                <li key={item.id}>
-                  {item.name} - ฿{item.price}
+              {cartItems.map((item) => (
+                <li key={item.id} className="cart-item">
+                  <img src={item.cover_image} alt={item.title} className="cart-item-image" />
+                  <div>
+                    {item.title} x {item.quantity} - ฿{(item.price * item.quantity).toFixed(2)}
+                  </div>
                 </li>
               ))}
             </ul>
 
             <div className="summary">
-              <p>ราคารวมสินค้า: ฿{totalPrice}</p>
+              <p>ราคารวมสินค้า: ฿{totalPrice.toFixed(2)}</p>
               <p>ค่าจัดส่ง: ฿{shippingCost}</p>
-              <p className="total">รวมทั้งหมด: ฿{grandTotal}</p>
+              <p className="total">รวมทั้งหมด: ฿{grandTotal.toFixed(2)}</p>
             </div>
 
             <div className="address-display">
@@ -101,7 +106,7 @@ const CheckoutPage = () => {
                     width="200"
                     height="200"
                   />
-                  <p>ยอดชำระ ฿{grandTotal}</p>
+                  <p>ยอดชำระ ฿{grandTotal.toFixed(2)}</p>
                 </div>
               )}
 

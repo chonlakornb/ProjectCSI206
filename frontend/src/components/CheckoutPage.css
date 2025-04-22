@@ -44,6 +44,20 @@
   color: #444;
 }
 
+.cart-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.cart-item-image {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 5px;
+}
+
 .summary {
   margin-top: 1.5rem;
   background-color: #f9f9f9;
