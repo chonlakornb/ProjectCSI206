@@ -6,7 +6,7 @@ import './AdminPage.css';
 
 const AdminPage = () => {
   const [books, setBooks] = useState([]);
-  const [formData, setFormData] = useState({ title: '', author: '', cover_image: '', categories: '', isbn: '', publisher: '', published_year: '' });
+  const [formData, setFormData] = useState({ title: '', author: '', cover_image: '', categories: '', isbn: '', publisher: '', published_year: '', price: '' });
   const [editingBookId, setEditingBookId] = useState(null);
   const [message, setMessage] = useState('');
   const navigate = useNavigate();
@@ -83,7 +83,7 @@ const AdminPage = () => {
       }
   
       // รีเซ็ตฟอร์ม
-      setFormData({ title: '', author: '', cover_image: '', categories: '', isbn: '', publisher: '', published_year: '' });
+      setFormData({ title: '', author: '', cover_image: '', categories: '', isbn: '', publisher: '', published_year: '', price: '' });
       setEditingBookId(null);
   
       // รีเฟรชรายการหนังสือ
@@ -179,6 +179,14 @@ const AdminPage = () => {
           value={formData.published_year}
           onChange={handleInputChange}
         />
+        <input
+          id="book-price"
+          type="text"
+          name="price"
+          placeholder="Price"
+          value={formData.price}
+          onChange={handleInputChange}
+        />
         <button id="add-edit-book-btn" onClick={handleAddOrEditBook}>
           {editingBookId ? 'Update Book' : 'Add Book'}
         </button>
@@ -191,6 +199,7 @@ const AdminPage = () => {
               <th>Title</th>
               <th>Author</th>
               <th>Cover</th>
+              <th>Price</th>
               <th>Actions</th>
             </tr>
           </thead>
@@ -200,7 +209,11 @@ const AdminPage = () => {
                 <td>{book.title}</td>
                 <td>{book.author}</td>
                 <td><img src={book.cover_image} alt={book.title} width="50" /></td>
-                <td><button id={`edit-book-${book.id}`} onClick={() => handleEditClick(book)}>Edit</button><button id={`delete-book-${book.id}`} onClick={() => handleDeleteBook(book.id)}>Delete</button></td>
+                <td>{book.price}</td>
+                <td>
+                  <button id={`edit-book-${book.id}`} onClick={() => handleEditClick(book)}>Edit</button>
+                  <button id={`delete-book-${book.id}`} onClick={() => handleDeleteBook(book.id)}>Delete</button>
+                </td>
               </tr>
             ))}
           </tbody>
