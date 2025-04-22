@@ -15,7 +15,11 @@ const pool = mysql.createPool({
 export const getAllBooks = async (req, res) => {
   try {
     const [books] = await pool.query('SELECT * FROM books');
-    res.json(books);
+    const updatedBooks = books.map((book) => ({
+      ...book,
+      cover_image: book.cover_image ? `http://localhost:3000${book.cover_image}` : null,
+    }));
+    res.json(updatedBooks);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -27,7 +31,9 @@ export const getBookById = async (req, res) => {
     if (books.length === 0) {
       return res.status(404).json({ message: 'Book not found' });
     }
-    res.json(books[0]);
+    const book = books[0];
+    book.cover_image = book.cover_image ? `http://localhost:3000${book.cover_image}` : null;
+    res.json(book);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

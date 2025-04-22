@@ -1,5 +1,6 @@
 import express from 'express';
 import cors from 'cors';
+import path from 'path';
 import { connectDB } from './config/db.js'; // Import connectDB
 
 import userRoutes from './routes/userRoutes.js';
@@ -21,6 +22,9 @@ const PORT = 3000;
 
 app.use(express.json());
 app.use(cors());
+
+// Serve the uploads folder as static content
+app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
 
 // Connect to the database
 connectDB();

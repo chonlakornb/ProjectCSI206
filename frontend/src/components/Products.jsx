@@ -77,7 +77,11 @@ const Products = () => {
           <div className="card" key={product.id}>
             <div className="image">
               <img
-                src={`http://localhost:3000${product.cover_image}`}
+                src={
+                  product.cover_image.startsWith('http')
+                    ? product.cover_image
+                    : `http://localhost:3000${product.cover_image}`
+                }
                 alt={`Product ${product.id}`}
               />
             </div>

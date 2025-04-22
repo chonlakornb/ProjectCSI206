@@ -72,6 +72,13 @@ const AdminPage = () => {
       setFormData({ title: '', author: '', cover_image: '', categories: '', isbn: '', publisher: '', published_year: '', price: '' });
       setEditingBookId(null);
 
+      // Reset the file input and preview image
+      const fileInput = document.getElementById('book-cover-image');
+      if (fileInput) {
+        fileInput.value = '';
+      }
+     
+
       const updatedBooks = await axios.get('http://localhost:3000/api/books', {
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -210,9 +217,9 @@ const AdminPage = () => {
                 <td>
                   <img
                     src={
-                      typeof book.cover_image === 'string' && book.cover_image.startsWith('http')
-                        ? book.cover_image
-                        : `http://localhost:3000/${book.cover_image}`
+                      book.cover_image.startsWith('http') 
+                        ? book.cover_image 
+                        : `http://localhost:3000${book.cover_image}`
                     }
                     alt={book.title}
                     width="50"

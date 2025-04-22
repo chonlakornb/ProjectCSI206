@@ -6,6 +6,9 @@ import { authMiddleware, adminMiddleware } from '../middleware/authMiddleware.js
 
 const router = express.Router();
 
+// Serve the uploads folder as static content
+router.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
+
 // Configure multer
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
