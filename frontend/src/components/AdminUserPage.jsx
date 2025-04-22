@@ -44,8 +44,8 @@ const AdminUserPage = () => {
     try {
       const token = localStorage.getItem('token');
       await axios.put(
-        `http://localhost:3000/api/users/${userId}/role`,
-        { role: newRole },
+        `http://localhost:3000/api/users/${userId}`, // Corrected endpoint
+        { role: newRole }, // Ensure the body contains the role field
         { headers: { Authorization: `Bearer ${token}` } }
       );
       setUsers(users.map(user => (user.id === userId ? { ...user, role: newRole } : user)));

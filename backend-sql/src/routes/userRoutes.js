@@ -84,4 +84,44 @@ router.put('/users/me', authMiddleware, updateUserProfile);
  */
 router.delete('/users/me', authMiddleware, deleteUserProfile);
 
+/**
+ * @swagger
+ * /api/users/{id}:
+ *   put:
+ *     summary: Update user details
+ *     description: Update the details of a user by ID. Fields that can be updated include username, password, and role.
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the user to update.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               username:
+ *                 type: string
+ *                 description: The new username for the user.
+ *               password:
+ *                 type: string
+ *                 description: The new password for the user.
+ *               role:
+ *                 type: string
+ *                 description: The new role for the user.
+ *     responses:
+ *       200:
+ *         description: User details updated successfully.
+ *       401:
+ *         description: Unauthorized.
+ */
+router.put('/users/:id', authMiddleware, updateUserProfile);
+
 export default router;

@@ -27,9 +27,10 @@ export const getUserProfile = async (req, res) => {
 
 export const updateUserProfile = async (req, res) => {
   const { username, password, role } = req.body;
+  const userId = req.params.id || req.user.id; // Allow admins to update other users
 
   try {
-    const [users] = await pool.query('SELECT * FROM users WHERE id = ?', [req.user.id]);
+    const [users] = await pool.query('SELECT * FROM users WHERE id = ?', [userId]);
     if (users.length === 0) {
       return res.status(404).json({ message: 'User not found' });
     }
@@ -38,7 +39,7 @@ export const updateUserProfile = async (req, res) => {
 
     await pool.query(
       'UPDATE users SET username = ?, password = ?, role = ? WHERE id = ?',
-      [username || users[0].username, hashedPassword, role || users[0].role, req.user.id]
+      [username || users[0].username, hashedPassword, role || users[0].role, userId]
     );
 
     res.json({ message: 'User profile updated successfully' });
