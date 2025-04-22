@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import Navbar from './Navbar'; // Optional: Add Navbar for navigation
+import AdminNavbar from './AdminNavbar'; // Replace Navbar with AdminNavbar
 import './AdminPage.css';
 
 const AdminPage = () => {
@@ -129,7 +129,7 @@ const AdminPage = () => {
 
   return (
     <div className="admin-page" id='admin'>
-      <Navbar />
+      <AdminNavbar /> {/* Use AdminNavbar */}
       <h1>Admin Panel</h1>
       {message && <p className="message">{message}</p>}
       <div className="form-container">

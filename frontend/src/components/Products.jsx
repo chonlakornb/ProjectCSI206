@@ -21,12 +21,7 @@ const Products = () => {
   }, []);
 
   const handleViewProduct = (product) => {
-    try {
-      navigate('/viewpage', { state: { product } }); // Ensure the route matches the one in your router
-    } catch (error) {
-      console.error('Navigation failed:', error);
-      setMessage('Failed to navigate to the product view page.');
-    }
+    navigate('/viewpage', { state: { product } });
   };
 
   const handleAddToCart = (product) => {
@@ -42,8 +37,8 @@ const Products = () => {
 
       localStorage.setItem('cart', JSON.stringify(cart));
       setMessage(`${product.title} added to cart!`);
-      setTimeout(() => setMessage(''), 500);
-    } catch (error) {
+      setTimeout(() => setMessage(''), 1000);
+    } catch {
       setMessage('Failed to add to cart.');
     }
   };
@@ -52,8 +47,8 @@ const Products = () => {
     try {
       const token = localStorage.getItem('token');
       await axios.post(
-        `http://localhost:3000/api/favorites/${product.id}`, // ✅ ใส่ bookId ใน path ตาม backend
-        {}, // body ว่าง
+        `http://localhost:3000/api/favorites/${product.id}`,
+        {},
         {
           headers: {
             Authorization: `Bearer ${token}`
@@ -61,9 +56,8 @@ const Products = () => {
         }
       );
       setMessage(`${product.title} added to favorites!`);
-      setTimeout(() => setMessage(''), 500);
+      setTimeout(() => setMessage(''), 1000);
     } catch (error) {
-      console.error('Error adding to favorites:', error.response || error.message);
       if (error.response?.status === 400) {
         setMessage('This book is already in your favorites.');
       } else if (error.response?.status === 401) {
@@ -73,7 +67,7 @@ const Products = () => {
       }
     }
   };
-  
+
   return (
     <div className="products" id="Products">
       <h1>PRODUCTS</h1>
@@ -81,10 +75,6 @@ const Products = () => {
       <div className="box">
         {products.map((product) => (
           <div className="card" key={product.id}>
-            <div className="small_card">
-              <i className="fa-solid fa-heart"></i>
-              <i className="fa-solid fa-share"></i>
-            </div>
             <div className="image">
               <img src={product.cover_image} alt={`Product ${product.id}`} />
             </div>
@@ -96,32 +86,26 @@ const Products = () => {
                 {[...Array(5)].map((_, starIndex) => (
                   <i
                     key={starIndex}
-                    className={`fa-solid ${
-                      starIndex < 4 ? 'fa-star' : 'fa-star-half-stroke'
-                    }`}
+                    className={`fa-solid ${starIndex < 4 ? 'fa-star' : 'fa-star-half-stroke'}`}
                   ></i>
                 ))}
               </div>
+
+              {/* Buttons */}
               <div className="button-group">
-                <button
-                  className="btn"
-                  onClick={() => handleViewProduct(product)}
-                >
-                  View
-                </button>
-                <button
-                  className="favorite-btn"
-                  onClick={() => handleAddToCart(product)}
-                >
-                  Add to Cart
-                </button>
-                <button
-                  className="favorite-btn small"
-                  onClick={() => handleAddToFavorites(product)}
-                >
+                <div className="top-buttons">
+                  <button className="btn view-btn" onClick={() => handleViewProduct(product)}>
+                    View
+                  </button>
+                  <button className="btn cart-btn" onClick={() => handleAddToCart(product)}>
+                    Add to Cart
+                  </button>
+                </div>
+                <button className="btn favorite-btn" onClick={() => handleAddToFavorites(product)}>
                   Favorite
                 </button>
               </div>
+
             </div>
           </div>
         ))}

@@ -1,0 +1,39 @@
+.admin-navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 2rem;
+  background: #333;
+  color: white;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+}
+
+.admin-navbar .logo h1 {
+  font-size: 1.8rem;
+  color: #fff;
+}
+
+.admin-navbar .logo span {
+  color: #c72092;
+}
+
+.admin-navbar ul {
+  list-style: none;
+  display: flex;
+  gap: 1.5rem;
+}
+
+.admin-navbar ul li a {
+  text-decoration: none;
+  color: white;
+  font-weight: bold;
+  transition: color 0.3s;
+}
+
+.admin-navbar ul li a:hover {
+  color: #c72092;
+}

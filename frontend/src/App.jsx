@@ -10,6 +10,7 @@ import EditProfilePage from './components/EditProfilePage'; // Import EditProfil
 import CartPage from './components/CartPage'; // Import CartPage
 import CheckoutPage from './components/CheckoutPage'; // Import CheckoutPage
 import ProductReviewPage from './components/ProductReviewPage'; // Import ProductReviewPage
+import ShippingPage from './components/ShippingPage'; // Import ShippingPage
 import './App.css';
 
 const App = () => {
@@ -28,6 +29,7 @@ const App = () => {
         <Route path="/cart" element={<CartPage />} /> {/* Add CartPage route */}
         <Route path="/checkout" element={<CheckoutPage />} /> {/* Add CheckoutPage route */}
         <Route path="/reviews" element={<ProductReviewPage />} /> {/* Add ProductReviewPage route */}
+        <Route path="/shipping" element={<ShippingPage />} /> {/* Add ShippingPage route */}
       </Routes>
     </Router>
   );

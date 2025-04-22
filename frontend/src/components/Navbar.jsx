@@ -16,6 +16,7 @@ const Navbar = () => {
         <li><Link to="/edit-profile">Edit</Link></li>
         <li><Link to="/cart">Cart</Link></li> {/* Restored Cart link */}
         <li><Link to="/reviews">Reviews</Link></li> {/* Add Reviews link */}
+        <li><Link to="/shipping">Shipping</Link></li> {/* Add Shipping link */}
         <li><Link to="/Login">Logout</Link></li>
       </ul>
 
