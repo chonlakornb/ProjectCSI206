@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Navbar from './Navbar'; // นำเข้า Navbar
 import './Favorites.css';
 import axios from 'axios';
 
 const Favorites = () => {
   const [favorites, setFavorites] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchFavorites = async () => {
@@ -43,7 +45,12 @@ const Favorites = () => {
         <h1>YOUR FAVORITES</h1>
         <div className="favorites-row">
           {favorites.map((favorite) => (
-            <div className="favorite-card" key={favorite.id}>
+            <div
+              className="favorite-card"
+              key={favorite.id}
+              onClick={() => navigate('/viewpage', { state: { product: favorite } })}
+              style={{ cursor: 'pointer' }}
+            >
               <img
                 src={
                   favorite.cover_image.startsWith('http')
@@ -54,7 +61,12 @@ const Favorites = () => {
               />
               <h2>{favorite.title}</h2>
               <p>{favorite.author}</p>
-              <button onClick={() => handleRemoveFavorite(favorite.id)}>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleRemoveFavorite(favorite.id);
+                }}
+              >
                 Remove from Favorites
               </button>
             </div>
