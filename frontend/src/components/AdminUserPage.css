@@ -1,0 +1,178 @@
+.admin-user-page {
+  padding: 2rem;
+  margin: 3rem auto;
+  max-width: 900px;
+  background: linear-gradient(135deg, #ffffff, #f3f4f6);
+  border-radius: 15px;
+  box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.15);
+  font-family: 'Arial', sans-serif;
+}
+
+.message {
+  color: #28a745;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  text-align: center;
+  font-size: 1.1rem;
+}
+
+.users-table table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.users-table th, .users-table td {
+  border-bottom: 1px solid #e0e0e0;
+  padding: 1rem;
+  text-align: left;
+  font-size: 1rem;
+}
+
+.users-table th {
+  background: linear-gradient(to right, #6c63ff, #5e54ff);
+  color: white;
+  text-transform: uppercase;
+  font-weight: bold;
+  letter-spacing: 0.05em;
+  box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.1);
+}
+
+.users-table td {
+  background: #f9f9f9;
+}
+
+.users-table tr:hover td {
+  background: #f0f0ff;
+  transition: background 0.2s ease;
+}
+
+.users-table td:last-child {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.users-table select, .users-table input {
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 1rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.users-table select:focus, .users-table input:focus {
+  border-color: #6c63ff;
+  outline: none;
+  box-shadow: 0 0 5px rgba(108, 99, 255, 0.5);
+}
+
+button {
+  padding: 0.5rem 1rem;
+  background: #28a745; /* Changed to green */
+  color: rgb(0, 0, 0);
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+button:hover {
+  background: #218838; /* Darker green on hover */
+  transform: scale(1.05);
+}
+
+button:active {
+  background: #1e7e34; /* Even darker green on active */
+  transform: scale(1);
+}
+
+/* Added Different Buttons for Different Actions */
+button.edit-btn {
+  background: #007bff;
+  color: white;
+}
+button.edit-btn:hover {
+  background: #0069d9;
+}
+
+button.delete-btn {
+  background: #dc3545;
+  color: white;
+}
+button.delete-btn:hover {
+  background: #c82333;
+}
+
+button.reset-btn {
+  background: #ffc107;
+  color: black;
+}
+button.reset-btn:hover {
+  background: #e0a800;
+}
+
+h1 {
+  text-align: center;
+  color: #333;
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+}
+
+.users-table td:last-child {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.users-table input[type="password"]::placeholder {
+  font-style: italic;
+  color: #aaa;
+}
+
+/* Button Layout Adjustments */
+button.edit-btn,
+button.delete-btn,
+button.reset-btn {
+  width: 120px;
+  font-size: 0.9rem;
+  padding: 0.6rem;
+}
+
+button.edit-btn:hover,
+button.delete-btn:hover,
+button.reset-btn:hover {
+  transform: scale(1.05);
+}
+
+/* Responsive Layout (For Small Screens) */
+@media (max-width: 768px) {
+  .admin-user-page {
+    margin: 1rem;
+    padding: 1.5rem;
+  }
+
+  .users-table {
+    font-size: 0.9rem;
+  }
+
+  .users-table td {
+    padding: 0.8rem;
+  }
+
+  h1 {
+    font-size: 1.5rem;
+  }
+
+  button {
+    width: 100%;
+    font-size: 0.9rem;
+  }
+}
