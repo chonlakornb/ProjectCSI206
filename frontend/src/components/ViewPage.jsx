@@ -24,7 +24,12 @@ const ViewPage = () => {
           const response = await fetch(`http://localhost:3000/api/books/${productId}`);
           if (response.ok) {
             const data = await response.json();
-            setProduct(data);
+            setProduct({
+              ...data,
+              image: data.cover_image.startsWith('http')
+                ? data.cover_image
+                : `http://localhost:3000${data.cover_image}`,
+            });
           } else {
             console.error('Failed to fetch product details');
           }

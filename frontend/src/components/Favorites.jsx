@@ -44,7 +44,14 @@ const Favorites = () => {
         <div className="favorites-row">
           {favorites.map((favorite) => (
             <div className="favorite-card" key={favorite.id}>
-              <img src={favorite.cover_image} alt={favorite.title} />
+              <img
+                src={
+                  favorite.cover_image.startsWith('http')
+                    ? favorite.cover_image
+                    : `http://localhost:3000${favorite.cover_image}`
+                }
+                alt={favorite.title}
+              />
               <h2>{favorite.title}</h2>
               <p>{favorite.author}</p>
               <button onClick={() => handleRemoveFavorite(favorite.id)}>
