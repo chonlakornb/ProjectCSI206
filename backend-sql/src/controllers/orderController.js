@@ -32,26 +32,24 @@ export const getOrders = async (req, res) => {
     let query = '';
     let params = [];
 
-    // Admins can view all orders
     if (user_role === 'admin') {
+      // Admins can view all orders
       query = `
-        SELECT o.order_id, o.total_price, o.created_at, 
-               a.street_address, a.province, a.postal_code, a.country, 
+        SELECT o.order_id, o.total_price, o.payment_method, o.status, o.created_at, 
+               o.address_id, a.street_address, a.province, a.postal_code, a.country, 
                u.phone AS user_phone
         FROM orders o
         JOIN address a ON o.address_id = a.address_id
-        JOIN users u ON o.user_id = u.id -- Corrected column name from u.user_id to u.id
+        JOIN users u ON o.user_id = u.id
         ORDER BY o.created_at DESC
       `;
     } else {
       // Regular users can only view their own orders
       query = `
-        SELECT o.order_id, o.total_price, o.created_at, 
-               a.street_address, a.province, a.postal_code, a.country, 
-               u.phone AS user_phone
+        SELECT o.order_id, o.total_price, o.payment_method, o.status, o.created_at, 
+               o.address_id, a.street_address, a.province, a.postal_code, a.country
         FROM orders o
         JOIN address a ON o.address_id = a.address_id
-        JOIN users u ON o.user_id = u.id -- Corrected column name from u.user_id to u.id
         WHERE o.user_id = ?
         ORDER BY o.created_at DESC
       `;
@@ -127,7 +125,7 @@ export const updateOrderStatus = async (req, res) => {
     }
 
     // Validate status
-    const validStatuses = ['shipped', 'delivered'];
+    const validStatuses = ['pending', 'paid', 'shipped', 'delivered', 'cancelled'];
     if (!validStatuses.includes(status)) {
       return res.status(400).json({ message: `Invalid status. Allowed statuses are: ${validStatuses.join(', ')}` });
     }

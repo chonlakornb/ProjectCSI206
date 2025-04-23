@@ -134,7 +134,7 @@ router.get('/:id', authMiddleware, getOrderById);
  *       500:
  *         description: Internal server error.
  */
-router.put('/:id/status', authMiddleware, updateOrderStatus);
+router.put('/:id/status', authMiddleware, updateOrderStatus); // Route for updating order status
 
 /**
  * @swagger

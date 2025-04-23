@@ -10,16 +10,26 @@ const ShippingPage = () => {
     const fetchOrders = async () => {
       try {
         const token = localStorage.getItem('token');
-        const response = await fetch('http://localhost:3000/api/orders/', {
+        const response = await fetch('http://localhost:3000/api/orders', {
           headers: { Authorization: `Bearer ${token}` },
         });
 
-        if (response.status === 401) {
-          throw new Error('Unauthorized');
+        if (!response.ok) {
+          throw new Error('Failed to fetch orders');
         }
 
         const data = await response.json();
-        setOrders(Array.isArray(data) ? data : []);
+        setOrders(
+          Array.isArray(data)
+            ? data.map(order => ({
+                id: order.order_id,
+                total_price: order.total_price || 0,
+                payment_method: order.payment_method || 'N/A',
+                status: order.status || 'Unknown',
+                address: `${order.street_address}, ${order.province}, ${order.postal_code}, ${order.country}`, // Full address
+              }))
+            : []
+        );
       } catch (error) {
         console.error('Error fetching orders:', error);
         setOrders([]);
@@ -54,13 +64,12 @@ const ShippingPage = () => {
           <div className="card-list">
             {orders.map((order) => (
               <div className="shipping-card" key={order.id}>
-                <img src={order.image || '/src/img/default.png'} alt={order.productName || 'Product'} className="product-image" />
                 <div className="card-content">
-                  <h2>{order.productName || 'Unknown Product'}</h2>
-                  <p><strong>Order ID:</strong> #{order.id}</p>
-                  <p><strong>Price:</strong> ${Number(order.price || 0).toFixed(2)}</p>
+                  <h2>Order ID: #{order.id}</h2>
+                  <p><strong>Total Price:</strong> ${Number(order.total_price || 0).toFixed(2)}</p>
                   <p><strong>Status:</strong> <span className={`status ${(order.status || '').toLowerCase()}`}>{getStatusIcon(order.status)} {order.status || 'Unknown'}</span></p>
-                  <p><strong>Estimated Delivery:</strong> {order.estimatedDelivery || 'N/A'}</p>
+                  <p><strong>Payment Method:</strong> {order.payment_method || 'N/A'}</p>
+                  <p><strong>Address:</strong> {order.address}</p> {/* Display full address */}
                   <div className="button-group">
                     <button className="view-details-btn">🔍 View Details</button>
                     <button className="invoice-btn">
