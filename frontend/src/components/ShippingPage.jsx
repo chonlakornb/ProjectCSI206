@@ -2,9 +2,11 @@ import React, { useState, useEffect } from 'react';
 import Navbar from './Navbar';
 import './ShippingPage.css';
 import { FaTruck, FaBoxOpen, FaCheckCircle, FaFileInvoice } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
 
 const ShippingPage = () => {
   const [orders, setOrders] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -71,7 +73,12 @@ const ShippingPage = () => {
                   <p><strong>Payment Method:</strong> {order.payment_method || 'N/A'}</p>
                   <p><strong>Address:</strong> {order.address}</p> {/* Display full address */}
                   <div className="button-group">
-                    <button className="view-details-btn">🔍 View Details</button>
+                    <button
+                      className="view-details-btn"
+                      onClick={() => navigate('/view-order-details', { state: { orderId: order.id } })}
+                    >
+                      🔍 View Details
+                    </button>
                     <button className="invoice-btn">
                       <FaFileInvoice className="invoice-icon" /> Invoice
                     </button>

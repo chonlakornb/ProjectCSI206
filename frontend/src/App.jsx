@@ -13,6 +13,7 @@ import ProductReviewPage from './components/ProductReviewPage'; // Import Produc
 import ShippingPage from './components/ShippingPage'; // Import ShippingPage
 import AdminUserPage from './components/AdminUserPage'; // Import AdminUserPage
 import AdminOrderPage from './components/AdminOrderPage'; // Import AdminOrderPage
+import ViewOrderDetails from './components/ViewOrderDetails'; // Import ViewOrderDetails
 import './App.css';
 
 const App = () => {
@@ -34,6 +35,7 @@ const App = () => {
         <Route path="/shipping" element={<ShippingPage />} /> {/* Add ShippingPage route */}
         <Route path="/admin/users" element={<AdminUserPage />} /> {/* Add AdminUserPage route */}
         <Route path="/admin/orders-page" element={<AdminOrderPage />} /> {/* Add AdminOrderPage route */}
+        <Route path="/view-order-details" element={<ViewOrderDetails />} /> {/* Add ViewOrderDetails route */}
       </Routes>
     </Router>
   );
