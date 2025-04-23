@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import AdminNavbar from './AdminNavbar'; // Replace Navbar with AdminNavbar
+import AdminNavbar from './AdminNavbar'; // ใช้ Navbar ของ Admin
 import './AdminPage.css';
 
 const AdminPage = () => {
@@ -18,7 +18,7 @@ const AdminPage = () => {
         const response = await axios.get('http://localhost:3000/api/books', {
           headers: { Authorization: `Bearer ${token}` },
         });
-        setBooks(response.data); // Ensure this matches the structure of the Postman API response
+        setBooks(response.data); // รับข้อมูลหนังสือ
       } catch (error) {
         setMessage('Failed to fetch books.');
       }
@@ -31,10 +31,10 @@ const AdminPage = () => {
           headers: { Authorization: `Bearer ${token}` },
         });
         if (response.data.role !== 'admin') {
-          navigate('/'); // Redirect non-admin users
+          navigate('/'); // ถ้าไม่ใช่แอดมินให้ไปหน้าอื่น
         }
       } catch (error) {
-        navigate('/'); // Redirect if token is invalid
+        navigate('/'); // ถ้าไม่มี token จะให้ไปหน้าอื่น
       }
     };
 
@@ -67,7 +67,6 @@ const AdminPage = () => {
 
       const config = { headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'multipart/form-data' } };
 
-
       if (editingBookId) {
         await axios.put(`http://localhost:3000/api/books/${editingBookId}`, formDataToSend, config);
         setMessage('Book updated successfully!');
@@ -79,12 +78,11 @@ const AdminPage = () => {
       setFormData({ title: '', author: '', cover_image: '', categories: '', isbn: '', publisher: '', published_year: '', price: '' });
       setEditingBookId(null);
 
-      // Reset the file input and preview image
+      // รีเซ็ต input และการแสดงภาพ
       const fileInput = document.getElementById('book-cover-image');
       if (fileInput) {
         fileInput.value = '';
       }
-     
 
       const updatedBooks = await axios.get('http://localhost:3000/api/books', {
         headers: { Authorization: `Bearer ${token}` },
@@ -92,10 +90,8 @@ const AdminPage = () => {
       setBooks(updatedBooks.data);
 
     } catch (error) {
-
       console.error('Error saving book:', error.response?.data || error.message);
       setMessage(error.response?.data?.message || 'Failed to save book.');
-
     }
   };
 
@@ -118,8 +114,8 @@ const AdminPage = () => {
   };
 
   return (
-    <div className="admin-page" id='admin'>
-      <AdminNavbar /> {/* Use AdminNavbar */}
+    <div className="admin-page" id="admin">
+      <AdminNavbar />
       <h1>Admin Panel</h1>
       {message && <p className="message">{message}</p>}
       <div className="form-container">
@@ -143,7 +139,7 @@ const AdminPage = () => {
         <input
           id="book-cover-image"
           type="file"
-          name="cover_image" // Ensure this matches the backend field name
+          name="cover_image"
           onChange={(e) => {
             const file = e.target.files[0];
             setFormData({ ...formData, cover_image: file });
@@ -226,8 +222,8 @@ const AdminPage = () => {
                 <td>
                   <img
                     src={
-                      book.cover_image.startsWith('http') 
-                        ? book.cover_image 
+                      book.cover_image.startsWith('http')
+                        ? book.cover_image
                         : `http://localhost:3000${book.cover_image}`
                     }
                     alt={book.title}
@@ -236,8 +232,8 @@ const AdminPage = () => {
                 </td>
                 <td>{book.price}</td>
                 <td>
-                  <button id={`edit-book-${book.id}`} onClick={() => handleEditClick(book)}>Edit</button>
-                  <button id={`delete-book-${book.id}`} onClick={() => handleDeleteBook(book.id)}>Delete</button>
+                  <button className="edit" onClick={() => handleEditClick(book)}>Edit</button>
+                  <button className="delete" onClick={() => handleDeleteBook(book.id)}>Delete</button>
                 </td>
               </tr>
             ))}

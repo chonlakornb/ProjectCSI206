@@ -7,36 +7,30 @@ const ShippingPage = () => {
   const [orders, setOrders] = useState([]);
 
   useEffect(() => {
-    const sampleOrders = [
-      {
-        id: 1,
-        productName: 'Product A',
-        price: 120.0,
-        status: 'Shipped',
-        estimatedDelivery: '2023-10-15',
-        image: '/src/img/productA.png'
-      },
-      {
-        id: 2,
-        productName: 'Product B',
-        price: 140.0,
-        status: 'Processing',
-        estimatedDelivery: '2023-10-20',
-        image: '/src/img/productB.png'
-      },
-      {
-        id: 3,
-        productName: 'Product C',
-        price: 180.0,
-        status: 'Delivered',
-        estimatedDelivery: '2023-10-10',
-        image: '/src/img/productC.png'
+    const fetchOrders = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        const response = await fetch('http://localhost:3000/api/orders/', {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (response.status === 401) {
+          throw new Error('Unauthorized');
+        }
+
+        const data = await response.json();
+        setOrders(Array.isArray(data) ? data : []);
+      } catch (error) {
+        console.error('Error fetching orders:', error);
+        setOrders([]);
       }
-    ];
-    setOrders(sampleOrders);
+    };
+
+    fetchOrders();
   }, []);
 
   const getStatusIcon = (status) => {
+    if (!status) return null; // Ensure status is defined
     switch (status.toLowerCase()) {
       case 'shipped':
         return <FaTruck className="status-icon shipped" />;
@@ -53,21 +47,20 @@ const ShippingPage = () => {
     <div className="shipping-page">
       <Navbar />
       <div className="shipping-container">
-        <h1></h1>
+        <h1>Shipping Orders</h1>
         {orders.length === 0 ? (
           <p className="empty-message">No orders found.</p>
         ) : (
           <div className="card-list">
             {orders.map((order) => (
               <div className="shipping-card" key={order.id}>
-                <img src={order.image} alt={order.productName} className="product-image" />
+                <img src={order.image || '/src/img/default.png'} alt={order.productName || 'Product'} className="product-image" />
                 <div className="card-content">
-                  <h2>{order.productName}</h2>
+                  <h2>{order.productName || 'Unknown Product'}</h2>
                   <p><strong>Order ID:</strong> #{order.id}</p>
-                  <p><strong>Price:</strong> ${order.price.toFixed(2)}</p>
-                  <p><strong>Status:</strong> <span className={`status ${order.status.toLowerCase()}`}>{getStatusIcon(order.status)} {order.status}</span></p>
-                  <p><strong>Estimated Delivery:</strong> {order.estimatedDelivery}</p>
-
+                  <p><strong>Price:</strong> ${Number(order.price || 0).toFixed(2)}</p>
+                  <p><strong>Status:</strong> <span className={`status ${(order.status || '').toLowerCase()}`}>{getStatusIcon(order.status)} {order.status || 'Unknown'}</span></p>
+                  <p><strong>Estimated Delivery:</strong> {order.estimatedDelivery || 'N/A'}</p>
                   <div className="button-group">
                     <button className="view-details-btn">🔍 View Details</button>
                     <button className="invoice-btn">

@@ -1,185 +1,148 @@
-/* ตั้งค่าพื้นฐานของหน้า */
+/* ปรับหน้า Admin ให้ดูทันสมัย */
 .admin-page {
-    align-items: center;
-    padding: 2rem;
-    margin: 3rem auto;
-    max-width: 900px;
-    background: #f8f9fa;
-    border-radius: 10px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-  }
-  
-  /* ข้อความแจ้งเตือน */
-  .message {
-    color: green;
-    font-weight: bold;
-    margin-bottom: 1rem;
-  }
-  
-/* ทำให้ .form-container อยู่กึ่งกลาง */
+  background-color: #f4f7fc;
+  padding: 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* หัวข้อของ Admin Panel */
+.admin-page h1 {
+  font-size: 2.5rem;
+  color: #333;
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+/* ฟอร์มการเพิ่ม/แก้ไขหนังสือ */
 .form-container {
-    background: white;
-    padding: 1.5rem;
-    border-radius: 8px;
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-    margin: 0 auto; /* ทำให้กึ่งกลางแนวนอน */
-    margin-bottom: 2rem;
-    width: 100%;
-    max-width: 500px; /* ขนาดสูงสุดให้เหมาะสม */
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center; /* จัดให้เนื้อหาภายในฟอร์มอยู่กึ่งกลาง */
-  }
-  
-  
-  .form-container input {
-    display: block;
-    margin-bottom: 1rem;
-    padding: 0.75rem;
-    width: 100%;
-    max-width: 400px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    transition: all 0.3s ease-in-out;
-  }
-  
-  .form-container input:focus {
-    border-color: #007bff;
-    box-shadow: 0px 0px 5px rgba(0, 123, 255, 0.5);
-    outline: none;
-  }
+  background-color: #fff;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  max-width: 600px;
+  margin: 0 auto;
+}
 
-  #book-categories {
-    margin-bottom: 1rem;
-    padding: 0.75rem;
-    width: 100%;
-    max-width: 400px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    transition: all 0.3s ease-in-out;
-  }
-  #book-categories:focus {
-    border-color: #007bff;
-    box-shadow: 0px 0px 5px rgba(0, 123, 255, 0.5);
-    outline: none;
-  }
+/* สไตล์ input ในฟอร์ม */
+.form-container input {
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+}
 
-  #book-isbn {
-    margin-bottom: 1rem;
-    padding: 0.75rem;
-    width: 100%;
-    max-width: 400px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    transition: all 0.3s ease-in-out;
-  }
-  #book-isbn:focus {
-    border-color: #007bff;
-    box-shadow: 0px 0px 5px rgba(0, 123, 255, 0.5);
-    outline: none;
-  }
-  
-  /* ปุ่มหลัก */
-  #add-edit-book-btn {
-    background: linear-gradient(135deg, #6c14d0, #c72092);
-    color: white;
-    border: none;
-    border-radius: 5px;
-    padding: 0.75rem 1.5rem;
-    cursor: pointer;
-    transition: 0.3s ease-in-out;
-    font-weight: bold;
-  }
-  
-  #add-edit-book-btn:hover {
-    background: linear-gradient(135deg, #6c14d0, #ec21d1);
-    transform: translateY(-2px);
-  }
-  
-  /* ตารางหนังสือ */
-  .books-table table {
-    width: 100%;
-    border-collapse: collapse;
-    background: white;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-  }
-  
-  .books-table th, .books-table td {
-    border-bottom: 1px solid #ddd;
-    padding: 1rem;
-    text-align: left;
-  }
-  
-  .books-table th {
-    background: #701483;
-    color: white;
-    text-transform: uppercase;
-    font-weight: bold;
-  }
-  
-  .books-table img {
-    max-width: 60px;
-    border-radius: 8px;
-    transition: transform 0.3s ease-in-out;
-  }
-  
-  .books-table img:hover {
-    transform: scale(1.1);
-  }
-  
-  /* ปุ่มในตาราง */
-  .books-table button {
-    border: none;
-    border-radius: 5px;
-    padding: 0.5rem 1rem;
-    cursor: pointer;
-    transition: 0.3s ease-in-out;
-    font-weight: bold;
-  }
-  
-  .books-table button:hover {
-    transform: translateY(-2px);
-  }
-  
-  /* ปุ่ม Edit */
-  .books-table button#edit-book-btn {
-    background: linear-gradient(135deg, #28a745, #218838);
-    color: white;
-  }
-  
-  .books-table button#edit-book-btn:hover {
-    background: linear-gradient(135deg, #218838, #1c6d32);
-  }
-  
-  /* ปุ่ม Delete */
-  .books-table button#delete-book-btn {
-    background: linear-gradient(135deg, #dc3545, #c82333);
-    color: white;
-  }
-  
-  .books-table button#delete-book-btn:hover {
-    background: linear-gradient(135deg, #c82333, #a71d2a);
-  }
-  
-  /* Responsive Design */
-  @media (max-width: 768px) {
-    .admin-page {
-      padding: 1rem;
-      margin: 2rem auto;
-    }
-  
-    .form-container input {
-      max-width: 100%;
-    }
-  
-    .books-table table {
-      font-size: 0.9rem;
-    }
-  
-    .books-table th, .books-table td {
-      padding: 0.75rem;
-    }
-  }
+/* เปลี่ยนสี border เมื่อ input โฟกัส */
+.form-container input:focus {
+  border-color: #6c14d0;
+  outline: none;
+}
+
+/* ปุ่ม Add หรือ Update */
+.form-container button {
+  background-color: #6c14d0;
+  color: white;
+  padding: 14px 24px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  width: 100%;
+  font-size: 1.2rem;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+/* ปุ่ม Add หรือ Update hover */
+.form-container button:hover {
+  background-color: #9a2cdb;
+  transform: translateY(-2px);
+}
+
+/* ข้อความแจ้งเตือน */
+.message {
+  color: #28a745;
+  font-size: 1.1rem;
+  text-align: center;
+  margin-top: 20px;
+}
+
+/* ตารางหนังสือ */
+.books-table {
+  margin-top: 50px;
+  max-width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.books-table table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.books-table table th, .books-table table td {
+  padding: 16px;
+  text-align: left;
+  font-size: 1rem;
+}
+
+/* เปลี่ยนสีหัวตาราง */
+.books-table table th {
+  background-color: #6c14d0;
+  color: white;
+  font-weight: bold;
+}
+
+/* เปลี่ยนสีเมื่อมีการ hover บนแถว */
+.books-table table tr:hover {
+  background-color: #f1f1f1;
+}
+
+/* ปุ่มแก้ไขและลบ */
+.books-table button {
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+/* ปุ่มแก้ไข */
+.books-table button.edit {
+  background-color: #4caf50;
+  color: white;
+  border: none;
+}
+
+.books-table button.edit:hover {
+  background-color: #45a049;
+  transform: translateY(-2px);
+}
+
+/* ปุ่มลบ */
+.books-table button.delete {
+  background-color: #ff4d4d;
+  color: white;
+  border: none;
+}
+
+.books-table button.delete:hover {
+  background-color: #e63946;
+  transform: translateY(-2px);
+}
+
+/* เพิ่ม effect สำหรับ preview image */
+#preview-image {
+  width: 120px;
+  margin-top: 15px;
+  border-radius: 8px;
+  transition: transform 0.3s ease;
+}
+
+#preview-image:hover {
+  transform: scale(1.05);
+}

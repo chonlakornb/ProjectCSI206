@@ -117,12 +117,11 @@ const CheckoutPage = () => {
       <Navbar />
       <div className="checkout-container">
         <div className="checkout-content">
-          {/* ซ้าย: รายการสินค้า */}
           <div className="checkout-left">
             <h2>รายการสินค้า</h2>
             <ul>
               {cartItems.map((item) => (
-                <li key={item.id} className="cart-item">
+                <li key={item.id} className="list-order-Checkout">
                   <img src={item.cover_image} alt={item.title} className="cart-item-image" />
                   <div>
                     {item.title} x {item.quantity} - ฿{(item.price * item.quantity).toFixed(2)}
@@ -138,7 +137,6 @@ const CheckoutPage = () => {
             </div>
           </div>
 
-          {/* ขวา: ช่องกรอกข้อมูลและการชำระเงิน */}
           <div className="checkout-right">
             <h2>ข้อมูลลูกค้า</h2>
             {message && <p className="message">{message}</p>}
