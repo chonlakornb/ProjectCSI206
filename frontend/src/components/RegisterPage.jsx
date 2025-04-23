@@ -7,6 +7,7 @@ const RegisterPage = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [phone, setPhone] = useState(''); // Added phone state
   const [message, setMessage] = useState('');
   const navigate = useNavigate();
 
@@ -20,6 +21,7 @@ const RegisterPage = () => {
       const response = await axios.post('http://localhost:3000/api/auth/register', {
         username,
         password,
+        phone, // Include phone in the request
         role: 'user',
       });
       setMessage(response.data.message || 'Registration successful!');
@@ -49,6 +51,12 @@ const RegisterPage = () => {
         placeholder="Confirm Password"
         value={confirmPassword}
         onChange={(e) => setConfirmPassword(e.target.value)}
+      />
+      <input
+        type="text"
+        placeholder="Phone Number" // Added phone input
+        value={phone}
+        onChange={(e) => setPhone(e.target.value)}
       />
       <button onClick={handleRegister}>Register</button>
       <p>{message}</p>

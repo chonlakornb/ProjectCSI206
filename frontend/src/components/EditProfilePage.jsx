@@ -6,6 +6,7 @@ import './EditProfilePage.css';
 const EditProfilePage = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [phone, setPhone] = useState(''); // Added phone state
   const [message, setMessage] = useState('');
   const navigate = useNavigate();
 
@@ -14,7 +15,7 @@ const EditProfilePage = () => {
       const token = localStorage.getItem('token');
       await axios.put(
         'http://localhost:3000/api/users/me',
-        { username, password },
+        { username, password, phone }, // Include phone in the request
         { headers: { Authorization: `Bearer ${token}` } }
       );
       setMessage('Profile updated successfully!');
@@ -51,6 +52,12 @@ const EditProfilePage = () => {
         placeholder="New Password"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
+      />
+      <input
+        type="text"
+        placeholder="Phone Number" // Added phone input
+        value={phone}
+        onChange={(e) => setPhone(e.target.value)}
       />
       <button onClick={handleSave}>Save</button>
       <button onClick={handleDelete} className="delete-button">Delete Profile</button>

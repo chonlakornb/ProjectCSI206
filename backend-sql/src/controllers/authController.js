@@ -12,11 +12,11 @@ const pool = mysql.createPool({
 
 
 export const registerUser = async (req, res) => {
-  const { username, password, role } = req.body;
+  const { username, password, role, phone } = req.body; // Added phone
 
   try {
     // Validate role
-    const validRoles = ['admin', 'user']; // Changed from 'customer' to 'user'
+    const validRoles = ['admin', 'user'];
     if (!validRoles.includes(role)) {
       return res.status(400).json({ message: `Invalid role. Allowed roles are: ${validRoles.join(', ')}` });
     }
@@ -28,10 +28,12 @@ export const registerUser = async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    await pool.query('INSERT INTO users (username, password, role) VALUES (?, ?, ?)', [
+    // Insert user with phone
+    await pool.query('INSERT INTO users (username, password, role, phone) VALUES (?, ?, ?, ?)', [
       username,
       hashedPassword,
       role,
+      phone, // Added phone
     ]);
 
     res.status(201).json({ message: 'User registered successfully' });

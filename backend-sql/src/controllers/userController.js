@@ -26,7 +26,7 @@ export const getUserProfile = async (req, res) => {
 };
 
 export const updateUserProfile = async (req, res) => {
-  const { username, password, role } = req.body;
+  const { username, password, role, phone } = req.body; // Added phone
   const userId = req.params.id || req.user.id; // Allow admins to update other users
 
   try {
@@ -38,8 +38,14 @@ export const updateUserProfile = async (req, res) => {
     const hashedPassword = password ? await bcrypt.hash(password, 10) : users[0].password;
 
     await pool.query(
-      'UPDATE users SET username = ?, password = ?, role = ? WHERE id = ?',
-      [username || users[0].username, hashedPassword, role || users[0].role, userId]
+      'UPDATE users SET username = ?, password = ?, role = ?, phone = ? WHERE id = ?',
+      [
+        username || users[0].username,
+        hashedPassword,
+        role || users[0].role,
+        phone || users[0].phone, // Added phone
+        userId,
+      ]
     );
 
     res.json({ message: 'User profile updated successfully' });

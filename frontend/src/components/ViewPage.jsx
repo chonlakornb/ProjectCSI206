@@ -47,23 +47,36 @@ const ViewPage = () => {
 
   useEffect(() => {
     const fetchReviews = async () => {
-      const reviewId = location.state?.product?.id; // Ensure `reviewId` is defined and correct
-      if (reviewId) {
+      const productId = location.state?.product?.id; // Ensure `productId` is defined
+      const token = localStorage.getItem('token'); // Retrieve the token from localStorage
+
+      if (!token) {
+        console.error('Unauthorized: No token found. Please log in.');
+        setMessage('You need to log in to view reviews.');
+        return;
+      }
+
+      if (productId) {
         try {
-          const response = await axios.get(`/api/reviews/${reviewId}`);
-          if (response.headers['content-type']?.includes('application/json')) {
-            if (Array.isArray(response.data)) {
-              setReviews(response.data);
-            } else {
-              console.error('Unexpected response format for reviews:', response.data);
-              setReviews([]); // Fallback to an empty array
-            }
+          const response = await axios.get(`http://localhost:3000/api/reviews/${productId}`, {
+            headers: {
+              Authorization: `Bearer ${token}`, // Include the token in the Authorization header
+            },
+          });
+
+          if (Array.isArray(response.data)) {
+            setReviews(response.data); // Ensure the response is an array of reviews
           } else {
-            console.error('Response is not JSON. Received:', response.data);
+            console.error('Unexpected response format:', response.data);
             setReviews([]); // Fallback to an empty array
           }
         } catch (error) {
-          console.error('Error fetching reviews:', error.message || error); // Log the error for debugging
+          console.error('Error fetching reviews:', error.response?.data?.message || error.message || error);
+          if (error.response?.status === 401) {
+            setMessage('Unauthorized: Please log in to view reviews.');
+          } else {
+            setMessage('Failed to fetch reviews.');
+          }
           setReviews([]); // Fallback to an empty array
         }
       }
@@ -141,27 +154,37 @@ const ViewPage = () => {
 
   const handleReviewSubmit = async () => {
     const productId = location.state?.product?.id;
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('token'); // Retrieve the token from localStorage
+
+    if (!token) {
+      setMessage('You need to log in to submit a review.');
+      return;
+    }
+
     if (productId && newReview.trim()) {
       try {
         const response = await axios.post(
           `http://localhost:3000/api/reviews/${productId}`,
-          { review: newReview },
+          { comment: newReview }, // Use `comment` as per reviewController
           {
             headers: {
-              Authorization: `Bearer ${token}`,
+              Authorization: `Bearer ${token}`, // Include the token in the Authorization header
             },
           }
         );
         if (response.status === 201) {
-          setReviews([...reviews, response.data]);
+          setReviews([...reviews, response.data.review]); // Append the new review
           setNewReview('');
           setMessage('Review submitted successfully!');
-          setTimeout(() => setMessage(''), 500);
+          setTimeout(() => setMessage(''), 3000);
         }
       } catch (error) {
         console.error('Error submitting review:', error);
-        setMessage('Failed to submit review.');
+        if (error.response?.status === 401) {
+          setMessage('Unauthorized: Please log in to submit a review.');
+        } else {
+          setMessage('Failed to submit review.');
+        }
       }
     }
   };
@@ -192,10 +215,10 @@ const ViewPage = () => {
         <h2>Reviews</h2>
         <div className="reviews">
           {reviews.length > 0 ? (
-            reviews.map((review, index) => (
-              <div key={index} className="review">
-                <p>{review.text}</p>
-                <small>By: {review.author}</small>
+            reviews.map((review) => (
+              <div key={review.id} className="review">
+                <p>{review.comment}</p> {/* Ensure the field matches the backend response */}
+                <small>By: {review.username}</small> {/* Ensure the field matches the backend response */}
               </div>
             ))
           ) : (

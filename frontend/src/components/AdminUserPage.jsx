@@ -70,10 +70,10 @@ const AdminUserPage = () => {
     }
   };
 
-  const handleSave = async (userId, username, password) => {
+  const handleSave = async (userId, username, password, phone) => {
     try {
       const token = localStorage.getItem('token');
-      const updatedData = { username };
+      const updatedData = { username, phone };
       if (password) updatedData.password = password;
 
       await axios.put(
@@ -81,7 +81,7 @@ const AdminUserPage = () => {
         updatedData,
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      setUsers(users.map(user => (user.id === userId ? { ...user, username } : user)));
+      setUsers(users.map(user => (user.id === userId ? { ...user, username, phone } : user)));
       setMessage('User details saved successfully!');
     } catch (error) {
       setMessage('Failed to save user details.');
@@ -112,6 +112,7 @@ const AdminUserPage = () => {
             <tr>
               <th>Username</th>
               <th>Password</th>
+              <th>Phone</th>
               <th>Role</th>
               <th>Actions</th>
             </tr>
@@ -137,6 +138,16 @@ const AdminUserPage = () => {
                     }
                   />
                 </td>
+                <td>
+                  <input
+                    type="text"
+                    placeholder="Enter phone number" // Added phone input
+                    value={user.phone || ''}
+                    onChange={e =>
+                      setUsers(users.map(u => (u.id === user.id ? { ...u, phone: e.target.value } : u)))
+                    }
+                  />
+                </td>
                 <td>{user.role}</td>
                 <td>
                   <select
@@ -147,7 +158,7 @@ const AdminUserPage = () => {
                     <option value="admin">Admin</option>
                   </select>
                   <button
-                    onClick={() => handleSave(user.id, user.username, user.password)}
+                    onClick={() => handleSave(user.id, user.username, user.password, user.phone)} // Include phone in save
                     style={{ backgroundColor: '#28a745', color: 'white' }} // Green background, white text
                   >
                     Save
