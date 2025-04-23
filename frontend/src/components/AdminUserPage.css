@@ -1,33 +1,37 @@
 .admin-user-page {
-  padding: 2rem;
+  padding: 2.5rem;
   margin: 3rem auto;
   max-width: 900px;
-  background: linear-gradient(135deg, #ffffff, #f3f4f6);
-  border-radius: 15px;
-  box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.15);
+  background: linear-gradient(135deg, #ffffff, #f9fafb);
+  border-radius: 20px;
+  box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.2);
   font-family: 'Arial', sans-serif;
 }
 
 .message {
   color: #28a745;
   font-weight: bold;
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
   text-align: center;
-  font-size: 1.1rem;
+  font-size: 1.2rem;
+  padding: 0.5rem;
+  border: 1px solid #d4edda;
+  border-radius: 8px;
+  background: #d4edda;
 }
 
 .users-table table {
   width: 100%;
   border-collapse: collapse;
   background: white;
-  border-radius: 10px;
+  border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.1);
 }
 
 .users-table th, .users-table td {
   border-bottom: 1px solid #e0e0e0;
-  padding: 1rem;
+  padding: 1.2rem;
   text-align: left;
   font-size: 1rem;
 }
@@ -46,22 +50,22 @@
 }
 
 .users-table tr:hover td {
-  background: #f0f0ff;
-  transition: background 0.2s ease;
+  background: #eef2ff;
+  transition: background 0.3s ease;
 }
 
 .users-table td:last-child {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
+  gap: 0.8rem;
   justify-content: flex-start;
   align-items: center;
 }
 
 .users-table select, .users-table input {
-  padding: 0.5rem;
+  padding: 0.6rem;
   border: 1px solid #ccc;
-  border-radius: 5px;
+  border-radius: 8px;
   font-size: 1rem;
   width: 100%;
   box-sizing: border-box;
@@ -70,37 +74,36 @@
 .users-table select:focus, .users-table input:focus {
   border-color: #6c63ff;
   outline: none;
-  box-shadow: 0 0 5px rgba(108, 99, 255, 0.5);
+  box-shadow: 0 0 6px rgba(108, 99, 255, 0.5);
 }
 
 button {
-  padding: 0.5rem 1rem;
-  background: #28a745; /* Changed to green */
-  color: rgb(0, 0, 0);
+  padding: 0.6rem 1.2rem;
+  background: #28a745;
+  color: white;
   border: none;
-  border-radius: 5px;
+  border-radius: 8px;
   cursor: pointer;
   font-size: 1rem;
   transition: background 0.3s ease, transform 0.2s ease;
 }
 
 button:hover {
-  background: #218838; /* Darker green on hover */
+  background: #218838;
   transform: scale(1.05);
 }
 
 button:active {
-  background: #1e7e34; /* Even darker green on active */
+  background: #1e7e34;
   transform: scale(1);
 }
 
-/* Added Different Buttons for Different Actions */
 button.edit-btn {
   background: #007bff;
   color: white;
 }
 button.edit-btn:hover {
-  background: #0069d9;
+  background: #0056b3;
 }
 
 button.delete-btn {
@@ -122,13 +125,13 @@ button.reset-btn:hover {
 h1 {
   text-align: center;
   color: #333;
-  font-size: 2rem;
-  margin-bottom: 1.5rem;
+  font-size: 2.2rem;
+  margin-bottom: 2rem;
 }
 
 .users-table td:last-child {
   display: flex;
-  gap: 0.5rem;
+  gap: 0.8rem;
   align-items: center;
 }
 
@@ -137,13 +140,12 @@ h1 {
   color: #aaa;
 }
 
-/* Button Layout Adjustments */
 button.edit-btn,
 button.delete-btn,
 button.reset-btn {
-  width: 120px;
-  font-size: 0.9rem;
-  padding: 0.6rem;
+  width: 130px;
+  font-size: 0.95rem;
+  padding: 0.7rem;
 }
 
 button.edit-btn:hover,
@@ -155,8 +157,8 @@ button.reset-btn:hover {
 /* Responsive Layout (For Small Screens) */
 @media (max-width: 768px) {
   .admin-user-page {
-    margin: 1rem;
-    padding: 1.5rem;
+    margin: 1.5rem;
+    padding: 2rem;
   }
 
   .users-table {
@@ -164,11 +166,11 @@ button.reset-btn:hover {
   }
 
   .users-table td {
-    padding: 0.8rem;
+    padding: 1rem;
   }
 
   h1 {
-    font-size: 1.5rem;
+    font-size: 1.8rem;
   }
 
   button {

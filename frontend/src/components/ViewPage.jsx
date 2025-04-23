@@ -16,7 +16,7 @@ const ViewPage = () => {
     image: '/src/img/default.png',
   });
   const [message, setMessage] = useState('');
-  const [reviews, setReviews] = useState([]);
+  const [reviews, setReviews] = useState([]); // Ensure reviews is initialized as an array
   const [newReview, setNewReview] = useState('');
 
   useEffect(() => {
@@ -47,15 +47,24 @@ const ViewPage = () => {
 
   useEffect(() => {
     const fetchReviews = async () => {
-      const productId = location.state?.product?.id;
-      if (productId) {
+      const reviewId = location.state?.product?.id; // Ensure `reviewId` is defined and correct
+      if (reviewId) {
         try {
-          const response = await axios.get(`http://localhost:3000/api/reviews/${productId}`);
-          if (response.status === 200) {
-            setReviews(response.data);
+          const response = await axios.get(`/api/reviews/${reviewId}`);
+          if (response.headers['content-type']?.includes('application/json')) {
+            if (Array.isArray(response.data)) {
+              setReviews(response.data);
+            } else {
+              console.error('Unexpected response format for reviews:', response.data);
+              setReviews([]); // Fallback to an empty array
+            }
+          } else {
+            console.error('Response is not JSON. Received:', response.data);
+            setReviews([]); // Fallback to an empty array
           }
         } catch (error) {
-          console.error('Error fetching reviews:', error);
+          console.error('Error fetching reviews:', error.message || error); // Log the error for debugging
+          setReviews([]); // Fallback to an empty array
         }
       }
     };

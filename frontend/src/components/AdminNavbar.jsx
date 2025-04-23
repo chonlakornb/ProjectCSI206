@@ -12,7 +12,7 @@ const AdminNavbar = () => {
         <li><Link to="/admin">Dashboard</Link></li>
         <li><Link to="/admin/users">Users</Link></li>
         {/* <li><Link to="/admin/books">Books</Link></li> */}
-        <li><Link to="/admin/orders">Orders</Link></li>
+        <li><Link to="/admin/orders-page">Orders</Link></li>
         <li><Link to="/home">Back to Shop</Link></li>
         <li><Link to="/login">Logout</Link></li>
       </ul>

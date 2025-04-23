@@ -1,105 +1,120 @@
-
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import AdminNavbar from './AdminNavbar';
+import { FaClock, FaSync, FaTruck, FaCheckCircle } from 'react-icons/fa';
+import './AdminOrderPage.css';
 
 const AdminOrderPage = () => {
   const [orders, setOrders] = useState([]);
+  const [addresses, setAddresses] = useState({});
   const [message, setMessage] = useState('');
 
   useEffect(() => {
     const fetchOrders = async () => {
       try {
         const token = localStorage.getItem('token');
-        const response = await axios.get('http://localhost:3000/api/orders', {
+        const response = await fetch('http://localhost:3000/api/orders/', {
           headers: { Authorization: `Bearer ${token}` },
         });
-        setOrders(response.data);
+
+        if (response.status === 401) {
+          throw new Error('Unauthorized');
+        }
+
+        const data = await response.json();
+        setOrders(Array.isArray(data) ? data : []);
       } catch (error) {
-        setMessage('❌ Failed to fetch orders.');
+        console.error('Error fetching orders:', error);
+        setOrders([]);
+      }
+    };
+
+    const fetchAddresses = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        const response = await fetch('http://localhost:3000/api/address', {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (response.status === 401) {
+          throw new Error('Unauthorized');
+        }
+
+        const data = await response.json();
+        const addressMap = Array.isArray(data)
+          ? data.reduce((map, address) => {
+              map[address.orderId] = address.street_address; // Ensure correct mapping
+              return map;
+            }, {})
+          : {};
+        setAddresses(addressMap);
+      } catch (error) {
+        console.error('Error fetching addresses:', error);
+        setAddresses({});
       }
     };
 
     fetchOrders();
-
-    // Add a sample order for demonstration
-    setOrders(prevOrders => [
-      ...prevOrders,
-      {
-        id: 'sample123',
-        status: 'Pending',
-        total_price: 99.99,
-        address: '123 Sample Street, Sample City',
-      },
-    ]);
+    fetchAddresses();
   }, []);
 
-  const handleStatusChange = async (orderId, newStatus) => {
-    try {
-      const token = localStorage.getItem('token');
-      await axios.put(
-        `http://localhost:3000/api/orders/${orderId}/status`,
-        { status: newStatus },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-      setOrders(orders.map(order =>
-        order.id === orderId ? { ...order, status: newStatus } : order
-      ));
-      setMessage('✅ Order status updated successfully!');
-    } catch (error) {
-      setMessage('❌ Failed to update order status.');
+  const handleStatusChange = (orderId, newStatus) => {
+    setOrders(orders.map(order =>
+      order.id === orderId ? { ...order, status: newStatus } : order
+    ));
+    setMessage('✅ Order status updated successfully!');
+    setTimeout(() => setMessage(''), 3000);
+  };
+
+  const getStatusIcon = (status) => {
+    switch ((status || '').toLowerCase()) {
+      case 'pending':
+        return <FaClock className="status-icon pending" />;
+      case 'processing':
+        return <FaSync className="status-icon processing" />;
+      case 'shipped':
+        return <FaTruck className="status-icon shipped" />;
+      case 'delivered':
+        return <FaCheckCircle className="status-icon delivered" />;
+      default:
+        return null;
     }
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="admin-order-page">
       <AdminNavbar />
-      <div className="max-w-7xl mx-auto py-10 px-6">
-        <h1 className="text-3xl font-bold text-gray-800 mb-6">Order Management</h1>
-        {message && (
-          <div className="mb-4 p-4 bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 rounded">
-            {message}
-          </div>
-        )}
-
-        <div className="overflow-x-auto rounded shadow">
-          <table className="min-w-full bg-white border border-gray-200">
-            <thead className="bg-gray-100 text-gray-700">
-              <tr>
-                <th className="px-6 py-3 text-left font-medium">Order ID</th>
-                <th className="px-6 py-3 text-left font-medium">Status</th>
-                <th className="px-6 py-3 text-left font-medium">Total Price</th>
-                <th className="px-6 py-3 text-left font-medium">Address</th>
-                <th className="px-6 py-3 text-left font-medium">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {orders.map(order => (
-                <tr key={order.id} className="border-t hover:bg-gray-50">
-                  <td className="px-6 py-4">{order.id}</td>
-                  <td className="px-6 py-4">
-                    <span className="px-3 py-1 rounded-full bg-blue-100 text-blue-800 text-sm">
-                      {order.status}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4">${order.total_price.toFixed(2)}</td>
-                  <td className="px-6 py-4">{order.address}</td>
-                  <td className="px-6 py-4">
-                    <select
-                      className="border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                      value={order.status}
-                      onChange={e => handleStatusChange(order.id, e.target.value)}
-                    >
-                      <option value="Pending">Pending</option>
-                      <option value="Processing">Processing</option>
-                      <option value="Shipped">Shipped</option>
-                      <option value="Delivered">Delivered</option>
-                    </select>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+      <div className="admin-order-container">
+        <h1>Order Management</h1>
+        {message && <div className="message">{message}</div>}
+        <div className="card-list">
+          {orders.map(order => (
+            <div className="order-card" key={order.id}>
+              <div className="card-content">
+                <h2>Order ID: {order.id}</h2>
+                <p>
+                  <strong>Status:</strong>
+                  <span className={`status ${(order.status || '').toLowerCase()}`}>
+                    {getStatusIcon(order.status)} {order.status || 'Unknown'}
+                  </span>
+                </p>
+                <p><strong>Total Price:</strong> ${Number(order.total_price || 0).toFixed(2)}</p>
+                <p><strong>Payment:</strong> {order.payment_method || 'N/A'}</p>
+                <p><strong>Address:</strong> {addresses[order.id] || 'N/A'}</p>
+                <div className="button-group">
+                  <select
+                    className="status-select"
+                    value={order.status || 'Pending'}
+                    onChange={e => handleStatusChange(order.id, e.target.value)}
+                  >
+                    <option value="Pending">Pending</option>
+                    <option value="Processing">Processing</option>
+                    <option value="Shipped">Shipped</option>
+                    <option value="Delivered">Delivered</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </div>
