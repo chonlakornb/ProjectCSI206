@@ -18,6 +18,7 @@ const Navbar = () => {
         <li><Link to="/reviews">Reviews</Link></li> {/* Add Reviews link */}
         <li><Link to="/shipping">Shipping</Link></li> {/* Add Shipping link */}
         <li><Link to="/Login">Logout</Link></li>
+        <li><a href="/address">Add Address</a></li> {/* Add Address link */}
       </ul>
 
       <div className="search-container">
