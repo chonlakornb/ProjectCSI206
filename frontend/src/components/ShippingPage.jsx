@@ -39,11 +39,11 @@ const ShippingPage = () => {
   const getStatusIcon = (status) => {
     switch (status.toLowerCase()) {
       case 'shipped':
-        return <FaTruck />;
+        return <FaTruck className="status-icon shipped" />;
       case 'processing':
-        return <FaBoxOpen />;
+        return <FaBoxOpen className="status-icon processing" />;
       case 'delivered':
-        return <FaCheckCircle />;
+        return <FaCheckCircle className="status-icon delivered" />;
       default:
         return null;
     }
@@ -53,9 +53,9 @@ const ShippingPage = () => {
     <div className="shipping-page">
       <Navbar />
       <div className="shipping-container">
-        <h1>Shipping Status</h1>
+        <h1></h1>
         {orders.length === 0 ? (
-          <p>No orders found.</p>
+          <p className="empty-message">No orders found.</p>
         ) : (
           <div className="card-list">
             {orders.map((order) => (
@@ -69,9 +69,9 @@ const ShippingPage = () => {
                   <p><strong>Estimated Delivery:</strong> {order.estimatedDelivery}</p>
 
                   <div className="button-group">
-                    <button className="view-details-btn">View Details</button>
+                    <button className="view-details-btn">🔍 View Details</button>
                     <button className="invoice-btn">
-                      <FaFileInvoice style={{ marginRight: '6px' }} /> Download Invoice
+                      <FaFileInvoice className="invoice-icon" /> Invoice
                     </button>
                   </div>
                 </div>
