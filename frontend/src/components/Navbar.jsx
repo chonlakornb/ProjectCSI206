@@ -14,11 +14,11 @@ const Navbar = () => {
         <li><a href="/favorites#Favorites">Favorites</a></li>
         {/* <li><a href="#Notifications">Notifications</a></li> */}
         <li><Link to="/edit-profile">Edit</Link></li>
+        <li><a href="/address">Address</a></li> {/* Add Address link */}
         <li><Link to="/cart">Cart</Link></li> {/* Restored Cart link */}
-        <li><Link to="/reviews">Reviews</Link></li> {/* Add Reviews link */}
         <li><Link to="/shipping">Shipping</Link></li> {/* Add Shipping link */}
+        <li><Link to="/reviews">Reviews</Link></li> {/* Add Reviews link */}
         <li><Link to="/Login">Logout</Link></li>
-        <li><a href="/address">Add Address</a></li> {/* Add Address link */}
       </ul>
 
       <div className="search-container">

@@ -1,5 +1,5 @@
 import express from 'express';
-import { addAddress, updateAddressById, getAllAddresses } from '../controllers/addressController.js';
+import { addAddress, updateAddressById, getAllAddresses, deleteAddressById } from '../controllers/addressController.js';
 import { authMiddleware } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
@@ -133,5 +133,31 @@ router.put('/:id', authMiddleware, updateAddressById);
  *         description: Internal server error.
  */
 router.get('/', authMiddleware, getAllAddresses);
+
+/**
+ * @swagger
+ * /api/address/{id}:
+ *   delete:
+ *     summary: Delete a user's address
+ *     description: Delete a specific address of the authenticated user by address ID.
+ *     tags: [Address]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: The ID of the address to delete.
+ *     responses:
+ *       200:
+ *         description: Address deleted successfully.
+ *       404:
+ *         description: Address not found or does not belong to the user.
+ *       500:
+ *         description: Internal server error.
+ */
+router.delete('/:id', authMiddleware, deleteAddressById);
 
 export default router;

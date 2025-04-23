@@ -92,3 +92,28 @@ export const getAllAddresses = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+export const deleteAddressById = async (req, res) => {
+  const { id } = req.params; // Address ID
+
+  try {
+    const user_id = req.user.id;
+
+    // Check if the address exists and belongs to the user
+    const [address] = await pool.query(
+      'SELECT * FROM address WHERE address_id = ? AND user_id = ?',
+      [id, user_id]
+    );
+
+    if (address.length === 0) {
+      return res.status(404).json({ message: 'Address not found or does not belong to the user' });
+    }
+
+    // Delete the address
+    await pool.query('DELETE FROM address WHERE address_id = ? AND user_id = ?', [id, user_id]);
+
+    res.json({ message: 'Address deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};

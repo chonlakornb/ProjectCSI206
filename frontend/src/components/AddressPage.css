@@ -3,11 +3,10 @@
   background-color: #ffffff;
   min-height: 100vh;
   padding: 80px;
-  
 }
 
 .address-container {
-  max-width: 500px;
+  max-width: 800px;
   margin: 0 auto;
   background-color: #ffffff;
   padding: 20px;
@@ -21,7 +20,122 @@
   margin-bottom: 20px;
 }
 
-.address-container input {
+.add-address-btn {
+  display: block;
+  margin: 0 auto 20px;
+  padding: 10px 20px;
+  background-color: #6c14d0;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.add-address-btn:hover {
+  background-color: #9a2cdb;
+}
+
+.address-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.address-card {
+  background-color: #f9f9f9;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  flex: 1 1 calc(50% - 20px);
+  max-width: calc(50% - 20px);
+  margin-bottom: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center content horizontally */
+  gap: 10px;
+}
+
+.address-card p {
+  margin: 5px 0;
+}
+
+.address-card button {
+  background-color: #6c14d0;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+}
+
+.address-card button:hover {
+  background-color: #9a2cdb;
+}
+
+.address-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: center; /* Center the buttons */
+}
+
+.delete-btn {
+  background-color: #dc3545; /* Red color for delete button */
+}
+
+.delete-btn:hover {
+  background-color: #c82333;
+}
+
+.message {
+  text-align: center;
+  margin-bottom: 15px;
+  color: #28a745;
+}
+
+.message.error {
+  color: #e63946;
+}
+
+/* Modal styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  padding: 2rem;
+  border-radius: 10px;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  position: relative;
+}
+
+.close-btn {
+  position: absolute;
+  /* top: 10px;
+  right: 10px; */
+  padding: 10px;  
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.modal-content input {
   width: 100%;
   padding: 10px;
   margin-bottom: 15px;
@@ -30,7 +144,7 @@
   font-size: 1rem;
 }
 
-.address-container button {
+.modal-content button {
   width: 100%;
   padding: 10px;
   background-color: #6c14d0;
@@ -42,16 +156,6 @@
   transition: background-color 0.3s ease;
 }
 
-.address-container button:hover {
+.modal-content button:hover {
   background-color: #9a2cdb;
-}
-
-.message {
-  text-align: center;
-  margin-bottom: 15px;
-  color: #28a745;
-}
-
-.message.error {
-  color: #e63946;
 }
