@@ -15,6 +15,7 @@ import AdminUserPage from './components/AdminUserPage'; // Import AdminUserPage
 import AdminOrderPage from './components/AdminOrderPage'; // Import AdminOrderPage
 import ViewOrderDetails from './components/ViewOrderDetails'; // Import ViewOrderDetails
 import AddressPage from './components/AddressPage'; // Import AddressPage
+import NotificationsPage from './components/NotificationsPage';
 import './App.css';
 
 const App = () => {
@@ -38,6 +39,7 @@ const App = () => {
         <Route path="/admin/orders-page" element={<AdminOrderPage />} /> {/* Add AdminOrderPage route */}
         <Route path="/view-order-details" element={<ViewOrderDetails />} /> {/* Add ViewOrderDetails route */}
         <Route path="/address" element={<AddressPage />} /> {/* Add AddressPage route */}
+        <Route path="/notifications" element={<NotificationsPage />} />
       </Routes>
     </Router>
   );

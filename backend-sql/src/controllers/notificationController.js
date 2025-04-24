@@ -9,6 +9,21 @@ export const getNotifications = async (req, res) => {
   }
 };
 
+export const getNotificationById = async (req, res) => {
+  try {
+    const [notification] = await pool.query(
+      'SELECT * FROM notifications WHERE id = ? AND user_id = ?',
+      [req.params.id, req.user.id]
+    );
+    if (notification.length === 0) {
+      return res.status(404).json({ message: 'Notification not found' });
+    }
+    res.json(notification[0]);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 export const addNotification = async (req, res) => {
   const { user_id, message, status } = req.body;
 

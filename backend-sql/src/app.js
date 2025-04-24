@@ -38,7 +38,7 @@ app.use('/api', userRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api', bookRoutes);
 app.use('/api', favoriteRoutes);
-app.use('/api', notificationRoutes);
+app.use('/api/notifications', notificationRoutes);
 app.use('/api', recommendationRoutes); // Use recommendation routes
 app.use('/api', cartRoutes); // Use cart routes
 app.use('/api/orders', orderRoutes); // Use order routes

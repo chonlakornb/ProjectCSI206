@@ -92,12 +92,28 @@ const CheckoutPage = () => {
 
     try {
       const token = localStorage.getItem('token');
+      const decodedToken = JSON.parse(atob(token.split('.')[1])); // Decode the JWT to extract user info
+      const userId = decodedToken.id; // Extract user_id from the token
+
       const response = await axios.post(
         'http://localhost:3000/api/orders',
         {
           address_id: formData.address, // Address selected by the user
           payment_method: formData.paymentMethod, // Payment method selected by the user
           total_price: grandTotal, // Total price calculated from the cart
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      // Create a notification after successful order creation
+      await axios.post(
+        'http://localhost:3000/api/notifications',
+        {
+          user_id: userId, // Use the user_id from the decoded token
+          message: 'ชำระเสร็จสิ้น',
+          status: 'unread',
         },
         {
           headers: { Authorization: `Bearer ${token}` },
