@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import AdminNavbar from './AdminNavbar';
-import { FaClock, FaSync, FaTruck, FaCheckCircle } from 'react-icons/fa';
+import { FaClock, FaSync, FaTruck, FaCheckCircle, FaTrash } from 'react-icons/fa'; // Added FaTrash
 import './AdminOrderPage.css';
 
 const AdminOrderPage = () => {
@@ -27,8 +27,8 @@ const AdminOrderPage = () => {
                 total_price: order.total_price || 0,
                 payment_method: order.payment_method || 'N/A',
                 status: order.status || 'Unknown',
-                address_id: order.address_id, // Include address_id
-                address: `${order.street_address}, ${order.province}, ${order.postal_code}, ${order.country}`, // Full address
+                address_id: order.address_id,
+                address: `${order.street_address}, ${order.province}, ${order.postal_code}, ${order.country}`,
               }))
             : []
         );
@@ -54,8 +54,7 @@ const AdminOrderPage = () => {
       });
 
       if (!response.ok) {
-        const errorData = await response.json(); // Capture error details from the response
-        console.error('Error response:', errorData); // Log the error response
+        const errorData = await response.json();
         throw new Error(errorData.message || 'Failed to update order status');
       }
 
@@ -65,8 +64,31 @@ const AdminOrderPage = () => {
       setMessage('✅ Order status updated successfully!');
       setTimeout(() => setMessage(''), 3000);
     } catch (error) {
-      console.error('Error updating order status:', error); // Log the error
+      console.error('Error updating order status:', error);
       setMessage('❌ Failed to update order status.');
+      setTimeout(() => setMessage(''), 3000);
+    }
+  };
+
+  const handleDeleteOrder = async (orderId) => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch(`http://localhost:3000/api/orders/${orderId}`, {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to delete order');
+      }
+
+      setOrders(orders.filter(order => order.id !== orderId));
+      setMessage('✅ Order deleted successfully!');
+      setTimeout(() => setMessage(''), 3000);
+    } catch (error) {
+      console.error('Error deleting order:', error);
+      setMessage('❌ Failed to delete order.');
       setTimeout(() => setMessage(''), 3000);
     }
   };
@@ -98,8 +120,8 @@ const AdminOrderPage = () => {
               <div className="order-card" key={order.id}>
                 <div className="card-content">
                   <h2>Order ID: {order.id}</h2>
-                  <p><strong>Address ID:</strong> {order.address_id}</p> {/* Display address_id */}
-                  <p><strong>Address:</strong> {order.address}</p> {/* Display full address */}
+                  <p><strong>Address ID:</strong> {order.address_id}</p>
+                  <p><strong>Address:</strong> {order.address}</p>
                   <p><strong>Total Price:</strong> ${Number(order.total_price || 0).toFixed(2)}</p>
                   <p>
                     <strong>Status:</strong>
@@ -120,12 +142,18 @@ const AdminOrderPage = () => {
                       <option value="delivered">Delivered</option>
                       <option value="cancelled">Cancelled</option>
                     </select>
+                    <button
+                      className="delete-btn"
+                      onClick={() => handleDeleteOrder(order.id)}
+                    >
+                      <FaTrash /> Delete
+                    </button>
                   </div>
                 </div>
               </div>
             ))
           ) : (
-            <p>No orders available.</p> // Fallback message if no orders
+            <p>No orders available.</p>
           )}
         </div>
       </div>
