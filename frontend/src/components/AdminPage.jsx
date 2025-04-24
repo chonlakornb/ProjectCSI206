@@ -73,12 +73,34 @@ const AdminPage = () => {
       } else {
         await axios.post('http://localhost:3000/api/books', formDataToSend, config);
         setMessage('Book added successfully!');
+
+        // Fetch all users to send notifications
+        const usersResponse = await axios.get('http://localhost:3000/api/users', {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        const users = usersResponse.data;
+
+        // Send notifications to all users
+        await Promise.all(
+          users.map((user) =>
+            axios.post(
+              'http://localhost:3000/api/notifications',
+              {
+                user_id: user.id,
+                message: 'มีหนังสือใหม่เข้าร้าน!',
+                status: 'unread',
+              },
+              { headers: { Authorization: `Bearer ${token}` } }
+            )
+          )
+        );
       }
 
       setFormData({ title: '', author: '', cover_image: '', categories: '', isbn: '', publisher: '', published_year: '', price: '' });
       setEditingBookId(null);
 
-      // รีเซ็ต input และการแสดงภาพ
+      // Reset input and preview image
       const fileInput = document.getElementById('book-cover-image');
       if (fileInput) {
         fileInput.value = '';
