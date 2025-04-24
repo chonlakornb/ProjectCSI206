@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Navbar from './Navbar';
 import './CheckoutPage.css';
 
 const CheckoutPage = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const productFromState = location.state?.product;
 
   const [formData, setFormData] = useState({
@@ -48,7 +49,6 @@ const CheckoutPage = () => {
         const addresses = response.data || [];
         setUserInfo({ addresses });
 
-        // Set the default address if available
         if (addresses.length > 0) {
           setFormData((prev) => ({ ...prev, address: addresses[0].address_id }));
         }
@@ -71,7 +71,7 @@ const CheckoutPage = () => {
 
   const generateQrCode = () => {
     const qrCodeUrl = `https://promptpay.io/0985620617/${grandTotal.toFixed(2)}.png`;
-    setQrCodeUrl(qrCodeUrl); // Directly set the constructed URL
+    setQrCodeUrl(qrCodeUrl);
   };
 
   useEffect(() => {
@@ -84,7 +84,9 @@ const CheckoutPage = () => {
     setFormData({ ...formData, address: e.target.value });
   };
 
-  const handleCheckout = async () => {
+  const handleCheckout = async (e) => {
+    e.preventDefault();
+
     if (!formData.address || !formData.paymentMethod) {
       setMessage('กรุณากรอกข้อมูลให้ครบถ้วน');
       return;
@@ -92,26 +94,25 @@ const CheckoutPage = () => {
 
     try {
       const token = localStorage.getItem('token');
-      const decodedToken = JSON.parse(atob(token.split('.')[1])); // Decode the JWT to extract user info
-      const userId = decodedToken.id; // Extract user_id from the token
+      const decodedToken = JSON.parse(atob(token.split('.')[1]));
+      const userId = decodedToken.id;
 
       const response = await axios.post(
         'http://localhost:3000/api/orders',
         {
-          address_id: formData.address, // Address selected by the user
-          payment_method: formData.paymentMethod, // Payment method selected by the user
-          total_price: grandTotal, // Total price calculated from the cart
+          address_id: formData.address,
+          payment_method: formData.paymentMethod,
+          total_price: grandTotal,
         },
         {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
 
-      // Create a notification after successful order creation
       await axios.post(
         'http://localhost:3000/api/notifications',
         {
-          user_id: userId, // Use the user_id from the decoded token
+          user_id: userId,
           message: 'ชำระเสร็จสิ้น',
           status: 'unread',
         },
@@ -121,7 +122,7 @@ const CheckoutPage = () => {
       );
 
       setMessage('✅ ชำระเงินสำเร็จ! ขอบคุณสำหรับการสั่งซื้อของคุณ');
-      console.log('Order created:', response.data);
+      localStorage.removeItem('cart');
     } catch (error) {
       console.error('Error creating order:', error.response?.data || error.message);
       setMessage('Failed to create order.');
@@ -138,7 +139,7 @@ const CheckoutPage = () => {
             <ul>
               {cartItems.map((item) => (
                 <li key={item.id} className="list-order-Checkout">
-                  <img src={item.cover_image} alt={item.title} className="cart-item-image" />
+                  <img src={item.cover_image} alt={item.title} />
                   <div>
                     {item.title} x {item.quantity} - ฿{(item.price * item.quantity).toFixed(2)}
                   </div>
@@ -155,8 +156,7 @@ const CheckoutPage = () => {
 
           <div className="checkout-right">
             <h2>ข้อมูลลูกค้า</h2>
-            {message && <p className="message">{message}</p>}
-            <form>
+            <form onSubmit={handleCheckout}>
               <label>ที่อยู่สำหรับจัดส่ง:</label>
               <select
                 name="address"
@@ -183,19 +183,21 @@ const CheckoutPage = () => {
               {formData.paymentMethod === 'qr' && qrCodeUrl && (
                 <div className="qr-instructions">
                   <p>กรุณาแสกน QR code เพื่อชำระเงิน</p>
-                  <img
-                    src={qrCodeUrl}
-                    alt="QR พร้อมเพย์"
-                    width="200"
-                    height="200"
-                  />
+                  <img src={qrCodeUrl} alt="QR พร้อมเพย์" width="200" height="200" />
                   <p>ยอดชำระ ฿{grandTotal.toFixed(2)}</p>
                 </div>
               )}
 
-              <button type="button" onClick={handleCheckout}>
-                ยืนยันการชำระเงิน
-              </button>
+              <div className="checkout-buttons">
+                <button type="button" className="back-btn" onClick={() => navigate('/home')}>
+                  กลับไปที่หน้าหลัก
+                </button>
+                <button type="submit" className="confirm-btn">
+                  ยืนยันการชำระเงิน
+                </button>
+              </div>
+
+              {message && <p className="message">{message}</p>}
             </form>
           </div>
         </div>

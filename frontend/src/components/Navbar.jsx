@@ -16,7 +16,7 @@ const Navbar = () => {
         <li><a href="/address">Address</a></li> {/* Add Address link */}
         <li><Link to="/cart">Cart</Link></li> {/* Restored Cart link */}
         <li><Link to="/shipping">Shipping</Link></li> {/* Add Shipping link */}
-        <li><Link to="/notifications">Notifications</Link></li> {/* เปลี่ยนเป็นข้อความ Notifications */}
+        <li><Link to="/notifications">Notifications</Link></li>
         <li><Link to="/Login">Logout</Link></li>
       </ul>
 

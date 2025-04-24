@@ -6,7 +6,7 @@
   min-height: 100vh;
   width: 100%;
   overflow-x: hidden; /* ป้องกันการเลื่อนขวา */
-  padding-right: 50px; /* ขยายขนาดการแสดงผลด้านข้าง */
+  padding: 80px; /* ขยายขนาดการแสดงผลด้านข้าง */
 }
 
 /* Container หลัก */
@@ -144,25 +144,14 @@
   right: 15px;
   top: 50%;
   transform: translateY(-50%);
-  pointer-events: none;
-  font-size: 1rem;
-  color: #6c14d0;
 }
 
 .checkout-right button {
-  background-color: #6c14d0;
-  color: white;
-  padding: 18px 28px;
-  border: none;
-  border-radius: 8px;
-  font-size: 1.4rem;
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.3s ease;
+  margin-top: 15px; /* Add spacing between buttons */
 }
 
-.checkout-right button:hover {
-  background-color: #9a2cdb;
-  transform: translateY(-2px);
+.checkout-right button + button {
+  margin-left: 10px; /* Add spacing between adjacent buttons */
 }
 
 /* QR Code */
@@ -196,4 +185,29 @@
 
 .message.error {
   color: #e63946;
+}
+
+/* กลุ่มปุ่ม */
+.checkout-buttons {
+  margin-top: 25px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+/* ปุ่ม: ยืนยันการชำระเงิน */
+.confirm-btn {
+  background-color: #ff9800; /* Orange color */
+  color: white;
+  padding: 15px 25px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.confirm-btn:hover {
+  background-color: #e68900; /* Darker orange on hover */
+  transform: translateY(-2px);
 }
