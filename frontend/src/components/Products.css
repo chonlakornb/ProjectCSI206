@@ -12,15 +12,15 @@
   gap: 0.6rem;
 }
 
-.btn {
-  padding: 0.4rem 0.9rem;
-  font-size: 13px;
+.btn-search {
+  padding: 1.5rem 3rem; /* Significantly increased padding */
+  font-size: 1.5rem; /* Larger font size */
   border: none;
-  border-radius: 6px;
+  border-radius: 12px; /* Larger border radius */
   color: white;
   cursor: pointer;
   transition: transform 0.2s ease, background 0.3s ease;
-  min-width: 100px;
+  min-width: 200px; /* Increased minimum width */
   text-align: center;
 }
 
@@ -37,6 +37,25 @@
 }
 
 .btn:hover {
-  transform: translateY(-1px);
-  filter: brightness(1.05);
+  transform: translateY(-3px); /* More pronounced lift effect */
+  filter: brightness(1.2);
+}
+
+.search-bar {
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.search-bar input {
+  padding: 0.5rem 1rem;
+  width: 300px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+.search-bar input:focus {
+  border-color: #6c14d0;
 }

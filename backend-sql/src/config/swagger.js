@@ -7,7 +7,25 @@ const swaggerOptions = {
     info: {
       title: 'Project CSI206 API',
       version: '1.0.0',
-      description: 'API documentation for Project CSI206',
+      description: `
+        Book Catalog - กลุ่มที่ 40 
+        คณะเทคโนโลยีสารสนเทศ สาขาวิทยาการคอมพิวเตอร์ มหาวิทยาลัยศรีปทุม  
+
+        **สมาชิกกลุ่ม**  
+        - นายชลกร บัวหลวง (66090864) 
+        - นายวิทวัส กุยสิงห์ (66057907)  
+
+        **หมวดหมู่ API ทั้งหมดมีดังนี้**  
+        - Address: 4 APIs  
+        - Auth: 4 APIs  
+        - Books: 7 API  
+        - Notification: 4 APIs    
+        - Favorites: 4 APIs  
+        - Orders: 5 APIs  
+        - Payment: 4 APIs
+        - Users: 5 APIs
+        **รวมทั้งหมด: 37 APIs**   
+      `,
     },
     servers: [
       {

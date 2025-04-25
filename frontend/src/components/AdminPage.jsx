@@ -6,6 +6,8 @@ import './AdminPage.css';
 
 const AdminPage = () => {
   const [books, setBooks] = useState([]);
+  const [filteredBooks, setFilteredBooks] = useState([]); // For filtered books
+  const [searchQuery, setSearchQuery] = useState(''); // For search input
   const [formData, setFormData] = useState({ title: '', author: '', cover_image: '', categories: '', isbn: '', publisher: '', published_year: '', price: '' });
   const [editingBookId, setEditingBookId] = useState(null);
   const [message, setMessage] = useState('');
@@ -19,6 +21,7 @@ const AdminPage = () => {
           headers: { Authorization: `Bearer ${token}` },
         });
         setBooks(response.data); // รับข้อมูลหนังสือ
+        setFilteredBooks(response.data); // Initialize filteredBooks
       } catch (error) {
         setMessage('Failed to fetch books.');
       }
@@ -135,6 +138,16 @@ const AdminPage = () => {
     }
   };
 
+  const handleSearchChange = (e) => {
+    const query = e.target.value.toLowerCase();
+    setSearchQuery(query);
+    setFilteredBooks(
+      books.filter((book) =>
+        book.title.toLowerCase().includes(query) || book.author.toLowerCase().includes(query)
+      )
+    );
+  };
+
   return (
     <div className="admin-page" id="admin">
       <AdminNavbar />
@@ -220,12 +233,23 @@ const AdminPage = () => {
           value={formData.price}
           onChange={handleInputChange}
         />
-        <button id="add-edit-book-btn" onClick={handleAddOrEditBook}>
+        <button
+          id="add-edit-book-btn"
+          onClick={handleAddOrEditBook}
+          style={{ padding: '10px 20px', fontSize: '16px' }}
+        >
           {editingBookId ? 'Update Book' : 'Add Book'}
         </button>
       </div>
       <div className="books-table">
         <h2>Books List</h2>
+        <input
+          type="text"
+          placeholder="Search by title or author"
+          value={searchQuery}
+          onChange={handleSearchChange}
+          style={{ marginBottom: '10px', padding: '5px', width: '100%' }}
+        />
         <table>
           <thead>
             <tr>
@@ -237,7 +261,7 @@ const AdminPage = () => {
             </tr>
           </thead>
           <tbody>
-            {books.map((book) => (
+            {filteredBooks.map((book) => (
               <tr key={book.id}>
                 <td>{book.title}</td>
                 <td>{book.author}</td>
@@ -254,8 +278,20 @@ const AdminPage = () => {
                 </td>
                 <td>{book.price}</td>
                 <td>
-                  <button className="edit" onClick={() => handleEditClick(book)}>Edit</button>
-                  <button className="delete" onClick={() => handleDeleteBook(book.id)}>Delete</button>
+                  <button
+                    className="edit"
+                    onClick={() => handleEditClick(book)}
+                    style={{ padding: '8px 16px', fontSize: '14px' }}
+                  >
+                    Edit
+                  </button>
+                  <button
+                    className="delete"
+                    onClick={() => handleDeleteBook(book.id)}
+                    style={{ padding: '8px 16px', fontSize: '14px', marginLeft: '5px' }}
+                  >
+                    Delete
+                  </button>
                 </td>
               </tr>
             ))}

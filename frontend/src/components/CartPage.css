@@ -89,18 +89,8 @@
 }
 
 .quantity-controls button {
-  padding: 0.4rem 0.8rem;
-  background: #6c14d0;
-  color: white;
-  font-size: 1rem;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background 0.3s;
-}
-
-.quantity-controls button:hover {
-  background: #9c27b0;
+  padding: 0.6rem 1rem; /* Increased padding */
+  font-size: 1.2rem; /* Increased font size */
 }
 
 .quantity-controls span {
@@ -109,17 +99,8 @@
 }
 
 .remove-btn {
-  padding: 0.5rem 1rem;
-  background: #e53935;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background 0.3s;
-}
-
-.remove-btn:hover {
-  background: #b71c1c;
+  padding: 0.7rem 1.5rem; /* Increased padding */
+  font-size: 1.1rem; /* Increased font size */
 }
 
 .cart-summary {
@@ -144,8 +125,8 @@
 
 .checkout-btn {
   margin-top: 1.5rem;
-  padding: 0.8rem 2rem;
-  font-size: 1rem;
+  padding: 1rem 2rem; /* Increased padding */
+  font-size: 1.2rem; /* Increased font size */
   background: linear-gradient(to right, #6c14d0, #c72092);
   color: white;
   border: none;

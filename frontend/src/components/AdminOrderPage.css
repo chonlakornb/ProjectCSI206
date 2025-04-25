@@ -107,29 +107,18 @@ h1 {
 }
 
 .status-select {
-  padding: 0.5rem;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  font-size: 0.9rem;
-  background: #fff;
-  color: #333;
-  transition: border-color 0.2s, box-shadow 0.2s;
-}
-
-.status-select:focus {
-  border-color: #007bff;
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+  padding: 0.6rem; /* Increased padding */
+  font-size: 1rem; /* Increased font size */
 }
 
 .delete-btn {
   background-color: #e63946;
   color: white;
   border: none;
-  padding: 8px 12px;
+  padding: 0.7rem 1.5rem; /* Increased padding */
   border-radius: 5px;
   cursor: pointer;
-  font-size: 0.9rem;
+  font-size: 1.1rem; /* Increased font size */
   display: flex;
   align-items: center;
   gap: 5px;

@@ -4,6 +4,7 @@ import axios from 'axios';
 
 const Products = () => {
   const [products, setProducts] = useState([]);
+  const [searchTerm, setSearchTerm] = useState(''); // Added state for search term
   const [message, setMessage] = useState('');
   const navigate = useNavigate();
 
@@ -20,23 +21,9 @@ const Products = () => {
     fetchBooks();
   }, []);
 
-  const handleBuyNow = (product) => {
-    try {
-      const cart = JSON.parse(localStorage.getItem('cart')) || [];
-      const existingProduct = cart.find((item) => item.id === product.id);
-
-      if (!existingProduct) {
-        cart.push({ ...product, quantity: 1 });
-      } else {
-        existingProduct.quantity = 1; // Ensure quantity is set to 1
-      }
-
-      localStorage.setItem('cart', JSON.stringify(cart));
-      navigate('/checkout', { state: { product } });
-    } catch {
-      setMessage('Failed to process the purchase.');
-    }
-  };
+  const filteredProducts = products.filter((product) =>
+    product.title.toLowerCase().includes(searchTerm.toLowerCase())
+  ); // Filter products based on search term
 
   const handleAddToCart = (product) => {
     try {
@@ -57,37 +44,20 @@ const Products = () => {
     }
   };
 
-  const handleAddToFavorites = async (product) => {
-    try {
-      const token = localStorage.getItem('token');
-      await axios.post(
-        `http://localhost:3000/api/favorites/${product.id}`,
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        }
-      );
-      setMessage(`${product.title} added to favorites!`);
-      setTimeout(() => setMessage(''), 1000);
-    } catch (error) {
-      if (error.response?.status === 400) {
-        setMessage('This book is already in your favorites.');
-      } else if (error.response?.status === 401) {
-        setMessage('You need to login to add favorites.');
-      } else {
-        setMessage('Failed to add to favorites.');
-      }
-    }
-  };
-
   return (
     <div className="products" id="Products">
       <h1>PRODUCTS</h1>
       {message && <p className="message">{message}</p>}
+      <div className="search-bar">
+        <input
+          type="text"
+          placeholder="Search products..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)} // Update search term
+        />
+      </div>
       <div className="box">
-        {products.map((product) => (
+        {filteredProducts.map((product) => (
           <div
             className="card"
             key={product.id}
@@ -116,30 +86,15 @@ const Products = () => {
                   ></i>
                 ))}
               </div>
-
-              {/* Buttons */}
-              <div className="button-group">
-                <div className="top-buttons">
-                  <button
-                    className="btn cart-btn"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleAddToCart(product);
-                    }}
-                  >
-                    Add to Cart
-                  </button>
-                </div>
-                <button
-                  className="btn favorite-btn"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleAddToFavorites(product);
-                  }}
-                >
-                  Favorite
-                </button>
-              </div>
+              <button
+                className="btn cart-btn"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleAddToCart(product);
+                }}
+              >
+                Add to Cart
+              </button>
             </div>
           </div>
         ))}
